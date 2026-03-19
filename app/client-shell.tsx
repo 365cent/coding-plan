@@ -8,11 +8,6 @@ import { PlanCard } from "@/components/plan-card"
 import { ComparisonTable } from "@/components/comparison-table"
 
 const CATEGORY_ORDER: PlanCategory[] = ["国内大厂", "御三家", "其他"]
-const DOMESTIC_BIG3_ORDER: Record<string, number> = {
-  腾讯云: 0,
-  阿里云: 1,
-  字节跳动: 2,
-}
 
 export function ClientShell({ plans }: { plans: Plan[] }) {
   const [search, setSearch] = useState("")
@@ -54,7 +49,8 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
     const categoryRank = (c: PlanCategory) => CATEGORY_ORDER.indexOf(c)
 
     result = [...result].sort((a, b) => {
-      if (!categoryFilter) {
+      // For non-default sorts, keep category grouping first.
+      if (!categoryFilter && sortBy !== "default") {
         const ra = categoryRank(a.category)
         const rb = categoryRank(b.category)
         if (ra !== rb) return ra - rb
@@ -92,13 +88,29 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
 
       switch (sortBy) {
         case "default": {
-          if (!categoryFilter && a.category === "国内大厂" && b.category === "国内大厂") {
-            const ra = DOMESTIC_BIG3_ORDER[a.company]
-            const rb = DOMESTIC_BIG3_ORDER[b.company]
-            const aHas = ra !== undefined
-            const bHas = rb !== undefined
-            if (aHas && bHas && ra !== rb) return ra - rb
-            if (aHas !== bHas) return aHas ? -1 : 1
+          if (!categoryFilter) {
+            const isBig3 = (p: Plan) =>
+              p.company === "腾讯云" || p.company === "阿里云" || p.company === "字节跳动"
+
+            const groupRank = (p: Plan) => (isBig3(p) ? 0 : p.category === "御三家" ? 1 : 2)
+
+            const ga = groupRank(a)
+            const gb = groupRank(b)
+            if (ga !== gb) return ga - gb
+
+            // Within the first group (腾讯/阿里/字节), order by lowest first-month price.
+            if (ga === 0) {
+              const minFirstMonth = (p: Plan) => {
+                const prices = p.tiers
+                  .filter((t) => !t.isFirstMonthOnly)
+                  .map((t) => t.firstMonthPrice)
+                  .filter((x): x is number => x != null && Number.isFinite(x))
+                return prices.length ? Math.min(...prices) : Infinity
+              }
+              const fa = minFirstMonth(a)
+              const fb = minFirstMonth(b)
+              if (fa !== fb) return fa - fb
+            }
           }
           const ia = originalIndex.get(a.id) ?? 0
           const ib = originalIndex.get(b.id) ?? 0

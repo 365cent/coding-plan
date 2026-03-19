@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, X } from "lucide-react"
+import { ChevronDown, Search, X } from "lucide-react"
 import type { PlanCategory } from "@/lib/plans-data"
 
 type FilterBarProps = {
@@ -67,17 +67,17 @@ export function FilterBar({
           )}
         </div>
 
-        <div className="flex items-center gap-2 flex-nowrap overflow-x-auto">
+        <div className="flex items-center gap-2 flex-nowrap overflow-x-auto overflow-y-visible py-0.5 pr-1">
           {/* Category */}
           <div className="flex items-center gap-1.5 shrink-0">
             {categoryOptions.map((opt) => (
               <button
                 key={opt.value || "all"}
                 onClick={() => onCategoryChange(opt.value)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-all ${
+                className={`h-8 px-2.5 inline-flex items-center rounded-lg text-xs font-medium whitespace-nowrap transition-all border border-transparent ${
                   categoryFilter === opt.value
                     ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground hover:bg-accent"
+                    : "bg-background/60 text-foreground border-border/70 hover:bg-accent"
                 }`}
               >
                 {opt.label}
@@ -86,32 +86,38 @@ export function FilterBar({
           </div>
 
           {/* Billing */}
-          <select
-            value={billingFilter}
-            onChange={(e) => onBillingFilterChange(e.target.value)}
-            className="h-8 px-3 rounded-lg bg-secondary text-xs font-medium text-secondary-foreground border-none outline-none cursor-pointer focus:ring-2 focus:ring-primary/30 shrink-0"
-            aria-label="计费单位筛选"
-          >
-            {billingOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
+          <div className="relative shrink-0">
+            <select
+              value={billingFilter}
+              onChange={(e) => onBillingFilterChange(e.target.value)}
+              className="h-8 px-2.5 pr-8 rounded-lg bg-background/60 text-xs font-medium text-foreground border border-border/70 outline-none appearance-none cursor-pointer focus:border-primary/40 shrink-0"
+              aria-label="计费单位筛选"
+            >
+              {billingOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+          </div>
 
           {/* Sort */}
-          <select
-            value={sortBy}
-            onChange={(e) => onSortByChange(e.target.value)}
-            className="h-8 px-3 rounded-lg bg-secondary text-xs font-medium text-secondary-foreground border-none outline-none cursor-pointer focus:ring-2 focus:ring-primary/30 shrink-0"
-            aria-label="排序"
-          >
-            {sortOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          <div className="relative shrink-0">
+            <select
+              value={sortBy}
+              onChange={(e) => onSortByChange(e.target.value)}
+              className="h-8 px-2.5 pr-8 rounded-lg bg-background/60 text-xs font-medium text-foreground border border-border/70 outline-none appearance-none cursor-pointer focus:border-primary/40 shrink-0"
+              aria-label="排序"
+            >
+              {sortOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+          </div>
         </div>
       </div>
     </div>

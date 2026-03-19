@@ -28,8 +28,8 @@ export function StatsBar({ plans }: { plans: Plan[] }) {
   ]
 
   return (
-    <div className="mt-6 w-full">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div className="max-w-7xl mx-auto px-6 mt-6 pb-2 w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
         {stats.map((s) => (
           <div
             key={s.label}

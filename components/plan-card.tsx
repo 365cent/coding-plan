@@ -4,6 +4,12 @@ import type { Plan } from "@/lib/plans-data"
 import { ShoppingCart } from "lucide-react"
 import Image from "next/image"
 
+function formatMoney(value: number) {
+  if (!Number.isFinite(value)) return "—"
+  if (Number.isInteger(value)) return String(value)
+  return String(Math.round(value * 10) / 10)
+}
+
 export function PlanCard({ plan }: { plan: Plan }) {
   const regularTiers = plan.tiers.filter((t) => !t.isFirstMonthOnly)
   const dealTiers = plan.tiers.filter((t) => t.isFirstMonthOnly || t.firstMonthPrice != null)
@@ -93,17 +99,23 @@ export function PlanCard({ plan }: { plan: Plan }) {
         <div className="flex items-baseline gap-1 mt-3">
           {lowestFirst !== undefined ? (
             <>
-              <span className="text-2xl font-bold text-primary">{"¥"}{lowestFirst}</span>
-              <span className="text-sm text-muted-foreground">/首月</span>
-              {lowestSecond !== undefined && (
-                <span className="text-sm text-muted-foreground ml-2">次月 {"¥"}{lowestSecond}</span>
+              {lowestFirst === 0 ? (
+                <span className="text-2xl font-bold text-primary">首月免费</span>
+              ) : (
+                <>
+                  <span className="text-2xl font-bold text-primary">{"¥"}{formatMoney(lowestFirst)}</span>
+                  <span className="text-sm text-muted-foreground">/首月</span>
+                </>
               )}
-              <span className="text-sm text-muted-foreground ml-2">续费 {"¥"}{lowestPrice}/月</span>
+              {lowestSecond !== undefined && (
+                <span className="text-sm text-muted-foreground ml-2">次月 {"¥"}{formatMoney(lowestSecond)}</span>
+              )}
+              <span className="text-sm text-muted-foreground ml-2">续费 {"¥"}{formatMoney(lowestPrice)}/月</span>
             </>
           ) : (
             <>
               <span className="text-2xl font-bold text-foreground">
-                {Number.isFinite(lowestPrice) ? `¥${Math.round(lowestPrice)}` : "—"}
+                {Number.isFinite(lowestPrice) ? `¥${formatMoney(lowestPrice)}` : "—"}
               </span>
               <span className="text-sm text-muted-foreground">
                 /月
