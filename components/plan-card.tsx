@@ -114,17 +114,23 @@ export function PlanCard({ plan }: { plan: Plan }) {
             </>
           ) : (
             <>
-              <span className="text-2xl font-bold text-foreground">
-                {Number.isFinite(lowestPrice) ? `¥${formatMoney(lowestPrice)}` : "—"}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                /月
-                {lowestPriceInfo?.period === "季"
-                  ? "(季付)"
-                  : lowestPriceInfo?.period === "年"
-                    ? "(年付)"
-                    : ""}
-              </span>
+              {Number.isFinite(lowestPrice) && lowestPrice === 0 ? (
+                <span className="text-2xl font-bold text-primary">首月免费</span>
+              ) : (
+                <>
+                  <span className="text-2xl font-bold text-foreground">
+                    {Number.isFinite(lowestPrice) ? `¥${formatMoney(lowestPrice)}` : "—"}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    /月
+                    {lowestPriceInfo?.period === "季"
+                      ? "(季付)"
+                      : lowestPriceInfo?.period === "年"
+                        ? "(年付)"
+                        : ""}
+                  </span>
+                </>
+              )}
             </>
           )}
         </div>
