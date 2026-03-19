@@ -132,7 +132,7 @@ export const plans: Plan[] = [
     id: "huawei",
     company: "华为云",
     product: "CodeArts 码道",
-    category: "国内大厂",
+    category: "其他",
     links: { official: "https://www.huaweicloud.com/product/codearts/ai.html" },
     logo: { src: "/logos/huawei.png", alt: "华为云" },
     models: ["盘古", "多模型接入"],

@@ -47,13 +47,14 @@ export function FilterBar({
     <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="max-w-7xl mx-auto px-6 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Search */}
-        <div className="relative flex-1 max-w-sm">
+        <div role="search" className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
             placeholder="搜索平台、模型..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
+            aria-label="搜索套餐平台或模型"
             className="w-full h-9 pl-9 pr-8 rounded-md bg-secondary text-sm text-foreground placeholder:text-muted-foreground border-none outline-none focus:ring-2 focus:ring-primary/30 transition-all"
           />
           {search && (

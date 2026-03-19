@@ -5,7 +5,8 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: false,
   images: {
-    unoptimized: true,
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 86400,
   },
 }
 

@@ -1,5 +1,8 @@
+"use client"
+
 import type { Plan } from "@/lib/plans-data"
 import { ShoppingCart } from "lucide-react"
+import Image from "next/image"
 
 export function PlanCard({ plan }: { plan: Plan }) {
   const regularTiers = plan.tiers.filter((t) => !t.isFirstMonthOnly)
@@ -36,7 +39,14 @@ export function PlanCard({ plan }: { plan: Plan }) {
   }, undefined)
 
   return (
-    <div className="group bg-card rounded-xl border border-border hover:border-border transition-all hover:shadow-md flex flex-col">
+    <div
+      data-plan-id={plan.id}
+      data-company={plan.company}
+      data-product={plan.product}
+      data-min-price={Number.isFinite(lowestPrice) ? Math.round(lowestPrice) : undefined}
+      data-billing-unit={plan.billingUnit}
+      className="group bg-card rounded-xl border border-border hover:border-border transition-all hover:shadow-md flex flex-col"
+    >
       {/* Header */}
       <div className="p-5 pb-4 border-b border-border">
         <div className="flex items-start justify-between">
@@ -49,9 +59,11 @@ export function PlanCard({ plan }: { plan: Plan }) {
                 className="shrink-0 mt-0.5"
                 aria-label={`${plan.company} 购买/访问`}
               >
-                <img
+                <Image
                   src={plan.logo.src}
                   alt={plan.logo.alt}
+                  width={36}
+                  height={36}
                   className="h-9 w-9 rounded-lg bg-secondary/70 border border-border object-contain"
                   loading="lazy"
                 />

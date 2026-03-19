@@ -11,10 +11,10 @@ export function TopFloatingHeader() {
           href="/"
           className="text-base font-semibold text-foreground hover:text-foreground/80 transition-colors"
         >
-          国内Coding Plan对比
+          国内 Coding Plan 性价比排行
         </Link>
 
-        <nav className="flex items-center gap-2">
+        <nav aria-label="主导航" className="flex items-center gap-2">
           <a
             href="#faq"
             className="px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"

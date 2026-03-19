@@ -1,5 +1,8 @@
+"use client"
+
 import type { Plan } from "@/lib/plans-data"
 import { ExternalLink } from "lucide-react"
+import Image from "next/image"
 
 export function ComparisonTable({ plans }: { plans: Plan[] }) {
   return (
@@ -8,34 +11,37 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
         <caption className="sr-only">AI Coding Plan 套餐对比表</caption>
         <thead>
           <tr className="border-b border-border bg-secondary/50">
-            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap sticky left-0 bg-secondary/50 z-10">
+            <th
+              scope="col"
+              className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap sticky left-0 bg-secondary/50 z-10"
+            >
               平台
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+            <th scope="col" className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
               入门价
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+            <th scope="col" className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
               首月/次月
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+            <th scope="col" className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
               计费单位
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+            <th scope="col" className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
               5小时限额
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+            <th scope="col" className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
               每月限额
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+            <th scope="col" className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
               模型数
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+            <th scope="col" className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
               工具数
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+            <th scope="col" className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
               套餐档
             </th>
-            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+            <th scope="col" className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
               购买
             </th>
           </tr>
@@ -57,18 +63,26 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
             return (
               <tr
                 key={plan.id}
+                data-plan-id={plan.id}
+                data-company={plan.company}
+                data-product={plan.product}
+                data-min-price={standardMonthlyPrice ?? undefined}
+                data-billing-unit={plan.billingUnit}
                 className={`border-b border-border last:border-b-0 hover:bg-accent/50 transition-colors ${
                   i % 2 === 0 ? "" : "bg-secondary/20"
                 }`}
               >
-                <td className="px-4 py-3 sticky left-0 bg-card z-10">
+                <th scope="row" className="px-4 py-3 sticky left-0 bg-card z-10 text-left font-normal">
                   <div className="min-w-[140px] flex items-start gap-2">
                     {plan.logo && (
-                      <img
+                      <Image
                         src={plan.logo.src}
                         alt={plan.logo.alt}
+                        width={20}
+                        height={20}
                         className="h-5 w-5 rounded bg-secondary/50 object-contain shrink-0 mt-0.5"
-                        loading="lazy"
+                        loading={i === 0 ? "eager" : "lazy"}
+                        priority={i === 0}
                       />
                     )}
                     <div>
@@ -84,7 +98,7 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
                       <p className="text-[11px] text-muted-foreground">{plan.product}</p>
                     </div>
                   </div>
-                </td>
+                </th>
                 <td className="px-4 py-3 whitespace-nowrap">
                   <span className="font-semibold text-foreground">
                     {"¥"}{standardMonthlyPrice ?? "-"}
