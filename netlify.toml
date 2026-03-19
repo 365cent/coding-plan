@@ -1,0 +1,17 @@
+[build]
+  command = "pnpm run build"
+  publish = ".next"
+
+[[redirects]]
+  from = "/script.js"
+  to = "https://endpoint-b.longlive.cloud/script.js"
+  status = 200
+  force = true
+  headers = { Cache-Control = "public, max-age=600" }
+
+[[redirects]]
+  from = "/api/event"
+  to = "https://endpoint-b.longlive.cloud/api/event"
+  status = 200
+  force = true
+

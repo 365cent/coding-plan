@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from '@vercel/analytics/next'
+import Script from "next/script"
 import './globals.css'
 import { FAQPageJsonLd, ItemListJsonLd, WebSiteJsonLd } from "@/components/json-ld"
 import { plans } from "@/lib/plans-data"
@@ -96,6 +97,12 @@ export default function RootLayout({
         >
           跳到主要内容
         </a>
+        <Script
+          defer
+          data-domain="coding.mcppla.net"
+          src="/script.js"
+          strategy="afterInteractive"
+        />
         <WebSiteJsonLd />
         <ItemListJsonLd plans={plans} />
         <FAQPageJsonLd />
