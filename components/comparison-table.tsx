@@ -1,0 +1,144 @@
+import type { Plan } from "@/lib/plans-data"
+import { ExternalLink } from "lucide-react"
+
+export function ComparisonTable({ plans }: { plans: Plan[] }) {
+  return (
+    <div className="overflow-x-auto rounded-lg border border-border bg-card">
+      <table className="w-full text-left text-sm">
+        <thead>
+          <tr className="border-b border-border bg-secondary/50">
+            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap sticky left-0 bg-secondary/50 z-10">
+              平台
+            </th>
+            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+              入门价
+            </th>
+            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+              首月/次月
+            </th>
+            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+              计费单位
+            </th>
+            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+              5小时限额
+            </th>
+            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+              每月限额
+            </th>
+            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+              模型数
+            </th>
+            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+              工具数
+            </th>
+            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+              套餐档
+            </th>
+            <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
+              购买
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {plans.map((plan, i) => {
+            const regularTiers = plan.tiers.filter((t) => !t.isFirstMonthOnly)
+            const baseTier = regularTiers[0]
+            const buyUrl = plan.links.affiliate ?? plan.links.official
+            const standardMonthlyPrice = baseTier
+              ? baseTier.period === "季"
+                ? Math.round(baseTier.price / 3)
+                : baseTier.period === "年"
+                  ? Math.round(baseTier.price / 12)
+                  : baseTier.price
+              : undefined
+            const firstMonthPrice = baseTier?.firstMonthPrice
+            const buyDisplayPrice = firstMonthPrice ?? standardMonthlyPrice
+            return (
+              <tr
+                key={plan.id}
+                className={`border-b border-border last:border-b-0 hover:bg-accent/50 transition-colors ${
+                  i % 2 === 0 ? "" : "bg-secondary/20"
+                }`}
+              >
+                <td className="px-4 py-3 sticky left-0 bg-card z-10">
+                  <div className="min-w-[140px] flex items-start gap-2">
+                    {plan.logo && (
+                      <img
+                        src={plan.logo.src}
+                        alt={plan.logo.alt}
+                        className="h-5 w-5 rounded bg-secondary/50 object-contain shrink-0 mt-0.5"
+                        loading="lazy"
+                      />
+                    )}
+                    <div>
+                      <a
+                        href={plan.links.official}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-medium text-foreground hover:text-primary transition-colors inline-flex items-center gap-1"
+                      >
+                        {plan.company}
+                        <ExternalLink className="h-3 w-3 opacity-50" />
+                      </a>
+                      <p className="text-[11px] text-muted-foreground">{plan.product}</p>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <span className="font-semibold text-foreground">
+                    {"¥"}{baseTier ? (baseTier.period === "季" ? Math.round(baseTier.price / 3) : baseTier.price) : "-"}
+                  </span>
+                  <span className="text-xs text-muted-foreground">/{baseTier?.period === "季" ? "月(季付)" : "月"}</span>
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  {baseTier?.firstMonthPrice !== undefined ? (
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-primary font-medium text-xs">首月 ¥{baseTier.firstMonthPrice}</span>
+                      {baseTier?.secondMonthPrice !== undefined && (
+                        <span className="text-muted-foreground text-xs">次月 ¥{baseTier.secondMonthPrice}</span>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground">-</span>
+                  )}
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <span className="px-2 py-0.5 rounded-md bg-muted text-[11px] font-medium text-muted-foreground">
+                    {plan.billingUnit}
+                  </span>
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-foreground">
+                  {baseTier?.limit5h || "-"}
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-foreground">
+                  {baseTier?.limitMonth || baseTier?.limitWeek || "-"}
+                </td>
+                <td className="px-4 py-3 text-center text-sm text-foreground">
+                  {plan.models.length}
+                </td>
+                <td className="px-4 py-3 text-center text-sm text-foreground">
+                  {plan.toolCount}+
+                </td>
+                <td className="px-4 py-3 text-center text-sm text-foreground">
+                  {regularTiers.length}
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <a
+                    href={buyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center h-9 px-3 rounded-md text-xs font-semibold bg-primary text-primary-foreground hover:brightness-105 transition whitespace-nowrap"
+                    aria-label={`${plan.company} 立即购买`}
+                  >
+                    {buyDisplayPrice != null ? `¥${buyDisplayPrice}` : "—"}{" "}
+                    立即购买
+                  </a>
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
