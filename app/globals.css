@@ -125,6 +125,15 @@ html {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-light;
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .font-semibold {
+    font-weight: 500;
+  }
+  .font-bold {
+    font-weight: 600;
   }
 }
