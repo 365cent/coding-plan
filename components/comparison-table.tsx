@@ -5,6 +5,7 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
   return (
     <div className="overflow-x-auto rounded-lg border border-border bg-card">
       <table className="w-full text-left text-sm">
+        <caption className="sr-only">AI Coding Plan 套餐对比表</caption>
         <thead>
           <tr className="border-b border-border bg-secondary/50">
             <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap sticky left-0 bg-secondary/50 z-10">
@@ -86,9 +87,12 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">
                   <span className="font-semibold text-foreground">
-                    {"¥"}{baseTier ? (baseTier.period === "季" ? Math.round(baseTier.price / 3) : baseTier.price) : "-"}
+                    {"¥"}{standardMonthlyPrice ?? "-"}
                   </span>
-                  <span className="text-xs text-muted-foreground">/{baseTier?.period === "季" ? "月(季付)" : "月"}</span>
+                  <span className="text-xs text-muted-foreground">
+                    /月
+                    {baseTier?.period === "季" ? "(季付)" : baseTier?.period === "年" ? "(年付)" : ""}
+                  </span>
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">
                   {baseTier?.firstMonthPrice !== undefined ? (
@@ -117,7 +121,7 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
                   {plan.models.length}
                 </td>
                 <td className="px-4 py-3 text-center text-sm text-foreground">
-                  {plan.toolCount}+
+                  {Math.max(plan.toolCount, plan.tools.length)}+
                 </td>
                 <td className="px-4 py-3 text-center text-sm text-foreground">
                   {regularTiers.length}

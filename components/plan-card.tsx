@@ -5,15 +5,17 @@ export function PlanCard({ plan }: { plan: Plan }) {
   const regularTiers = plan.tiers.filter((t) => !t.isFirstMonthOnly)
   const dealTiers = plan.tiers.filter((t) => t.isFirstMonthOnly || t.firstMonthPrice != null)
   const buyUrl = plan.links.affiliate ?? plan.links.official
-  const lowestPrice = regularTiers.length
-    ? Math.min(
-        ...regularTiers.map((t) => {
-          if (t.period === "季") return Math.round(t.price / 3)
-          if (t.period === "年") return Math.round(t.price / 12)
-          return t.price
-        })
-      )
-    : Infinity
+  const lowestPriceInfo = (() => {
+    let best: { monthly: number; period: "月" | "季" | "年" } | undefined
+    for (const t of regularTiers) {
+      const monthly =
+        t.period === "季" ? t.price / 3 : t.period === "年" ? t.price / 12 : t.price
+      if (!Number.isFinite(monthly)) continue
+      if (!best || monthly < best.monthly) best = { monthly, period: t.period }
+    }
+    return best
+  })()
+  const lowestPrice = lowestPriceInfo?.monthly ?? Infinity
   const lowestFirst = regularTiers.reduce<number | undefined>((min, t) => {
     if (t.firstMonthPrice === undefined) return min
     if (min === undefined) return t.firstMonthPrice
@@ -89,10 +91,15 @@ export function PlanCard({ plan }: { plan: Plan }) {
           ) : (
             <>
               <span className="text-2xl font-bold text-foreground">
-                {Number.isFinite(lowestPrice) ? `¥${lowestPrice}` : "—"}
+                {Number.isFinite(lowestPrice) ? `¥${Math.round(lowestPrice)}` : "—"}
               </span>
               <span className="text-sm text-muted-foreground">
-                /{regularTiers[0]?.period === "季" ? "季" : regularTiers[0]?.period === "年" ? "年" : "月"}
+                /月
+                {lowestPriceInfo?.period === "季"
+                  ? "(季付)"
+                  : lowestPriceInfo?.period === "年"
+                    ? "(年付)"
+                    : ""}
               </span>
             </>
           )}
@@ -130,9 +137,9 @@ export function PlanCard({ plan }: { plan: Plan }) {
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">{tier.name}</p>
                     <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                      {tier.limit5h}/5h
-                      {tier.limitWeek && <span>{" | "}{tier.limitWeek}/周</span>}
-                      {tier.limitMonth && <span>{" | "}{tier.limitMonth}/月</span>}
+                      {tier.limit5h}
+                      {tier.limitWeek && <span>{" | "}{tier.limitWeek}</span>}
+                      {tier.limitMonth && <span>{" | "}{tier.limitMonth}</span>}
                     </p>
                   </div>
                   <div className="text-right shrink-0">

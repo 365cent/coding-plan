@@ -18,7 +18,7 @@ export function StatsBar({ plans }: { plans: Plan[] }) {
     ? perPlanMonthly.reduce((a, b) => a + b, 0) / perPlanMonthly.length
     : NaN
   const allModels = new Set(plans.flatMap((p) => p.models))
-  const totalTools = Math.max(...plans.map((p) => p.toolCount))
+  const totalTools = Math.max(...plans.map((p) => Math.max(p.toolCount, p.tools.length)))
 
   const stats = [
     { label: "平台对比", value: String(plans.length) },

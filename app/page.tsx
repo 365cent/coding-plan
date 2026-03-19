@@ -83,13 +83,24 @@ export default function Page() {
       const priceA = monthlyA.length ? Math.min(...monthlyA) : Infinity
       const priceB = monthlyB.length ? Math.min(...monthlyB) : Infinity
 
-      const getMonthQuota = (plan: typeof a) =>
-        plan.tiers[0]?.limitMonthCount ?? plan.tiers[0]?.limitWeekCount ?? 0
+      const getBaseTier = (plan: typeof a) => plan.tiers.find((t) => !t.isFirstMonthOnly)
+
+      const getMonthQuota = (plan: typeof a) => {
+        // only comparable for request-count based plans
+        if (plan.billingUnit !== "API请求" && plan.billingUnit !== "请求次数") return 0
+        const tier = getBaseTier(plan)
+        if (!tier) return 0
+        if (tier.limitMonthCount) return tier.limitMonthCount
+        if (tier.limitWeekCount) return tier.limitWeekCount * 4
+        return 0
+      }
+
+      const effectiveToolCount = (plan: typeof a) => Math.max(plan.toolCount, plan.tools.length)
 
       const getValueScore = (plan: typeof a, price: number) => {
         const quota = getMonthQuota(plan)
         if (quota) return quota / price
-        return (plan.models.length * 10 + plan.toolCount * 5) / price
+        return (plan.models.length * 10 + effectiveToolCount(plan) * 5) / price
       }
 
       const getRequestFreq = (plan: typeof a) => getMonthQuota(plan)
@@ -109,7 +120,7 @@ export default function Page() {
         case "models":
           return b.models.length - a.models.length
         case "tools":
-          return b.toolCount - a.toolCount
+          return effectiveToolCount(b) - effectiveToolCount(a)
         case "requests":
           return getRequestFreq(b) - getRequestFreq(a)
         default:
