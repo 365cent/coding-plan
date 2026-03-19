@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { FAQPageJsonLd, ItemListJsonLd, WebSiteJsonLd } from "@/components/json-ld"
 import { plans } from "@/lib/plans-data"
+import { getMetadataBase } from "@/lib/site-origin"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
@@ -14,14 +15,10 @@ const titleTemplate = "%s | Coding Plan 对比"
 const description =
   "2026年最新国内AI编程套餐全面横评：阿里云百炼、字节火山方舟、智谱GLM、Kimi、MiniMax等平台价格、模型、用量限制、每元请求数一键对比，助你选出最划算AI Coding Plan。"
 
-const metadataBase = process.env.NEXT_PUBLIC_SITE_URL
-  ? new URL(process.env.NEXT_PUBLIC_SITE_URL)
-  : process.env.VERCEL_URL
-    ? new URL(`https://${process.env.VERCEL_URL}`)
-    : new URL("http://localhost:3000")
+const metadataBase = getMetadataBase()
 
 export const metadata: Metadata = {
-  metadataBase,
+  ...(metadataBase ? { metadataBase } : {}),
   title: {
     default: titleDefault,
     template: titleTemplate,

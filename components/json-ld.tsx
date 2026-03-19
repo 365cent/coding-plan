@@ -1,4 +1,5 @@
 import type { Plan } from "@/lib/plans-data"
+import { getSiteOrigin } from "@/lib/site-origin"
 
 function jsonLd(data: unknown) {
   return { __html: JSON.stringify(data) }
@@ -16,9 +17,7 @@ function lowestRegularMonthlyPrice(plan: Plan): number | undefined {
   return Math.round(best)
 }
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+const siteUrl = getSiteOrigin() ?? ""
 
 export function WebSiteJsonLd() {
   const dateModified = new Date().toISOString().split("T")[0]
@@ -27,12 +26,12 @@ export function WebSiteJsonLd() {
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: "国内Coding Plan对比",
-      url: siteUrl,
+      ...(siteUrl ? { url: siteUrl } : {}),
       description: "国内主流AI编程套餐全面横评，持续更新",
       inLanguage: "zh-CN",
       potentialAction: {
         "@type": "SearchAction",
-        target: `${siteUrl}/?q={search_term_string}`,
+        ...(siteUrl ? { target: `${siteUrl}/?q={search_term_string}` } : {}),
         "query-input": "required name=search_term_string",
       },
     },
@@ -40,7 +39,7 @@ export function WebSiteJsonLd() {
       "@context": "https://schema.org",
       "@type": "WebPage",
       name: "国内 Coding Plan 性价比排行 2026",
-      url: siteUrl,
+      ...(siteUrl ? { url: siteUrl } : {}),
       datePublished: "2026-01-01",
       dateModified,
       inLanguage: "zh-CN",
@@ -58,7 +57,7 @@ export function ItemListJsonLd({ plans }: { plans: Plan[] }) {
   const data = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "@id": `${siteUrl}#itemlist`,
+    ...(siteUrl ? { "@id": `${siteUrl}#itemlist` } : {}),
     name: "国内AI Coding Plan套餐对比列表",
     description: "2026年国内主流AI编程订阅套餐价格对比",
     numberOfItems: plans.length,
@@ -71,7 +70,7 @@ export function ItemListJsonLd({ plans }: { plans: Plan[] }) {
         position: idx + 1,
         name: `${plan.product} — ${plan.company}`,
         description: desc,
-        url: plan.links.official,
+        ...(plan.links.official ? { url: plan.links.official } : {}),
         ...(minPrice != null
           ? {
               offers: {
