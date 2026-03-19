@@ -199,7 +199,7 @@ export const plans: Plan[] = [
     company: "月之暗面",
     product: "Kimi Code Plan",
     category: "其他",
-    links: { official: "https://www.kimi.com/code/docs/benefits.html" },
+    links: { official: "https://www.kimi.com/membership/pricing" },
     logo: { src: "/logos/kimi.png", alt: "Kimi" },
     models: ["Kimi K2.5"],
     tiers: [
