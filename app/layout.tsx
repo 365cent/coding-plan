@@ -1,14 +1,9 @@
 import type { Metadata, Viewport } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import { Analytics } from '@vercel/analytics/next'
 import Script from "next/script"
-import './globals.css'
+import "./globals.css"
 import { FAQPageJsonLd, ItemListJsonLd, WebSiteJsonLd } from "@/components/json-ld"
 import { plans } from "@/lib/plans-data"
 import { getMetadataBase } from "@/lib/site-origin"
-
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" })
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
 
 const siteName = "国内Coding Plan对比"
 const titleDefault = "国内 Coding Plan 性价比排行 2026 | 价格·模型·用量对比"
@@ -90,7 +85,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body className={`${geist.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:text-sm focus:shadow"
@@ -107,7 +102,6 @@ export default function RootLayout({
         <ItemListJsonLd plans={plans} />
         <FAQPageJsonLd />
         {children}
-        <Analytics />
       </body>
     </html>
   )
