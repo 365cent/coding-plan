@@ -1,7 +1,12 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import type { Plan, PlanCategory } from "@/lib/plans-data"
+import {
+  type Plan,
+  type PlanCategory,
+  purchasableRegularTiers,
+  tierComparableMonthly,
+} from "@/lib/plans-data"
 import { FilterBar } from "@/components/filter-bar"
 import { ViewToggle } from "@/components/view-toggle"
 import { PlanCard } from "@/components/plan-card"
@@ -56,16 +61,12 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
         if (ra !== rb) return ra - rb
       }
 
-      const monthlyA = a.tiers
-        .filter((t) => !t.isFirstMonthOnly)
-        .map((t) => (t.period === "季" ? Math.round(t.price / 3) : t.period === "年" ? Math.round(t.price / 12) : t.price))
-      const monthlyB = b.tiers
-        .filter((t) => !t.isFirstMonthOnly)
-        .map((t) => (t.period === "季" ? Math.round(t.price / 3) : t.period === "年" ? Math.round(t.price / 12) : t.price))
+      const monthlyA = purchasableRegularTiers(a).map((t) => tierComparableMonthly(t))
+      const monthlyB = purchasableRegularTiers(b).map((t) => tierComparableMonthly(t))
       const priceA = monthlyA.length ? Math.min(...monthlyA) : Infinity
       const priceB = monthlyB.length ? Math.min(...monthlyB) : Infinity
 
-      const getBaseTier = (plan: Plan) => plan.tiers.find((t) => !t.isFirstMonthOnly)
+      const getBaseTier = (plan: Plan) => purchasableRegularTiers(plan)[0]
 
       const getMonthQuota = (plan: Plan) => {
         if (plan.billingUnit !== "API请求" && plan.billingUnit !== "请求次数") return 0
@@ -102,7 +103,7 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
             if (ga === 0) {
               const minFirstMonth = (p: Plan) => {
                 const prices = p.tiers
-                  .filter((t) => !t.isFirstMonthOnly)
+                  .filter((t) => !t.isFirstMonthOnly && !t.discontinuedForNewSales)
                   .map((t) => t.firstMonthPrice)
                   .filter((x): x is number => x != null && Number.isFinite(x))
                 return prices.length ? Math.min(...prices) : Infinity

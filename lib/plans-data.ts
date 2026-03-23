@@ -19,6 +19,8 @@ export type Plan = {
   tools: string[]
   toolCount: number
   tags: string[]
+  /** 重要说明（展示在卡片内，如停售公告） */
+  notice?: string
   yearlyPrice?: number      // 年付价格 (e.g., Kimi ¥468/年)
   quarterlyPrice?: number   // 季付价格
 }
@@ -28,7 +30,8 @@ export type Tier = {
   price: number
   firstMonthPrice?: number
   secondMonthPrice?: number  // 次月价格 (e.g., 次月半价)
-  period: "月" | "季" | "年"
+  /** 包 = 一次性按量包（非连续月付） */
+  period: "月" | "季" | "年" | "包"
   limit5h: string
   limitWeek?: string
   limitMonth?: string
@@ -36,7 +39,23 @@ export type Tier = {
   limitWeekCount?: number    // 结构化：7天配额（次）
   limitMonthCount?: number   // 结构化：30天配额（次）
   isFirstMonthOnly?: boolean // 新人专享一次性，不计入最低月付
+  /** 已停止接受新购（仍展示供参考，UI 删除线） */
+  discontinuedForNewSales?: boolean
   notes?: string
+}
+
+/** 参与比价、卡片主价格的常规档位（排除停售新购；若全部停售则回退为全部常规档） */
+export function purchasableRegularTiers(plan: Plan): Tier[] {
+  const regular = plan.tiers.filter((t) => !t.isFirstMonthOnly)
+  const active = regular.filter((t) => !t.discontinuedForNewSales)
+  return active.length ? active : regular
+}
+
+/** 用于排序、入门价等：按量包按标价比较；月季年按折算月价 */
+export function tierComparableMonthly(t: Tier): number {
+  if (t.period === "季") return Math.round(t.price / 3)
+  if (t.period === "年") return Math.round(t.price / 12)
+  return t.price
 }
 
 export const plans: Plan[] = [
@@ -50,7 +69,18 @@ export const plans: Plan[] = [
       affiliate: "https://www.aliyun.com/benefit/ai/aistar?clubBiz=subTask..12440021..10263..",
     },
     logo: { src: "/logos/qwen.png", alt: "通义千问" },
-    models: ["Qwen3.5-Plus", "Qwen3-Max", "Qwen3-Coder-Next", "Qwen3-Coder-Plus", "GLM-4.7", "Kimi-K2.5", "MiniMax-M2.5"],
+    notice:
+      "自 2026-03-20 00:00:00（UTC+8）起，Lite 基础套餐停止接受新购；已购用户的使用、续费及套餐升级权益不变。",
+    models: [
+      "qwen3.5-plus（推荐·支持图片理解）",
+      "kimi-k2.5（推荐·支持图片理解）",
+      "glm-5",
+      "MiniMax-M2.5",
+      "qwen3-max-2026-01-23",
+      "qwen3-coder-next",
+      "qwen3-coder-plus",
+      "glm-4.7",
+    ],
     tiers: [
       {
         name: "Lite",
@@ -64,12 +94,12 @@ export const plans: Plan[] = [
         limit5hCount: 1200,
         limitWeekCount: 9000,
         limitMonthCount: 18000,
+        discontinuedForNewSales: true,
+        notes: "已停售新购（仅已购用户续费/升级）",
       },
       {
         name: "Pro",
         price: 200,
-        firstMonthPrice: 39.9,
-        secondMonthPrice: 100,
         period: "月",
         limit5h: "6,000 次",
         limitWeek: "45,000 次",
@@ -82,7 +112,7 @@ export const plans: Plan[] = [
     billingUnit: "API请求",
     tools: ["Claude Code", "Cline", "OpenClaw", "OpenCode", "Cursor"],
     toolCount: 5,
-    tags: ["多模型", "首月优惠", "次月半价"],
+    tags: ["多模型", "固定月费", "Lite停售新购"],
   },
   {
     id: "ark",
@@ -207,8 +237,8 @@ export const plans: Plan[] = [
         name: "Andante",
         price: 49,
         period: "月",
-        limit5h: "300-1,200 次/5小时",
-        limitMonth: "4M token/月",
+        limit5h: "300-1,200 次",
+        limitMonth: "4M token",
         notes: "额度每7天滚动刷新（以订阅日为起点）, 最大并发30, 年付¥468(¥39/月)",
       },
       {
@@ -216,7 +246,7 @@ export const plans: Plan[] = [
         price: 99,
         period: "月",
         limit5h: "Andante×4",
-        limitMonth: "16M token/月",
+        limitMonth: "16M token",
         notes: "多设备登录, 额度每7天滚动刷新（以订阅日为起点）, 年付¥948(¥79/月)",
       },
       {
@@ -224,7 +254,7 @@ export const plans: Plan[] = [
         price: 199,
         period: "月",
         limit5h: "Andante×20",
-        limitMonth: "80M token/月",
+        limitMonth: "80M token",
         notes: "额度每7天滚动刷新（以订阅日为起点）",
       },
       {
@@ -232,7 +262,7 @@ export const plans: Plan[] = [
         price: 699,
         period: "月",
         limit5h: "Andante×60",
-        limitMonth: "240M token/月",
+        limitMonth: "240M token",
         notes: "高端套餐, 额度每7天滚动刷新（以订阅日为起点）",
       },
     ],
@@ -327,7 +357,7 @@ export const plans: Plan[] = [
         secondMonthPrice: 40,
         period: "月",
         limit5h: "1,000 次",
-        limitMonth: "12,000 次/月",
+        limitMonth: "12,000 次",
         limit5hCount: 1000,
         limitWeekCount: 6000,
         limitMonthCount: 12000,
@@ -340,7 +370,7 @@ export const plans: Plan[] = [
         secondMonthPrice: 200,
         period: "月",
         limit5h: "5,000 次",
-        limitMonth: "60,000 次/月",
+        limitMonth: "60,000 次",
         limit5hCount: 5000,
         limitWeekCount: 30000,
         limitMonthCount: 60000,
@@ -412,7 +442,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "1,200 次",
         limitWeek: "9,000 次",
-        limitMonth: "18,000 次/月",
+        limitMonth: "18,000 次",
         limit5hCount: 1200,
         limitWeekCount: 9000,
         limitMonthCount: 18000,
@@ -426,7 +456,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "6,000 次",
         limitWeek: "45,000 次",
-        limitMonth: "90,000 次/月",
+        limitMonth: "90,000 次",
         limit5hCount: 6000,
         limitWeekCount: 45000,
         limitMonthCount: 90000,
@@ -571,55 +601,54 @@ export const plans: Plan[] = [
       {
         name: "超值体验包",
         price: 6.9,
-        firstMonthPrice: 6.9,
-        period: "月",
+        period: "包",
         limit5h: "2900万积分",
         isFirstMonthOnly: true,
-        notes: "新人专享一次性包, 按量计费, 有效期30天（限购一份）",
+        notes: "新人专享；面向模型体验及个人日常使用；按量计费，有效期30天（限购一份）",
       },
       {
-        name: "Lite 按量",
+        name: "标准按量包 Lite",
         price: 19.9,
-        period: "月",
+        period: "包",
         limit5h: "5900万积分",
-        notes: "按量计费, 用完即止",
+        notes: "面向个人日常使用；按量计费，有效期180天",
       },
       {
-        name: "Plus 按量",
+        name: "标准按量包 Plus",
         price: 199,
-        period: "月",
+        period: "包",
         limit5h: "5.9亿积分",
-        notes: "按量计费, 大流量包",
+        notes: "面向管理轻量级工作负载的入门级开发人员；按量计费，有效期180天",
       },
       {
-        name: "包月 Lite",
+        name: "包月畅享包 Lite",
         price: 49.9,
         period: "月",
         limit5h: "每日700万积分",
-        limitMonth: "约2.1亿积分/月",
-        notes: "包月畅享, 每日刷新",
+        limitMonth: "约2.1亿积分",
+        notes: "面向日常低频使用；包月，有效期30天；每日0点刷新额度",
       },
       {
-        name: "包月 Plus",
+        name: "包月畅享包 Plus",
         price: 199,
         period: "月",
         limit5h: "每日2800万积分",
-        limitMonth: "约8.4亿积分/月",
-        notes: "包月畅享, 每日刷新",
+        limitMonth: "约8.4亿积分",
+        notes: "面向管理轻量级工作负载的入门级开发人员；包月，有效期30天；每日0点刷新额度",
       },
       {
-        name: "包月 Pro",
+        name: "包月畅享包 Pro",
         price: 499,
         period: "月",
         limit5h: "每日7000万积分",
-        limitMonth: "约21亿积分/月",
-        notes: "包月畅享, 每日刷新",
+        limitMonth: "约21亿积分",
+        notes: "面向管理复杂工作负载的专业开发人员；包月，有效期30天；每日0点刷新额度",
       },
     ],
     billingUnit: "按量计费",
     tools: ["Claude Code", "OpenClaw", "主流编程工具兼容"],
     toolCount: 5,
-    tags: ["最低价", "积分制", "多模型", "按量+包月"],
+    tags: ["最低价", "积分制", "多模型", "按量+包月", "新人专享"],
   },
   {
     id: "xfyun",
@@ -636,7 +665,7 @@ export const plans: Plan[] = [
         firstMonthPrice: 3.9,
         secondMonthPrice: 19,
         period: "月",
-        limit5h: "日tokens上限：2000w",
+        limit5h: "20M token/天",
         notes: "QPS：20；支持 DeepSeek-V3.2 / GLM-4.7-Flash",
       },
       {
@@ -645,7 +674,7 @@ export const plans: Plan[] = [
         firstMonthPrice: 7.9,
         secondMonthPrice: 39,
         period: "月",
-        limit5h: "日tokens上限：1000w",
+        limit5h: "10M token/天",
         notes: "QPS：5；支持 Spark X2 / GLM-5 / MiniMax / Kimi / DeepSeek / GLM-4.7-Flash",
       },
       {
@@ -654,7 +683,7 @@ export const plans: Plan[] = [
         firstMonthPrice: 39.9,
         secondMonthPrice: 199,
         period: "月",
-        limit5h: "日tokens上限：5000w",
+        limit5h: "50M token/天",
         notes: "QPS：20；支持 Spark X2 / GLM-5 / MiniMax / Kimi / DeepSeek / GLM-4.7-Flash",
       },
     ],
@@ -677,8 +706,8 @@ export const plans: Plan[] = [
         price: 40,
         firstMonthPrice: 0,
         period: "月",
-        limit5h: "18,000 次/月",
-        limitMonth: "18,000 次/月",
+        limit5h: "18,000 次",
+        limitMonth: "18,000 次",
         limitMonthCount: 18000,
         notes: "公测限量免费",
       },
@@ -687,8 +716,8 @@ export const plans: Plan[] = [
         price: 200,
         firstMonthPrice: 0,
         period: "月",
-        limit5h: "90,000 次/月",
-        limitMonth: "90,000 次/月",
+        limit5h: "90,000 次",
+        limitMonth: "90,000 次",
         limitMonthCount: 90000,
         notes: "公测限量免费",
       },

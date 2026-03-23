@@ -1,6 +1,6 @@
 "use client"
 
-import type { Plan } from "@/lib/plans-data"
+import { type Plan, purchasableRegularTiers, tierComparableMonthly } from "@/lib/plans-data"
 import { ShoppingCart } from "lucide-react"
 import Image from "next/image"
 
@@ -12,26 +12,28 @@ function formatMoney(value: number) {
 
 export function PlanCard({ plan }: { plan: Plan }) {
   const regularTiers = plan.tiers.filter((t) => !t.isFirstMonthOnly)
-  const dealTiers = plan.tiers.filter((t) => t.isFirstMonthOnly || t.firstMonthPrice != null)
+  const pricingTiers = purchasableRegularTiers(plan)
+  const dealTiers = plan.tiers.filter(
+    (t) => !t.discontinuedForNewSales && (t.isFirstMonthOnly || t.firstMonthPrice != null),
+  )
   const buyUrl = plan.links.affiliate ?? plan.links.official
   const lowestPriceInfo = (() => {
-    let best: { monthly: number; period: "月" | "季" | "年" } | undefined
-    for (const t of regularTiers) {
-      const monthly =
-        t.period === "季" ? t.price / 3 : t.period === "年" ? t.price / 12 : t.price
+    let best: { monthly: number; period: "月" | "季" | "年" | "包" } | undefined
+    for (const t of pricingTiers) {
+      const monthly = tierComparableMonthly(t)
       if (!Number.isFinite(monthly)) continue
       if (!best || monthly < best.monthly) best = { monthly, period: t.period }
     }
     return best
   })()
   const lowestPrice = lowestPriceInfo?.monthly ?? Infinity
-  const lowestFirst = regularTiers.reduce<number | undefined>((min, t) => {
+  const lowestFirst = pricingTiers.reduce<number | undefined>((min, t) => {
     if (t.firstMonthPrice === undefined) return min
     if (min === undefined) return t.firstMonthPrice
     return Math.min(min, t.firstMonthPrice)
   }, undefined)
 
-  const lowestSecond = regularTiers.reduce<number | undefined>((min, t) => {
+  const lowestSecond = pricingTiers.reduce<number | undefined>((min, t) => {
     if (t.secondMonthPrice === undefined) return min
     if (min === undefined) return t.secondMonthPrice
     return Math.min(min, t.secondMonthPrice)
@@ -42,6 +44,14 @@ export function PlanCard({ plan }: { plan: Plan }) {
     if (!Number.isFinite(p)) return min
     if (min === undefined) return p
     return Math.min(min, p)
+  }, undefined)
+
+  const lowestDealTier = dealTiers.reduce<Plan["tiers"][number] | undefined>((best, t) => {
+    const p = t.firstMonthPrice ?? t.price
+    if (!Number.isFinite(p)) return best
+    if (!best) return t
+    const bp = best.firstMonthPrice ?? best.price
+    return p < bp ? t : best
   }, undefined)
 
   return (
@@ -110,7 +120,10 @@ export function PlanCard({ plan }: { plan: Plan }) {
               {lowestSecond !== undefined && (
                 <span className="text-sm text-muted-foreground ml-2">次月 {"¥"}{formatMoney(lowestSecond)}</span>
               )}
-              <span className="text-sm text-muted-foreground ml-2">续费 {"¥"}{formatMoney(lowestPrice)}/月</span>
+              {(lowestSecond !== undefined ||
+                (Number.isFinite(lowestPrice) && lowestFirst !== undefined && lowestPrice !== lowestFirst)) && (
+                <span className="text-sm text-muted-foreground ml-2">续费 {"¥"}{formatMoney(lowestPrice)}/月</span>
+              )}
             </>
           ) : (
             <>
@@ -122,7 +135,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
                     {Number.isFinite(lowestPrice) ? `¥${formatMoney(lowestPrice)}` : "—"}
                   </span>
                   <span className="text-sm text-muted-foreground">
-                    /月
+                    {lowestPriceInfo?.period === "包" ? "/包" : "/月"}
                     {lowestPriceInfo?.period === "季"
                       ? "(季付)"
                       : lowestPriceInfo?.period === "年"
@@ -134,6 +147,12 @@ export function PlanCard({ plan }: { plan: Plan }) {
             </>
           )}
         </div>
+
+        {plan.notice && (
+          <p className="text-[11px] text-amber-700 dark:text-amber-500/90 leading-snug mt-3 border border-amber-500/25 bg-amber-500/10 rounded-md px-2 py-1.5">
+            {plan.notice}
+          </p>
+        )}
 
         {/* Tags */}
         <div className="flex flex-wrap gap-1.5 mt-3">
@@ -158,28 +177,55 @@ export function PlanCard({ plan }: { plan: Plan }) {
         </p>
         <div className="h-[132px] -mx-1 px-1 overflow-x-auto overflow-y-hidden">
           <div className="flex gap-2">
-            {regularTiers.map((tier) => (
+            {regularTiers.map((tier) => {
+              const struck = tier.discontinuedForNewSales
+              return (
               <div
                 key={tier.name}
-                className="min-w-[220px] max-w-[220px] h-[132px] overflow-hidden px-3 py-2 rounded-lg bg-secondary/60 border border-border/40"
+                className={`min-w-[220px] max-w-[220px] h-[132px] overflow-hidden px-3 py-2 rounded-lg bg-secondary/60 border border-border/40 ${
+                  struck ? "opacity-80" : ""
+                }`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{tier.name}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                    <div className="flex items-baseline gap-1.5 flex-wrap">
+                      <p
+                        className={`text-sm font-medium truncate ${
+                          struck ? "line-through text-muted-foreground" : "text-foreground"
+                        }`}
+                      >
+                        {tier.name}
+                      </p>
+                      {struck && (
+                        <span className="text-[10px] font-medium text-amber-700 dark:text-amber-500 shrink-0">
+                          停售新购
+                        </span>
+                      )}
+                    </div>
+                    <p
+                      className={`text-xs mt-0.5 truncate ${
+                        struck ? "line-through text-muted-foreground/80" : "text-muted-foreground"
+                      }`}
+                    >
                       {tier.limit5h}
                       {tier.limitWeek && <span>{" | "}{tier.limitWeek}</span>}
                       {tier.limitMonth && <span>{" | "}{tier.limitMonth}</span>}
                     </p>
                   </div>
-                  <div className="text-right shrink-0">
+                  <div
+                    className={`text-right shrink-0 ${struck ? "line-through text-muted-foreground" : ""}`}
+                  >
                     <p className="text-sm font-semibold text-foreground">
                       {"¥"}{tier.price}
                       <span className="text-xs text-muted-foreground font-normal">/{tier.period}</span>
                     </p>
                   </div>
                 </div>
-                <div className="mt-1.5 flex items-center gap-2 flex-wrap">
+                <div
+                  className={`mt-1.5 flex items-center gap-2 flex-wrap ${
+                    struck ? "line-through text-muted-foreground" : ""
+                  }`}
+                >
                   {tier.firstMonthPrice !== undefined && (
                     <span className="text-[11px] font-medium text-primary">首月 ¥{tier.firstMonthPrice}</span>
                   )}
@@ -188,12 +234,13 @@ export function PlanCard({ plan }: { plan: Plan }) {
                   )}
                 </div>
                 {tier.notes && (
-                  <p className="text-[11px] text-muted-foreground/70 mt-1 max-h-[32px] overflow-hidden">
+                  <p className="text-[11px] text-muted-foreground/70 mt-1 max-h-[32px] overflow-hidden not-italic no-underline">
                     {tier.notes}
                   </p>
                 )}
               </div>
-            ))}
+            )
+            })}
           </div>
         </div>
       </div>
@@ -232,11 +279,15 @@ export function PlanCard({ plan }: { plan: Plan }) {
             {lowestDealPrice !== undefined
               ? lowestDealPrice === 0
                 ? "首月免费"
-                : `首月 ¥${lowestDealPrice}`
+                : lowestDealTier?.isFirstMonthOnly
+                  ? `新人 ¥${formatMoney(lowestDealPrice)}`
+                  : `首月 ¥${formatMoney(lowestDealPrice)}`
               : Number.isFinite(lowestPrice)
                 ? lowestPrice === 0
                   ? "免费体验"
-                  : `¥${lowestPrice}/月`
+                  : lowestPriceInfo?.period === "包"
+                    ? `¥${formatMoney(lowestPrice)}/包`
+                    : `¥${formatMoney(lowestPrice)}/月`
                 : "免费体验"}
           </p>
           <a

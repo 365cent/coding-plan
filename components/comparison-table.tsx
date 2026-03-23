@@ -1,6 +1,6 @@
 "use client"
 
-import type { Plan } from "@/lib/plans-data"
+import { type Plan, purchasableRegularTiers, tierComparableMonthly } from "@/lib/plans-data"
 import { ExternalLink } from "lucide-react"
 import Image from "next/image"
 
@@ -49,17 +49,19 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
         <tbody>
           {plans.map((plan, i) => {
             const regularTiers = plan.tiers.filter((t) => !t.isFirstMonthOnly)
-            const baseTier = regularTiers[0]
+            const baseTier = purchasableRegularTiers(plan)[0]
             const buyUrl = plan.links.affiliate ?? plan.links.official
-            const standardMonthlyPrice = baseTier
-              ? baseTier.period === "季"
-                ? Math.round(baseTier.price / 3)
-                : baseTier.period === "年"
-                  ? Math.round(baseTier.price / 12)
-                  : baseTier.price
-              : undefined
+            const standardMonthlyPrice = baseTier ? tierComparableMonthly(baseTier) : undefined
             const firstMonthPrice = baseTier?.firstMonthPrice
             const buyDisplayPrice = firstMonthPrice ?? standardMonthlyPrice
+            const buyPriceLabel =
+              firstMonthPrice !== undefined
+                ? firstMonthPrice === 0
+                  ? "首月免费"
+                  : `首月 ¥${buyDisplayPrice}`
+                : buyDisplayPrice != null
+                  ? `¥${buyDisplayPrice}`
+                  : "—"
             return (
               <tr
                 key={plan.id}
@@ -104,7 +106,7 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
                     {"¥"}{standardMonthlyPrice ?? "-"}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    /月
+                    {baseTier?.period === "包" ? "/包" : "/月"}
                     {baseTier?.period === "季" ? "(季付)" : baseTier?.period === "年" ? "(年付)" : ""}
                   </span>
                 </td>
@@ -126,10 +128,10 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
                   </span>
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-foreground">
-                  {baseTier?.limit5h || "-"}
+                  {baseTier?.limit5h ?? "-"}
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-foreground">
-                  {baseTier?.limitMonth || baseTier?.limitWeek || "-"}
+                  {baseTier?.limitMonth ?? baseTier?.limitWeek ?? "-"}
                 </td>
                 <td className="px-4 py-3 text-center text-sm text-foreground">
                   {plan.models.length}
@@ -146,10 +148,9 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center h-9 px-3 rounded-md text-xs font-semibold bg-primary text-primary-foreground hover:brightness-105 transition whitespace-nowrap"
-                    aria-label={`${plan.company} 立即购买`}
+                    aria-label={`${plan.company} ${buyPriceLabel} 立即购买`}
                   >
-                    {buyDisplayPrice != null ? `¥${buyDisplayPrice}` : "—"}{" "}
-                    立即购买
+                    {buyPriceLabel} 立即购买
                   </a>
                 </td>
               </tr>

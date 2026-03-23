@@ -1,16 +1,8 @@
-import type { Plan } from "@/lib/plans-data"
+import { type Plan, purchasableRegularTiers, tierComparableMonthly } from "@/lib/plans-data"
 
 export function StatsBar({ plans }: { plans: Plan[] }) {
   const perPlanMonthly = plans
-    .map((p) =>
-      p.tiers
-        .filter((t) => !t.isFirstMonthOnly)
-        .map((t) => {
-          if (t.period === "季") return t.price / 3
-          if (t.period === "年") return t.price / 12
-          return t.price
-        })
-    )
+    .map((p) => purchasableRegularTiers(p).map((t) => tierComparableMonthly(t)))
     .map((arr) => (arr.length ? Math.min(...arr) : NaN))
     .filter((x) => Number.isFinite(x))
 

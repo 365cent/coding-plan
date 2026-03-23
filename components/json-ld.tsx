@@ -1,4 +1,4 @@
-import type { Plan } from "@/lib/plans-data"
+import { type Plan, purchasableRegularTiers, tierComparableMonthly } from "@/lib/plans-data"
 import { getSiteOrigin } from "@/lib/site-origin"
 
 function jsonLd(data: unknown) {
@@ -6,10 +6,10 @@ function jsonLd(data: unknown) {
 }
 
 function lowestRegularMonthlyPrice(plan: Plan): number | undefined {
-  const regular = plan.tiers.filter((t) => !t.isFirstMonthOnly)
+  const regular = purchasableRegularTiers(plan)
   let best: number | undefined
   for (const t of regular) {
-    const monthly = t.period === "季" ? t.price / 3 : t.period === "年" ? t.price / 12 : t.price
+    const monthly = tierComparableMonthly(t)
     if (!Number.isFinite(monthly)) continue
     if (best === undefined || monthly < best) best = monthly
   }
