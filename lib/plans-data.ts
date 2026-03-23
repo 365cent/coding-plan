@@ -560,15 +560,22 @@ export const plans: Plan[] = [
       affiliate: "https://passport.compshare.cn/register?referral_code=7KuMSzfdofaEKUvaTYql35",
     },
     logo: { src: "/logos/ucloud.png", alt: "UCloud" },
-    models: ["DeepSeek-V3.2", "GLM-5", "MiniMax-M2.5", "Kimi-K2.5"],
+    models: [
+      "MiniMax-M2.1", "MiniMax-M2.5",
+      "claude-haiku-4-5", "claude-sonnet-4-5", "claude-sonnet-4-6", "claude-opus-4-5", "claude-opus-4-6",
+      "DeepSeek-V3.2",
+      "gpt-5.1", "gpt-5.1-codex-mini", "gpt-5.1-codex-max", "gpt-5.2", "gpt-5.2-codex", "gpt-5.3-codex", "gpt-5.4",
+      "Kimi-K2.5", "GLM-5",
+    ],
     tiers: [
       {
         name: "超值体验包",
         price: 6.9,
+        firstMonthPrice: 6.9,
         period: "月",
         limit5h: "2900万积分",
         isFirstMonthOnly: true,
-        notes: "新人专享一次性包, 按量计费",
+        notes: "新人专享一次性包, 按量计费, 有效期30天（限购一份）",
       },
       {
         name: "Lite 按量",
