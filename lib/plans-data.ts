@@ -609,6 +609,7 @@ export const plans: Plan[] = [
       {
         name: "标准按量包 Lite",
         price: 19.9,
+        firstMonthPrice: 19.9,
         period: "包",
         limit5h: "5900万积分",
         notes: "面向个人日常使用；按量计费，有效期180天",

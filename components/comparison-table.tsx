@@ -54,14 +54,15 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
             const standardMonthlyPrice = baseTier ? tierComparableMonthly(baseTier) : undefined
             const firstMonthPrice = baseTier?.firstMonthPrice
             const buyDisplayPrice = firstMonthPrice ?? standardMonthlyPrice
+            /** 按量包等 period「包」且含首月价时，购买列写「首月 ¥」；月付首月优惠仍只写「¥」（首月已在左侧列） */
             const buyPriceLabel =
-              firstMonthPrice !== undefined
+              buyDisplayPrice != null
                 ? firstMonthPrice === 0
                   ? "首月免费"
-                  : `首月 ¥${buyDisplayPrice}`
-                : buyDisplayPrice != null
-                  ? `¥${buyDisplayPrice}`
-                  : "—"
+                  : baseTier?.period === "包" && firstMonthPrice !== undefined
+                    ? `首月 ¥${buyDisplayPrice}`
+                    : `¥${buyDisplayPrice}`
+                : "—"
             return (
               <tr
                 key={plan.id}
@@ -102,13 +103,24 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
                   </div>
                 </th>
                 <td className="px-4 py-3 whitespace-nowrap">
-                  <span className="font-semibold text-foreground">
-                    {"¥"}{standardMonthlyPrice ?? "-"}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {baseTier?.period === "包" ? "/包" : "/月"}
-                    {baseTier?.period === "季" ? "(季付)" : baseTier?.period === "年" ? "(年付)" : ""}
-                  </span>
+                  {baseTier?.period === "包" &&
+                  firstMonthPrice != null &&
+                  firstMonthPrice > 0 ? (
+                    <>
+                      <span className="font-semibold text-primary">首月 ¥{firstMonthPrice}</span>
+                      <span className="text-xs text-muted-foreground">/包</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-semibold text-foreground">
+                        {"¥"}{standardMonthlyPrice ?? "-"}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {baseTier?.period === "包" ? "/包" : "/月"}
+                        {baseTier?.period === "季" ? "(季付)" : baseTier?.period === "年" ? "(年付)" : ""}
+                      </span>
+                    </>
+                  )}
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">
                   {baseTier?.firstMonthPrice !== undefined ? (

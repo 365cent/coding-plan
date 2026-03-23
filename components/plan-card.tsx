@@ -46,14 +46,6 @@ export function PlanCard({ plan }: { plan: Plan }) {
     return Math.min(min, p)
   }, undefined)
 
-  const lowestDealTier = dealTiers.reduce<Plan["tiers"][number] | undefined>((best, t) => {
-    const p = t.firstMonthPrice ?? t.price
-    if (!Number.isFinite(p)) return best
-    if (!best) return t
-    const bp = best.firstMonthPrice ?? best.price
-    return p < bp ? t : best
-  }, undefined)
-
   return (
     <div
       data-plan-id={plan.id}
@@ -279,9 +271,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
             {lowestDealPrice !== undefined
               ? lowestDealPrice === 0
                 ? "首月免费"
-                : lowestDealTier?.isFirstMonthOnly
-                  ? `新人 ¥${formatMoney(lowestDealPrice)}`
-                  : `首月 ¥${formatMoney(lowestDealPrice)}`
+                : `首月 ¥${formatMoney(lowestDealPrice)}`
               : Number.isFinite(lowestPrice)
                 ? lowestPrice === 0
                   ? "免费体验"
