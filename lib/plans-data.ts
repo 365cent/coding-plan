@@ -51,6 +51,17 @@ export function purchasableRegularTiers(plan: Plan): Tier[] {
   return active.length ? active : regular
 }
 
+/** 全套餐（含新人专享）中最低首月价；不停售档才计入 */
+export function lowestFirstMonthInPlan(plan: Plan): number | undefined {
+  let best: number | undefined
+  for (const t of plan.tiers) {
+    if (t.discontinuedForNewSales) continue
+    if (t.firstMonthPrice === undefined) continue
+    if (best === undefined || t.firstMonthPrice < best) best = t.firstMonthPrice
+  }
+  return best
+}
+
 /** 用于排序、入门价等：按量包按标价比较；月季年按折算月价 */
 export function tierComparableMonthly(t: Tier): number {
   if (t.period === "季") return Math.round(t.price / 3)
@@ -601,6 +612,7 @@ export const plans: Plan[] = [
       {
         name: "超值体验包",
         price: 6.9,
+        firstMonthPrice: 6.9,
         period: "包",
         limit5h: "2900万积分",
         isFirstMonthOnly: true,
@@ -609,7 +621,6 @@ export const plans: Plan[] = [
       {
         name: "标准按量包 Lite",
         price: 19.9,
-        firstMonthPrice: 19.9,
         period: "包",
         limit5h: "5900万积分",
         notes: "面向个人日常使用；按量计费，有效期180天",

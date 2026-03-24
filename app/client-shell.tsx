@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import {
   type Plan,
   type PlanCategory,
+  lowestFirstMonthInPlan,
   purchasableRegularTiers,
   tierComparableMonthly,
 } from "@/lib/plans-data"
@@ -99,17 +100,10 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
             const gb = groupRank(b)
             if (ga !== gb) return ga - gb
 
-            // Within the first group (腾讯/阿里/字节), order by lowest first-month price.
+            // Within the first group (腾讯/阿里/字节), order by lowest first-month price（含新人档）.
             if (ga === 0) {
-              const minFirstMonth = (p: Plan) => {
-                const prices = p.tiers
-                  .filter((t) => !t.isFirstMonthOnly && !t.discontinuedForNewSales)
-                  .map((t) => t.firstMonthPrice)
-                  .filter((x): x is number => x != null && Number.isFinite(x))
-                return prices.length ? Math.min(...prices) : Infinity
-              }
-              const fa = minFirstMonth(a)
-              const fb = minFirstMonth(b)
+              const fa = lowestFirstMonthInPlan(a) ?? Infinity
+              const fb = lowestFirstMonthInPlan(b) ?? Infinity
               if (fa !== fb) return fa - fb
             }
           }

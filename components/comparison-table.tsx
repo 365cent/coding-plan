@@ -1,6 +1,11 @@
 "use client"
 
-import { type Plan, purchasableRegularTiers, tierComparableMonthly } from "@/lib/plans-data"
+import {
+  type Plan,
+  lowestFirstMonthInPlan,
+  purchasableRegularTiers,
+  tierComparableMonthly,
+} from "@/lib/plans-data"
 import { ExternalLink } from "lucide-react"
 import Image from "next/image"
 
@@ -53,13 +58,15 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
             const buyUrl = plan.links.affiliate ?? plan.links.official
             const standardMonthlyPrice = baseTier ? tierComparableMonthly(baseTier) : undefined
             const firstMonthPrice = baseTier?.firstMonthPrice
-            const buyDisplayPrice = firstMonthPrice ?? standardMonthlyPrice
-            /** 按量包等 period「包」且含首月价时，购买列写「首月 ¥」；月付首月优惠仍只写「¥」（首月已在左侧列） */
+            const minFirstMonth = lowestFirstMonthInPlan(plan)
+            const buyDisplayPrice =
+              minFirstMonth !== undefined ? minFirstMonth : firstMonthPrice ?? standardMonthlyPrice
+            /** 按量包且存在任一档首月价时，购买列写「首月 ¥」；月付仍只写「¥」 */
             const buyPriceLabel =
               buyDisplayPrice != null
-                ? firstMonthPrice === 0
+                ? buyDisplayPrice === 0
                   ? "首月免费"
-                  : baseTier?.period === "包" && firstMonthPrice !== undefined
+                  : baseTier?.period === "包" && minFirstMonth !== undefined
                     ? `首月 ¥${buyDisplayPrice}`
                     : `¥${buyDisplayPrice}`
                 : "—"
@@ -104,10 +111,10 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
                 </th>
                 <td className="px-4 py-3 whitespace-nowrap">
                   {baseTier?.period === "包" &&
-                  firstMonthPrice != null &&
-                  firstMonthPrice > 0 ? (
+                  minFirstMonth != null &&
+                  minFirstMonth > 0 ? (
                     <>
-                      <span className="font-semibold text-primary">首月 ¥{firstMonthPrice}</span>
+                      <span className="font-semibold text-primary">首月 ¥{minFirstMonth}</span>
                       <span className="text-xs text-muted-foreground">/包</span>
                     </>
                   ) : (
@@ -123,13 +130,17 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
                   )}
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">
-                  {baseTier?.firstMonthPrice !== undefined ? (
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-primary font-medium text-xs">首月 ¥{baseTier.firstMonthPrice}</span>
-                      {baseTier?.secondMonthPrice !== undefined && (
-                        <span className="text-muted-foreground text-xs">次月 ¥{baseTier.secondMonthPrice}</span>
-                      )}
-                    </div>
+                  {minFirstMonth !== undefined ? (
+                    minFirstMonth === 0 ? (
+                      <span className="text-primary font-medium text-xs">首月免费</span>
+                    ) : (
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-primary font-medium text-xs">首月 ¥{minFirstMonth}</span>
+                        {baseTier?.secondMonthPrice !== undefined && (
+                          <span className="text-muted-foreground text-xs">次月 ¥{baseTier.secondMonthPrice}</span>
+                        )}
+                      </div>
+                    )
                   ) : (
                     <span className="text-muted-foreground">-</span>
                   )}

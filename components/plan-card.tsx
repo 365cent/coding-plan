@@ -1,6 +1,11 @@
 "use client"
 
-import { type Plan, purchasableRegularTiers, tierComparableMonthly } from "@/lib/plans-data"
+import {
+  type Plan,
+  lowestFirstMonthInPlan,
+  purchasableRegularTiers,
+  tierComparableMonthly,
+} from "@/lib/plans-data"
 import { ShoppingCart } from "lucide-react"
 import Image from "next/image"
 
@@ -27,11 +32,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
     return best
   })()
   const lowestPrice = lowestPriceInfo?.monthly ?? Infinity
-  const lowestFirst = pricingTiers.reduce<number | undefined>((min, t) => {
-    if (t.firstMonthPrice === undefined) return min
-    if (min === undefined) return t.firstMonthPrice
-    return Math.min(min, t.firstMonthPrice)
-  }, undefined)
+  const lowestFirst = lowestFirstMonthInPlan(plan)
 
   const lowestSecond = pricingTiers.reduce<number | undefined>((min, t) => {
     if (t.secondMonthPrice === undefined) return min
