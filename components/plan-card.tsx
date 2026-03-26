@@ -141,12 +141,6 @@ export function PlanCard({ plan }: { plan: Plan }) {
           )}
         </div>
 
-        {plan.notice && (
-          <p className="text-[11px] text-amber-700 dark:text-amber-500/90 leading-snug mt-3 border border-amber-500/25 bg-amber-500/10 rounded-md px-2 py-1.5">
-            {plan.notice}
-          </p>
-        )}
-
         {/* Tags */}
         <div className="flex flex-wrap gap-1.5 mt-3">
           <span className="px-1.5 py-0.5 rounded-sm bg-muted text-[10px] font-medium text-muted-foreground">
@@ -263,6 +257,12 @@ export function PlanCard({ plan }: { plan: Plan }) {
         <p className="text-xs text-muted-foreground leading-relaxed max-h-[44px] overflow-hidden">
           {plan.tools.join(" / ")}
         </p>
+
+        {plan.notice && (
+          <p className="text-[11px] text-amber-700 dark:text-amber-500/90 leading-snug mt-2 border border-amber-500/25 bg-amber-500/10 rounded-md px-2 py-1.5">
+            {plan.notice}
+          </p>
+        )}
       </div>
 
       {/* Order CTA (always present) */}

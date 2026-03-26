@@ -485,8 +485,6 @@ export const plans: Plan[] = [
     tools: ["Claude Code", "OpenCode", "OpenClaw", "Roo Code", "Cursor"],
     toolCount: 5,
     tags: ["多模型", "工具共享额度", "首月优惠"],
-    notice:
-      "仅限在指定AI编程工具中使用，严禁用于常规API调用/自动化脚本等非交互式批量场景；误用可能导致订阅暂停或Key封禁（官方规则）。",
   },
   {
     id: "baidu",
