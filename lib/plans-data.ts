@@ -76,7 +76,7 @@ export const plans: Plan[] = [
     product: "百炼 Coding Plan",
     category: "国内大厂",
     links: {
-      official: "https://help.aliyun.com/zh/model-studio/coding-plan",
+      official: "https://www.aliyun.com/benefit/scene/codingplan",
       affiliate: "https://www.aliyun.com/benefit/ai/aistar?clubBiz=subTask..12440021..10263..",
     },
     logo: { src: "/logos/qwen.png", alt: "通义千问" },
