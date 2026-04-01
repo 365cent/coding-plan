@@ -163,6 +163,7 @@ export function PingContent() {
   const [progress, setProgress] = useState(0)
   const [filter, setFilter] = useState<FilterMode>("all")
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null)
+  const [activeUrls, setActiveUrls] = useState<Set<string>>(new Set())
   const abortRef = useRef(false)
   const runAbortRef = useRef<AbortController | null>(null)
   const copiedTimerRef = useRef<number | null>(null)
@@ -278,6 +279,7 @@ export function PingContent() {
     setTestCompleted(false)
     setResults([])
     setProgress(0)
+    setActiveUrls(new Set())
     const resultByIndex: Array<PingResult | undefined> = new Array(ENDPOINTS.length)
     let nextIndex = 0
     let completed = 0
@@ -287,7 +289,18 @@ export function PingContent() {
         const i = nextIndex
         nextIndex += 1
         if (i >= ENDPOINTS.length) return
+        const endpointUrl = ENDPOINTS[i].url
+        setActiveUrls((prev) => {
+          const next = new Set(prev)
+          next.add(endpointUrl)
+          return next
+        })
         const res = await testEndpoint(ENDPOINTS[i], runSignal)
+        setActiveUrls((prev) => {
+          const next = new Set(prev)
+          next.delete(endpointUrl)
+          return next
+        })
         if (abortRef.current) return
         resultByIndex[i] = res
         completed += 1
@@ -303,6 +316,7 @@ export function PingContent() {
     if (!abortRef.current && completed === ENDPOINTS.length) {
       setTestCompleted(true)
     }
+    setActiveUrls(new Set())
     runAbortRef.current = null
     setRunning(false)
   }, [])
@@ -310,6 +324,7 @@ export function PingContent() {
   const stop = useCallback(() => {
     abortRef.current = true
     runAbortRef.current?.abort()
+    setActiveUrls(new Set())
   }, [])
 
   const urlRegionMap = useMemo(() => {
@@ -441,7 +456,13 @@ export function PingContent() {
                   <div className="text-right">
                     <p className="text-[10px] text-muted-foreground">{testCompleted ? `#${idx + 1}` : "未排名"}</p>
                     <p className="text-xs font-medium text-foreground">
-                      {!result ? "未测试" : result.avg == null ? "超时" : `${result.avg} ms`}
+                      {!result
+                        ? activeUrls.has(endpoint.url)
+                          ? "测试中"
+                          : "未测试"
+                        : result.avg == null
+                          ? "超时"
+                          : `${result.avg} ms`}
                     </p>
                   </div>
 
@@ -626,7 +647,7 @@ export function PingContent() {
                           </div>
                         ) : (
                           <span className="text-xs text-muted-foreground">
-                            {!result ? "未测试" : "超时"}
+                            {!result ? (activeUrls.has(endpoint.url) ? "测试中" : "未测试") : "超时"}
                           </span>
                         )}
                       </td>
