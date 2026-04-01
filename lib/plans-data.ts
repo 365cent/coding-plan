@@ -83,8 +83,8 @@ export const plans: Plan[] = [
     notice:
       "自 2026-03-20 00:00:00（UTC+8）起，Lite 基础套餐停止接受新购；已购用户的使用、续费及套餐升级权益不变。",
     models: [
-      "qwen3.5-plus（推荐·支持图片理解）",
-      "kimi-k2.5（推荐·支持图片理解）",
+      "qwen3.5-plus",
+      "kimi-k2.5",
       "glm-5",
       "MiniMax-M2.5",
       "qwen3-max-2026-01-23",
@@ -201,7 +201,7 @@ export const plans: Plan[] = [
       affiliate: "https://www.bigmodel.cn/glm-coding?ic=R8RQ6LQCRJ",
     },
     logo: { src: "/logos/bigmodel.png", alt: "智谱AI" },
-    models: ["GLM-5", "GLM-4.7", "GLM-4.6"],
+    models: ["GLM-5.1", "GLM-5-Turbo", "GLM-4.7", "GLM-4.6", "GLM-4.5-Air", "GLM-5（Max/Pro）"],
     tiers: [
       {
         name: "Lite",
@@ -209,7 +209,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "~80 次对话",
         limitWeek: "~400 次对话",
-        notes: "MCP 100次/月, 不支持GLM-5",
+        notes: "MCP 100次/月；基础模型全支持",
       },
       {
         name: "Pro",
@@ -217,7 +217,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "~400 次对话",
         limitWeek: "~2,000 次对话",
-        notes: "MCP 1,000次/月, GLM-5 消耗3倍额度",
+        notes: "MCP 1,000次/月；含 GLM-5",
       },
       {
         name: "Max",
@@ -225,7 +225,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "~1,600 次对话",
         limitWeek: "~8,000 次对话",
-        notes: "MCP 4,000次/月, 高峰优先",
+        notes: "MCP 4,000次/月，高峰优先；含 GLM-5",
       },
     ],
     billingUnit: "请求次数",

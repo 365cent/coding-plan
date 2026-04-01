@@ -110,24 +110,15 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
                   </div>
                 </th>
                 <td className="px-4 py-3 whitespace-nowrap">
-                  {baseTier?.period === "包" &&
-                  minFirstMonth != null &&
-                  minFirstMonth > 0 ? (
-                    <>
-                      <span className="font-semibold text-primary">首月 ¥{minFirstMonth}</span>
-                      <span className="text-xs text-muted-foreground">/包</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="font-semibold text-foreground">
-                        {"¥"}{standardMonthlyPrice ?? "-"}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {baseTier?.period === "包" ? "/包" : "/月"}
-                        {baseTier?.period === "季" ? "(季付)" : baseTier?.period === "年" ? "(年付)" : ""}
-                      </span>
-                    </>
-                  )}
+                  <>
+                    <span className="font-semibold text-foreground">
+                      {"¥"}{standardMonthlyPrice ?? "-"}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {baseTier?.period === "包" ? "/包" : "/月"}
+                      {baseTier?.period === "季" ? "(季付)" : baseTier?.period === "年" ? "(年付)" : ""}
+                    </span>
+                  </>
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">
                   {minFirstMonth !== undefined ? (

@@ -237,7 +237,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
         <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-2">
           支持模型
         </p>
-        <div className="flex flex-wrap gap-1 max-h-[56px] overflow-hidden">
+        <div className="flex flex-wrap content-start gap-1 h-[56px] overflow-y-auto overflow-x-hidden pr-1">
           {plan.models.map((m) => (
             <span
               key={m}
