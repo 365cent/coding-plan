@@ -28,7 +28,6 @@ const sortOptions = [
 const categoryOptions: { value: PlanCategory | ""; label: string }[] = [
   { value: "", label: "全部" },
   { value: "国内大厂", label: "国内大厂" },
-  { value: "御三家", label: "御三家" },
   { value: "其他", label: "其他" },
 ]
 
@@ -44,7 +43,7 @@ export function FilterBar({
   onSortByChange,
 }: FilterBarProps) {
   return (
-    <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
+    <div className="sticky top-14 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="max-w-7xl mx-auto px-6 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Search */}
         <div role="search" className="relative flex-1 max-w-sm">
@@ -60,7 +59,8 @@ export function FilterBar({
           {search && (
             <button
               onClick={() => onSearchChange("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              aria-label="清空搜索"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
@@ -74,7 +74,8 @@ export function FilterBar({
               <button
                 key={opt.value || "all"}
                 onClick={() => onCategoryChange(opt.value)}
-                className={`h-8 px-2.5 inline-flex items-center rounded-lg text-xs font-medium whitespace-nowrap transition-all border border-transparent ${
+                aria-pressed={categoryFilter === opt.value}
+                className={`h-8 px-2.5 inline-flex items-center rounded-lg text-xs font-medium whitespace-nowrap transition-all border border-transparent cursor-pointer ${
                   categoryFilter === opt.value
                     ? "bg-primary text-primary-foreground"
                     : "bg-background/60 text-foreground border-border/70 hover:bg-accent"

@@ -4,6 +4,8 @@ import "./globals.css"
 import { FAQPageJsonLd, ItemListJsonLd, WebSiteJsonLd } from "@/components/json-ld"
 import { plans } from "@/lib/plans-data"
 import { getMetadataBase } from "@/lib/site-origin"
+import { TopFloatingHeader } from "@/components/top-floating-header"
+import { SiteFooter } from "@/components/site-footer"
 
 const siteName = "国内Coding Plan对比"
 const titleDefault = "国内 Coding Plan 性价比排行 2026 | 价格·模型·用量对比"
@@ -101,7 +103,9 @@ export default function RootLayout({
         <WebSiteJsonLd />
         <ItemListJsonLd plans={plans} />
         <FAQPageJsonLd />
+        <TopFloatingHeader />
         {children}
+        <SiteFooter />
       </body>
     </html>
   )

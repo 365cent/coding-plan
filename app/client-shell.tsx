@@ -1,6 +1,7 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useState, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import {
   type Plan,
   type PlanCategory,
@@ -13,14 +14,23 @@ import { ViewToggle } from "@/components/view-toggle"
 import { PlanCard } from "@/components/plan-card"
 import { ComparisonTable } from "@/components/comparison-table"
 
-const CATEGORY_ORDER: PlanCategory[] = ["国内大厂", "御三家", "其他"]
+const CATEGORY_ORDER: PlanCategory[] = ["国内大厂", "其他"]
 
-export function ClientShell({ plans }: { plans: Plan[] }) {
-  const [search, setSearch] = useState("")
+function ClientShellInner({ plans }: { plans: Plan[] }) {
+  const searchParams = useSearchParams()
+  const initialSearch = searchParams.get("q") || ""
+  const [search, setSearch] = useState(initialSearch)
   const [billingFilter, setBillingFilter] = useState("全部")
   const [categoryFilter, setCategoryFilter] = useState<PlanCategory | "">("")
   const [sortBy, setSortBy] = useState("default")
-  const [view, setView] = useState<"cards" | "table">("table")
+  const isByProvider = initialSearch.startsWith("by:provider ")
+  const [view, setView] = useState<"cards" | "table">(isByProvider ? "cards" : "table")
+
+  // Sync search state if URL changes (optional, but good practice)
+  useEffect(() => {
+    const q = searchParams.get("q")
+    setSearch(q ?? "")
+  }, [searchParams])
 
   const billingOptions = useMemo(() => {
     const preferred = ["全部", "API请求", "按量计费", "请求次数", "Token"] as const
@@ -38,14 +48,19 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
     }
 
     if (search) {
-      const q = search.toLowerCase()
-      result = result.filter(
-        (p) =>
-          p.company.toLowerCase().includes(q) ||
-          p.product.toLowerCase().includes(q) ||
-          p.models.some((m) => m.toLowerCase().includes(q)) ||
-          p.tools.some((t) => t.toLowerCase().includes(q)),
-      )
+      if (search.startsWith("by:provider ")) {
+        const providerName = search.slice(12).trim()
+        result = result.filter((p) => p.company === providerName)
+      } else {
+        const q = search.toLowerCase()
+        result = result.filter(
+          (p) =>
+            p.company.toLowerCase().includes(q) ||
+            p.product.toLowerCase().includes(q) ||
+            p.models.some((m) => m.toLowerCase().includes(q)) ||
+            p.tools.some((t) => t.toLowerCase().includes(q)),
+        )
+      }
     }
 
     if (billingFilter !== "全部") {
@@ -94,7 +109,7 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
             const isBig3 = (p: Plan) =>
               p.company === "腾讯云" || p.company === "阿里云" || p.company === "字节跳动"
 
-            const groupRank = (p: Plan) => (isBig3(p) ? 0 : p.category === "御三家" ? 1 : 2)
+            const groupRank = (p: Plan) => (isBig3(p) ? 0 : 1)
 
             const ga = groupRank(a)
             const gb = groupRank(b)
@@ -173,3 +188,10 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
   )
 }
 
+export function ClientShell({ plans }: { plans: Plan[] }) {
+  return (
+    <Suspense fallback={<div className="min-h-[400px]" />}>
+      <ClientShellInner plans={plans} />
+    </Suspense>
+  )
+}

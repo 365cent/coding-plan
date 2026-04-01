@@ -1,4 +1,4 @@
-export type PlanCategory = "国内大厂" | "御三家" | "其他"
+export type PlanCategory = "国内大厂" | "其他"
 
 export type Plan = {
   id: string
@@ -195,7 +195,7 @@ export const plans: Plan[] = [
     id: "glm",
     company: "智谱AI",
     product: "GLM Coding Plan",
-    category: "御三家",
+    category: "其他",
     links: {
       official: "https://www.bigmodel.cn/glm-coding",
       affiliate: "https://www.bigmodel.cn/glm-coding?ic=R8RQ6LQCRJ",
@@ -287,7 +287,7 @@ export const plans: Plan[] = [
     id: "minimax",
     company: "MiniMax",
     product: "MiniMax Token Plan",
-    category: "御三家",
+    category: "其他",
     links: {
       official: "https://platform.minimaxi.com/subscribe/token-plan",
       affiliate: "https://platform.minimaxi.com/subscribe/token-plan?code=uQkm#YTxQ#SGio4O&source=link",
@@ -397,7 +397,7 @@ export const plans: Plan[] = [
     id: "tencent",
     company: "腾讯云",
     product: "腾讯云 Coding Plan",
-    category: "国内大厂",
+    category: "其他",
     links: { official: "https://cloud.tencent.com/act/pro/codingplan" },
     logo: { src: "/logos/tencentcloud.png", alt: "腾讯云" },
     models: ["Tencent HY 2.0", "GLM-5", "Kimi-K2.5", "MiniMax-M2.5"],
@@ -440,7 +440,7 @@ export const plans: Plan[] = [
     id: "jdcloud",
     company: "京东云",
     product: "JoyBuilder Coding Plan",
-    category: "国内大厂",
+    category: "其他",
     links: { official: "https://www.jdcloud.com/cn/pages/codingplan" },
     logo: { src: "/logos/jd.png", alt: "京东" },
     models: [

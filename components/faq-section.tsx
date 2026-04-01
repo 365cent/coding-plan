@@ -1,4 +1,9 @@
-const faqItems = [
+export type FaqItem = {
+  q: string
+  a: string
+}
+
+const defaultFaqItems: FaqItem[] = [
   {
     q: "国内哪家AI Coding Plan性价比最高？",
     a: "没有单一“最划算”。建议用续费价（标准价）做基准，再结合你的使用强度（5小时/周/月限额）和模型/工具需求选择；首月优惠只适合短期体验，不适合长期对比。",
@@ -25,23 +30,23 @@ const faqItems = [
   },
 ]
 
-export function FaqSection() {
+export function FaqSection({ items = defaultFaqItems }: { items?: FaqItem[] }) {
   return (
     <section
-      id="faq-section"
+      id="faq"
       aria-labelledby="faq-heading"
       className="max-w-7xl mx-auto px-6 mt-10"
     >
-      <h2 id="faq-heading" className="text-base font-semibold text-foreground mb-3">
+      <h2 id="faq-heading" className="text-base font-semibold text-foreground mb-3 scroll-mt-24">
         常见问题
       </h2>
       <div className="divide-y divide-border rounded-xl border border-border bg-card">
-        {faqItems.map(({ q, a }) => (
-          <details key={q} className="p-4">
-            <summary className="cursor-pointer list-none">
-              <h3 className="text-sm font-medium text-foreground inline">{q}</h3>
+        {items.map(({ q, a }) => (
+          <details key={q} className="p-4 group">
+            <summary className="cursor-pointer list-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md">
+              <h3 className="text-sm font-medium text-foreground inline group-hover:text-primary transition-colors">{q}</h3>
             </summary>
-            <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{a}</p>
+            <p className="mt-2 text-sm text-muted-foreground leading-relaxed animate-in fade-in slide-in-from-top-1">{a}</p>
           </details>
         ))}
       </div>
