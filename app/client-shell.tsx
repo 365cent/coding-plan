@@ -33,7 +33,7 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
   }, [searchParams])
 
   const billingOptions = useMemo(() => {
-    const preferred = ["全部", "API请求", "按量计费", "请求次数", "Token"] as const
+    const preferred = ["全部", "API请求", "按量计费", "Token计费", "积分制", "请求次数"] as const
     const set = new Set(plans.map((p) => p.billingUnit))
     const rest = Array.from(set).filter((x) => !preferred.includes(x as any))
     return [...preferred.filter((x) => x === "全部" || set.has(x)), ...rest]
