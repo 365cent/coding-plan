@@ -2,6 +2,7 @@
 
 import {
   type Plan,
+  type Tier,
   lowestFirstMonthInPlan,
   purchasableRegularTiers,
   tierComparableMonthly,
@@ -13,6 +14,18 @@ function formatMoney(value: number) {
   if (!Number.isFinite(value)) return "—"
   if (Number.isInteger(value)) return String(value)
   return String(Math.round(value * 10) / 10)
+}
+
+/** 套餐档位限额一行：跳过「-」「—」占位，不前置多余分隔符 */
+function tierLimitsLine(tier: Tier): string {
+  const parts: string[] = []
+  for (const raw of [tier.limit5h, tier.limitWeek, tier.limitMonth]) {
+    if (raw == null) continue
+    const s = raw.trim()
+    if (!s || s === "-" || s === "—") continue
+    parts.push(raw.trim())
+  }
+  return parts.join(" | ") || "—"
 }
 
 export function PlanCard({ plan }: { plan: Plan }) {
@@ -99,33 +112,15 @@ export function PlanCard({ plan }: { plan: Plan }) {
           </div>
         </div>
 
-        <div className="flex items-baseline gap-1 mt-3">
-          {lowestFirst !== undefined ? (
+        <div className="flex items-baseline gap-1 mt-3 flex-wrap">
+          {Number.isFinite(lowestPrice) ? (
             <>
-              {lowestFirst === 0 ? (
-                <span className="text-2xl font-bold text-primary">首月免费</span>
-              ) : (
-                <>
-                  <span className="text-2xl font-bold text-primary">{"¥"}{formatMoney(lowestFirst)}</span>
-                  <span className="text-sm text-muted-foreground">/首月</span>
-                </>
-              )}
-              {lowestSecond !== undefined && (
-                <span className="text-sm text-muted-foreground ml-2">次月 {"¥"}{formatMoney(lowestSecond)}</span>
-              )}
-              {(lowestSecond !== undefined ||
-                (Number.isFinite(lowestPrice) && lowestFirst !== undefined && lowestPrice !== lowestFirst)) && (
-                <span className="text-sm text-muted-foreground ml-2">续费 {"¥"}{formatMoney(lowestPrice)}/月</span>
-              )}
-            </>
-          ) : (
-            <>
-              {Number.isFinite(lowestPrice) && lowestPrice === 0 ? (
+              {lowestPrice === 0 && lowestFirst === undefined ? (
                 <span className="text-2xl font-bold text-primary">首月免费</span>
               ) : (
                 <>
                   <span className="text-2xl font-bold text-foreground">
-                    {Number.isFinite(lowestPrice) ? `¥${formatMoney(lowestPrice)}` : "—"}
+                    ¥{formatMoney(lowestPrice)}
                   </span>
                   <span className="text-sm text-muted-foreground">
                     {lowestPriceInfo?.period === "包" ? "/包" : "/月"}
@@ -137,6 +132,24 @@ export function PlanCard({ plan }: { plan: Plan }) {
                   </span>
                 </>
               )}
+            </>
+          ) : lowestFirst !== undefined ? (
+            <>
+              {lowestFirst === 0 ? (
+                <span className="text-2xl font-bold text-primary">首月免费</span>
+              ) : (
+                <>
+                  <span className="text-2xl font-bold text-primary">¥{formatMoney(lowestFirst)}</span>
+                  <span className="text-sm text-muted-foreground">/首月</span>
+                </>
+              )}
+              {lowestSecond !== undefined && (
+                <span className="text-sm text-muted-foreground ml-2">次月 ¥{formatMoney(lowestSecond)}</span>
+              )}
+            </>
+          ) : (
+            <>
+              <span className="text-2xl font-bold text-foreground">—</span>
             </>
           )}
         </div>
@@ -194,9 +207,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
                         struck ? "line-through text-muted-foreground/80" : "text-muted-foreground"
                       }`}
                     >
-                      {tier.limit5h}
-                      {tier.limitWeek && <span>{" | "}{tier.limitWeek}</span>}
-                      {tier.limitMonth && <span>{" | "}{tier.limitMonth}</span>}
+                      {tierLimitsLine(tier)}
                     </p>
                   </div>
                   <div
@@ -265,20 +276,45 @@ export function PlanCard({ plan }: { plan: Plan }) {
         )}
       </div>
 
+      {plan.apiBases && plan.apiBases.length > 0 && (
+        <div className="px-5 pb-4 space-y-2 border-t border-border/60 pt-3">
+          <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+            API 基址
+          </p>
+          <ul className="space-y-2">
+            {plan.apiBases.map(({ label, url }) => (
+              <li key={url} className="text-[11px]">
+                {label?.trim() ? (
+                  <span className="text-muted-foreground">{label}</span>
+                ) : null}
+                <p
+                  className={`font-mono text-foreground/90 break-all leading-snug ${label?.trim() ? "mt-0.5" : ""}`}
+                >
+                  {url}
+                </p>
+              </li>
+            ))}
+          </ul>
+          {plan.apiKeyHint && (
+            <p className="text-[11px] text-muted-foreground leading-snug pt-0.5">{plan.apiKeyHint}</p>
+          )}
+        </div>
+      )}
+
       {/* Order CTA (always present) */}
       <div className="px-5 pb-5 -mt-2 mt-auto">
         <div className="flex items-center justify-between gap-3">
           <p className="text-sm font-semibold text-foreground">
-            {lowestDealPrice !== undefined
-              ? lowestDealPrice === 0
-                ? "首月免费"
-                : `首月 ¥${formatMoney(lowestDealPrice)}`
-              : Number.isFinite(lowestPrice)
-                ? lowestPrice === 0
-                  ? "免费体验"
-                  : lowestPriceInfo?.period === "包"
-                    ? `¥${formatMoney(lowestPrice)}/包`
-                    : `¥${formatMoney(lowestPrice)}/月`
+            {Number.isFinite(lowestPrice)
+              ? lowestPrice === 0
+                ? "免费体验"
+                : lowestPriceInfo?.period === "包"
+                  ? `¥${formatMoney(lowestPrice)}/包`
+                  : `¥${formatMoney(lowestPrice)}/月`
+              : lowestDealPrice !== undefined
+                ? lowestDealPrice === 0
+                  ? "首月免费"
+                  : `首月 ¥${formatMoney(lowestDealPrice)}`
                 : "免费体验"}
           </p>
           <a

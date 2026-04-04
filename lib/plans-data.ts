@@ -21,6 +21,10 @@ export type Plan = {
   tags: string[]
   /** 重要说明（展示在卡片内，如停售公告） */
   notice?: string
+  /** API 基址（展示在套餐卡片内，便于配置 CLI）；label 可选 */
+  apiBases?: readonly { label?: string; url: string }[]
+  /** API Key 格式与获取说明（可选） */
+  apiKeyHint?: string
   yearlyPrice?: number      // 年付价格 (e.g., Kimi ¥468/年)
   quarterlyPrice?: number   // 季付价格
 }
@@ -348,6 +352,65 @@ export const plans: Plan[] = [
     tools: ["Claude Code", "Roo Code", "Kilo Code", "Cline", "Codex CLI", "OpenCode", "Droid", "TRAE", "Grok CLI", "Cursor"],
     toolCount: 10,
     tags: ["Token Plan", "M2.7", "100+ TPS"],
+  },
+  {
+    id: "xiaomi-mimo",
+    company: "小米",
+    product: "MiMo Token Plan",
+    category: "其他",
+    links: {
+      official: "https://platform.xiaomimimo.com/",
+    },
+    logo: { src: "/logos/xiaomi-mimo.png", alt: "Xiaomi MiMo" },
+    apiBases: [
+      { label: "国内", url: "https://token-plan-cn.xiaomimimo.com/v1" },
+      { label: "国际站", url: "https://token-plan-sgp.xiaomimimo.com/v1" },
+    ],
+    apiKeyHint:
+      "Key 格式：tp-xxxxx。订阅成功后可在 Subscription 获取专属 Base URL 与 API Key。",
+    models: ["MiMo-V2-Omni", "MiMo-V2-Pro", "MiMo-V2-TTS"],
+    tiers: [
+      {
+        name: "Lite",
+        price: 39,
+        firstMonthPrice: 34.3,
+        period: "月",
+        limit5h: "-",
+        limitMonth: "60M Credits",
+        notes: "约 120 个中等～复杂任务；海外 $6/月",
+      },
+      {
+        name: "Standard",
+        price: 99,
+        firstMonthPrice: 87.1,
+        period: "月",
+        limit5h: "-",
+        limitMonth: "200M Credits",
+        notes: "约 400 个中等～复杂任务；海外 $16/月",
+      },
+      {
+        name: "Pro",
+        price: 329,
+        firstMonthPrice: 289.5,
+        period: "月",
+        limit5h: "-",
+        limitMonth: "700M Credits",
+        notes: "约 1,400 个中等～复杂任务；海外 $50/月",
+      },
+      {
+        name: "Max",
+        price: 659,
+        firstMonthPrice: 579.9,
+        period: "月",
+        limit5h: "-",
+        limitMonth: "1600M Credits",
+        notes: "约 3,200 个中等～复杂任务；海外 $100/月",
+      },
+    ],
+    billingUnit: "Token",
+    tools: ["Claude Code", "OpenClaw", "OpenCode", "Kilo Code", "Cline"],
+    toolCount: 5,
+    tags: ["Token Plan", "Credit 点数", "无5小时限额", "首购88折", "新模型内测优先"],
   },
   {
     id: "infini",
