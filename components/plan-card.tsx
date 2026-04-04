@@ -60,6 +60,28 @@ export function PlanCard({ plan }: { plan: Plan }) {
     return Math.min(min, p)
   }, undefined)
 
+  /** 底部 CTA：取最低首月价及对应档位周期（仅统计明确配置了 firstMonthPrice 的档） */
+  const lowestFirstMonthTier = (() => {
+    let best: { price: number; period: Tier["period"] } | undefined
+    for (const t of plan.tiers) {
+      if (t.discontinuedForNewSales) continue
+      if (t.firstMonthPrice === undefined) continue
+      if (!Number.isFinite(t.firstMonthPrice)) continue
+      if (best === undefined || t.firstMonthPrice < best.price) {
+        best = { price: t.firstMonthPrice, period: t.period }
+      }
+    }
+    return best
+  })()
+
+  const ctaPriceSuffix = (period: Tier["period"]) => {
+    if (period === "包") return "/包"
+    if (period === "月") return "/月"
+    if (period === "季") return "/季"
+    if (period === "年") return "/年"
+    return ""
+  }
+
   return (
     <div
       data-plan-id={plan.id}
@@ -276,46 +298,46 @@ export function PlanCard({ plan }: { plan: Plan }) {
         )}
       </div>
 
-      {plan.apiBases && plan.apiBases.length > 0 && (
-        <div className="px-5 pb-4 space-y-2 border-t border-border/60 pt-3">
-          <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
-            API 基址
-          </p>
-          <ul className="space-y-2">
-            {plan.apiBases.map(({ label, url }) => (
-              <li key={url} className="text-[11px]">
-                {label?.trim() ? (
-                  <span className="text-muted-foreground">{label}</span>
-                ) : null}
-                <p
-                  className={`font-mono text-foreground/90 break-all leading-snug ${label?.trim() ? "mt-0.5" : ""}`}
-                >
-                  {url}
-                </p>
-              </li>
-            ))}
-          </ul>
-          {plan.apiKeyHint && (
-            <p className="text-[11px] text-muted-foreground leading-snug pt-0.5">{plan.apiKeyHint}</p>
-          )}
-        </div>
-      )}
-
       {/* Order CTA (always present) */}
       <div className="px-5 pb-5 -mt-2 mt-auto">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold text-foreground">
-            {Number.isFinite(lowestPrice)
-              ? lowestPrice === 0
-                ? "免费体验"
-                : lowestPriceInfo?.period === "包"
-                  ? `¥${formatMoney(lowestPrice)}/包`
-                  : `¥${formatMoney(lowestPrice)}/月`
-              : lowestDealPrice !== undefined
-                ? lowestDealPrice === 0
-                  ? "首月免费"
-                  : `首月 ¥${formatMoney(lowestDealPrice)}`
-                : "免费体验"}
+          <p className="text-sm font-semibold flex flex-wrap items-baseline gap-x-0">
+            {lowestFirstMonthTier ? (
+              lowestFirstMonthTier.price === 0 ? (
+                <span className="text-foreground">首月免费</span>
+              ) : (
+                <>
+                  <span className="text-foreground">首月 </span>
+                  <span className="text-primary">¥{formatMoney(lowestFirstMonthTier.price)}</span>
+                  <span className="text-foreground">{ctaPriceSuffix(lowestFirstMonthTier.period)}</span>
+                </>
+              )
+            ) : Number.isFinite(lowestPrice) ? (
+              lowestPrice === 0 ? (
+                <span className="text-foreground">免费体验</span>
+              ) : lowestPriceInfo?.period === "包" ? (
+                <>
+                  <span className="text-primary">¥{formatMoney(lowestPrice)}</span>
+                  <span className="text-foreground">/包</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-primary">¥{formatMoney(lowestPrice)}</span>
+                  <span className="text-foreground">/月</span>
+                </>
+              )
+            ) : lowestDealPrice !== undefined ? (
+              lowestDealPrice === 0 ? (
+                <span className="text-foreground">首月免费</span>
+              ) : (
+                <>
+                  <span className="text-foreground">首月 </span>
+                  <span className="text-primary">¥{formatMoney(lowestDealPrice)}</span>
+                </>
+              )
+            ) : (
+              <span className="text-foreground">免费体验</span>
+            )}
           </p>
           <a
             href={buyUrl}

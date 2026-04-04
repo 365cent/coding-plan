@@ -21,10 +21,6 @@ export type Plan = {
   tags: string[]
   /** 重要说明（展示在卡片内，如停售公告） */
   notice?: string
-  /** API 基址（展示在套餐卡片内，便于配置 CLI）；label 可选 */
-  apiBases?: readonly { label?: string; url: string }[]
-  /** API Key 格式与获取说明（可选） */
-  apiKeyHint?: string
   yearlyPrice?: number      // 年付价格 (e.g., Kimi ¥468/年)
   quarterlyPrice?: number   // 季付价格
 }
@@ -246,7 +242,7 @@ export const plans: Plan[] = [
     category: "其他",
     links: { official: "https://www.kimi.com/membership/pricing" },
     logo: { src: "/logos/kimi.png", alt: "Kimi" },
-    models: ["Kimi K2.5"],
+    models: ["Kimi K2.5", "Kimi K2 Thinking"],
     tiers: [
       {
         name: "Andante",
@@ -284,7 +280,7 @@ export const plans: Plan[] = [
     billingUnit: "Token计费",
     tools: ["Kimi Code CLI", "Kimi Code for VS Code", "Claude Code", "Roo Code"],
     toolCount: 4,
-    tags: ["256K上下文", "含会员权益", "7天滚动刷新", "仅K2.5"],
+    tags: ["256K上下文", "含会员权益", "7天滚动刷新", "K2.5 / K2 Thinking"],
     yearlyPrice: 468, // Andante年付价格
   },
   {
@@ -338,12 +334,6 @@ export const plans: Plan[] = [
       official: "https://platform.xiaomimimo.com/",
     },
     logo: { src: "/logos/xiaomi.png", alt: "小米" },
-    apiBases: [
-      { label: "国内", url: "https://token-plan-cn.xiaomimimo.com/v1" },
-      { label: "国际站", url: "https://token-plan-sgp.xiaomimimo.com/v1" },
-    ],
-    apiKeyHint:
-      "Key 格式：tp-xxxxx。订阅成功后可在 Subscription 获取专属 Base URL 与 API Key。",
     models: ["MiMo-V2-Omni", "MiMo-V2-Pro", "MiMo-V2-TTS"],
     tiers: [
       {
