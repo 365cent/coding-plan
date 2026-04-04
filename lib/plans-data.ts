@@ -331,7 +331,7 @@ export const plans: Plan[] = [
     product: "MiMo Token Plan",
     category: "其他",
     links: {
-      official: "https://platform.xiaomimimo.com/",
+      official: "https://platform.xiaomimimo.com/#/token-plan",
     },
     logo: { src: "/logos/xiaomi.png", alt: "小米" },
     models: ["MiMo-V2-Omni", "MiMo-V2-Pro", "MiMo-V2-TTS"],
