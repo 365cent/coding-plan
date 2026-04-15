@@ -77,7 +77,7 @@ export const plans: Plan[] = [
     category: "国内大厂",
     links: {
       official: "https://www.aliyun.com/benefit/scene/codingplan",
-      affiliate: "https://www.aliyun.com/benefit/ai/aistar?clubBiz=subTask..12440021..10263..",
+      affiliate: "https://www.aliyun.com/benefit/scene/codingplan?source=5176.29345612&userCode=y44p2mtf",
     },
     logo: { src: "/logos/qwen.png", alt: "通义千问" },
     notice:
@@ -492,8 +492,11 @@ export const plans: Plan[] = [
     id: "tencent",
     company: "腾讯云",
     product: "腾讯云 Coding Plan",
-    category: "其他",
-    links: { official: "https://cloud.tencent.com/act/pro/codingplan" },
+    category: "国内大厂",
+    links: {
+      official: "https://cloud.tencent.com/act/pro/codingplan",
+      affiliate: "https://cloud.tencent.com/act/cps/redirect?redirect=38021&cps_key=b1b782d9eb899c792b44ce3dccf79759",
+    },
     logo: { src: "/logos/tencentcloud.png", alt: "腾讯云" },
     models: ["Tencent HY 2.0", "GLM-5", "Kimi-K2.5", "MiniMax-M2.5"],
     tiers: [
