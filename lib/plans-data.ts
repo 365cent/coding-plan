@@ -567,7 +567,7 @@ export const plans: Plan[] = [
   {
     id: "jdcloud",
     company: "京东云",
-    product: "JoyBuilder Coding Plan",
+    product: "京东云 Coding Plan",
     category: "其他",
     links: { official: "https://www.jdcloud.com/cn/pages/codingplan" },
     logo: { src: "/logos/jd.png", alt: "京东" },
@@ -584,7 +584,7 @@ export const plans: Plan[] = [
       {
         name: "Lite",
         price: 40,
-        firstMonthPrice: 7.9,
+        firstMonthPrice: 19.9,
         period: "月",
         limit5h: "~1,200 次",
         limitWeek: "~9,000 次",
@@ -593,12 +593,12 @@ export const plans: Plan[] = [
         limitWeekCount: 9000,
         limitMonthCount: 18000,
         notes:
-          "新客首月7.9元；每次提问可能触发多次模型调用，实际消耗与项目复杂度/是否开启深度思考有关（以控制台为准）",
+          "每天10:30限量开抢，每月最多18,000次请求；每次提问可能触发多次模型调用，实际消耗与项目复杂度/是否开启深度思考有关（以控制台为准）",
       },
       {
         name: "Pro",
         price: 200,
-        firstMonthPrice: 39.9,
+        firstMonthPrice: 99.9,
         period: "月",
         limit5h: "~6,000 次",
         limitWeek: "~45,000 次",
@@ -606,7 +606,7 @@ export const plans: Plan[] = [
         limit5hCount: 6000,
         limitWeekCount: 45000,
         limitMonthCount: 90000,
-        notes: "Lite 用量的 5 倍；新客首月39.9元（以控制台活动页面为准）",
+        notes: "Lite 用量的 5 倍；每天10:30限量开抢（以控制台活动页面为准）",
       },
     ],
     billingUnit: "API请求",

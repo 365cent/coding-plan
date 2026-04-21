@@ -45,7 +45,7 @@ const ENDPOINTS: Endpoint[] = [
   { provider: "UCloud", company: "UCloud 优刻得", product: "优云智算 Coding Plan", logoSrc: "/logos/ucloud.png", logoAlt: "UCloud", url: "https://api.modelverse.cn/v1", region: "domestic" },
   { provider: "千帆", company: "百度", product: "千帆 Coding Plan", logoSrc: "/logos/yiyan.png", logoAlt: "文心一言", url: "https://qianfan.baidubce.com/v2/coding", region: "domestic" },
   { provider: "科大讯飞", company: "科大讯飞", product: "讯飞星辰 Astron Coding Plan", logoSrc: "/logos/xfyun.png", logoAlt: "讯飞星辰", url: "https://maas-coding-api.cn-huabei-1.xf-yun.com/v2", region: "domestic" },
-  { provider: "京东云", company: "京东云", product: "JoyBuilder Coding Plan", logoSrc: "/logos/jd.png", logoAlt: "京东", url: "https://modelservice.jdcloud.com/coding/openai/v1", region: "domestic" },
+  { provider: "京东云", company: "京东云", product: "京东云 Coding Plan", logoSrc: "/logos/jd.png", logoAlt: "京东", url: "https://modelservice.jdcloud.com/coding/openai/v1", region: "domestic" },
   { provider: "快手 KwaiKAT", company: "快手", product: "KwaiKAT Coding Plan", logoSrc: "/logos/kuaishou.png", logoAlt: "快手", url: "https://wanqing.streamlakeapi.com/api/gateway/coding/v1", region: "domestic" },
   { provider: "联通云（贵阳）", company: "联通云（贵阳）", product: "Coding Plan", logoSrc: "/logos/cucloud.png", logoAlt: "联通云", url: "https://aigw-gzgy2.cucloud.cn:8443/v1", region: "domestic" },
   { provider: "联通云（济南）", company: "联通云（济南）", product: "Coding Plan", logoSrc: "/logos/cucloud.png", logoAlt: "联通云", url: "https://aigw-jnzs5.cucloud.cn:8443/v1", region: "domestic" },
