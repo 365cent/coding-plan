@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next"
 import Script from "next/script"
 import "./globals.css"
 import { FAQPageJsonLd, ItemListJsonLd, WebSiteJsonLd } from "@/components/json-ld"
-import { getAdSenseScriptSrc } from "@/lib/google-adsense"
 import { plans } from "@/lib/plans-data"
 import { getMetadataBase } from "@/lib/site-origin"
 import { TopFloatingHeader } from "@/components/top-floating-header"
@@ -88,6 +87,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9548862109530353"
+          crossOrigin="anonymous"
+        ></script>
+      </head>
       <body className="font-sans antialiased">
         <a
           href="#main-content"
@@ -100,12 +106,6 @@ export default function RootLayout({
           data-domain="coding.mcppla.net"
           src="/script.js"
           strategy="afterInteractive"
-        />
-        <Script
-          id="google-adsense-auto-ads"
-          src={getAdSenseScriptSrc()}
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
         />
         <WebSiteJsonLd />
         <ItemListJsonLd plans={plans} />
