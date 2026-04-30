@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation"
 import {
   type Plan,
   type PlanCategory,
-  lowestFirstMonthInPlan,
   purchasableRegularTiers,
   tierComparableMonthly,
 } from "@/lib/plans-data"
@@ -15,6 +14,12 @@ import { PlanCard } from "@/components/plan-card"
 import { ComparisonTable } from "@/components/comparison-table"
 
 const CATEGORY_ORDER: PlanCategory[] = ["国内大厂", "其他"]
+const DEFAULT_TABLE_LEADER_IDS = ["ark", "bailian", "tencent", "xiaomi-mimo"] as const
+
+function defaultLeaderRank(planId: string): number {
+  const idx = DEFAULT_TABLE_LEADER_IDS.indexOf(planId as (typeof DEFAULT_TABLE_LEADER_IDS)[number])
+  return idx === -1 ? Number.POSITIVE_INFINITY : idx
+}
 
 function ClientShellInner({ plans }: { plans: Plan[] }) {
   const searchParams = useSearchParams()
@@ -105,22 +110,10 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
 
       switch (sortBy) {
         case "default": {
-          if (!categoryFilter) {
-            const isBig3 = (p: Plan) =>
-              p.company === "腾讯云" || p.company === "阿里云" || p.company === "字节跳动"
-
-            const groupRank = (p: Plan) => (isBig3(p) ? 0 : 1)
-
-            const ga = groupRank(a)
-            const gb = groupRank(b)
-            if (ga !== gb) return ga - gb
-
-            // Within the first group (腾讯/阿里/字节), order by lowest first-month price（含新人档）.
-            if (ga === 0) {
-              const fa = lowestFirstMonthInPlan(a) ?? Infinity
-              const fb = lowestFirstMonthInPlan(b) ?? Infinity
-              if (fa !== fb) return fa - fb
-            }
+          const leaderA = defaultLeaderRank(a.id)
+          const leaderB = defaultLeaderRank(b.id)
+          if (leaderA !== leaderB) {
+            if (Number.isFinite(leaderA) || Number.isFinite(leaderB)) return leaderA - leaderB
           }
           const ia = originalIndex.get(a.id) ?? 0
           const ib = originalIndex.get(b.id) ?? 0
