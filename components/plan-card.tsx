@@ -28,6 +28,25 @@ function tierLimitsLine(tier: Tier): string {
   return parts.join(" | ") || "—"
 }
 
+function renderNoticeWithLinks(text: string) {
+  const parts = text.split(/(https?:\/\/[^\s]+)/g)
+  return parts.map((part, i) =>
+    /^https?:\/\/[^\s]+$/.test(part) ? (
+      <a
+        key={`${part}-${i}`}
+        href={part}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline underline-offset-2 hover:opacity-80 transition-opacity"
+      >
+        {part}
+      </a>
+    ) : (
+      <span key={`${i}-${part.slice(0, 8)}`}>{part}</span>
+    ),
+  )
+}
+
 export function PlanCard({ plan }: { plan: Plan }) {
   const regularTiers = plan.tiers.filter((t) => !t.isFirstMonthOnly)
   const pricingTiers = purchasableRegularTiers(plan)
@@ -293,7 +312,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
 
         {plan.notice && (
           <p className="text-[11px] text-amber-700 dark:text-amber-500/90 leading-snug mt-2 border border-amber-500/25 bg-amber-500/10 rounded-md px-2 py-1.5">
-            {plan.notice}
+            {renderNoticeWithLinks(plan.notice)}
           </p>
         )}
       </div>

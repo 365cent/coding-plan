@@ -125,7 +125,6 @@ export const plans: Plan[] = [
       {
         name: "Lite",
         price: 40,
-        firstMonthPrice: 8.9,
         period: "月",
         limit5h: "~1,200 次",
         limitWeek: "9,000 次",
@@ -138,7 +137,6 @@ export const plans: Plan[] = [
       {
         name: "Pro",
         price: 200,
-        firstMonthPrice: 44.91,
         period: "月",
         limit5h: "~6,000 次",
         limitWeek: "45,000 次",
@@ -342,6 +340,8 @@ export const plans: Plan[] = [
       affiliate: "https://platform.xiaomimimo.com?ref=SRTY5N",
     },
     logo: { src: "/logos/xiaomi.png", alt: "小米" },
+    notice:
+      "限时活动（2026-04-28 至 2026-05-28）：Xiaomi MiMo Orbit 百万亿 Token 发放进行中，可在 https://100t.xiaomimimo.com/ 申请，最高可领 2亿～16亿额度 / $300 Credit（以审核到账为准）。",
     models: [
       "MiMo-V2.5-Pro",
       "MiMo-V2.5",
