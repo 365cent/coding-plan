@@ -23,7 +23,7 @@ export function DisplayAd({ className = "" }: AdUnitProps) {
 
   return (
     <div
-      className={`w-full flex justify-center items-center overflow-hidden min-h-[100px] ${className}`}
+      className={`w-full flex justify-center items-center overflow-hidden max-h-[100px] ${className}`}
       aria-hidden="true"
     >
       <ins
@@ -55,7 +55,7 @@ export function InArticleAd({ className = "" }: AdUnitProps) {
 
   return (
     <div
-      className={`w-full flex justify-center items-center overflow-hidden min-h-[100px] ${className}`}
+      className={`w-full flex justify-center items-center overflow-hidden max-h-[100px] ${className}`}
       aria-hidden="true"
     >
       <ins
