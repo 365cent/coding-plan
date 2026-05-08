@@ -34,6 +34,7 @@ const ENDPOINTS: Endpoint[] = [
   { provider: "百炼 Token Plan", company: "阿里云（华北）", product: "百炼 Token Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1", region: "domestic" },
   { provider: "百炼（国际站）", company: "阿里云（国际站）", product: "百炼 Coding Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://coding-intl.dashscope.aliyuncs.com/v1", region: "international" },
   { provider: "火山方舟", company: "字节跳动", product: "火山方舟 Coding Plan", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.cn-beijing.volces.com/api/coding/v3", region: "domestic" },
+  { provider: "火山方舟 Agent Plan", company: "字节跳动", product: "火山方舟 Agent Plan", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.cn-beijing.volces.com/api/plan/v3", region: "domestic" },
   { provider: "BytePlus（字节国际站）", company: "字节跳动（国际站）", product: "BytePlus Coding", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.ap-southeast.bytepluses.com/api/coding", region: "international" },
   { provider: "腾讯云", company: "腾讯云", product: "腾讯云 Token Plan", logoSrc: "/logos/tencentcloud.png", logoAlt: "腾讯云", url: "https://api.lkeap.cloud.tencent.com/plan/v3", region: "domestic" },
   { provider: "智谱 GLM", company: "智谱AI", product: "GLM Coding Plan", logoSrc: "/logos/bigmodel.png", logoAlt: "智谱AI", url: "https://open.bigmodel.cn/api/coding/paas/v4", region: "domestic" },
