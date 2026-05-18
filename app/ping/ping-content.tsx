@@ -7,8 +7,6 @@ import { ArrowDown, ArrowUp, Check, Copy, Gauge, Waves, Info, X } from "lucide-r
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useCallback, useMemo, useRef, useState } from "react"
-import { DisplayAd, InArticleAd } from "@/components/ad-unit"
-
 type Endpoint = {
   provider: string
   company: string
@@ -685,19 +683,11 @@ export function PingContent() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <DisplayAd className="my-2" />
-      </div>
-
       <div className="max-w-7xl mx-auto px-6 pb-6 mt-2">
         <Notice title="测速说明">
           <p>当前 HTTP Ping 仅反映客户端到各平台 API 服务器的网络连接延迟。低延迟有助于缩短请求的初始响应周期，但大模型的实际生成速度还取决于模型参数规模、服务端算力分配及限流策略等多重因素。</p>
           <p>更多详情请查看下方的 <a href="#faq" className="text-primary hover:underline font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm">测速相关问题</a>。</p>
         </Notice>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 mb-6">
-        <InArticleAd />
       </div>
 
       <FaqSection items={pingFaqs} />

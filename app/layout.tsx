@@ -87,13 +87,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9548862109530353"
-          crossOrigin="anonymous"
-        ></script>
-      </head>
       <body className="font-sans antialiased">
         <a
           href="#main-content"

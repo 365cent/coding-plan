@@ -4,7 +4,6 @@ import { StatsBar } from "@/components/stats-bar"
 import { ClientShell } from "@/app/client-shell"
 import { FaqSection } from "@/components/faq-section"
 import { Notice } from "@/components/notice"
-import { DisplayAd, InArticleAd } from "@/components/ad-unit"
 
 export default function Page() {
   return (
@@ -25,15 +24,7 @@ export default function Page() {
         </Notice>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 mb-6">
-        <InArticleAd />
-      </div>
-
       <FaqSection />
-
-      <div className="max-w-7xl mx-auto px-6 mt-8">
-        <DisplayAd />
-      </div>
 
       <section id="about" className="max-w-7xl mx-auto px-6 mt-8">
         <h2 className="text-base font-semibold mb-2">关于本站</h2>
