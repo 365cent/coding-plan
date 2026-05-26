@@ -45,6 +45,7 @@ const ENDPOINTS: Endpoint[] = [
   { provider: "MiMo（欧洲）", company: "小米（欧洲）", product: "MiMo Token Plan", logoSrc: "/logos/xiaomi.png", logoAlt: "小米", url: "https://token-plan-ams.xiaomimimo.com/v1", region: "international" },
   { provider: "Infini", company: "无问芯穹", product: "Infini Coding Plan", logoSrc: "/logos/infini.png", logoAlt: "无问芯穹", url: "https://cloud.infini-ai.com/maas/coding/v1", region: "domestic" },
   { provider: "UCloud", company: "UCloud 优刻得", product: "优云智算 Agent Plan", logoSrc: "/logos/ucloud.png", logoAlt: "UCloud", url: "https://cp.compshare.cn/v1", region: "domestic" },
+  { provider: "OpenCode Go", company: "Anomaly", product: "OpenCode Go", logoSrc: "/logos/opencode.png", logoAlt: "OpenCode", url: "https://opencode.ai/zen/go/v1", region: "international" },
   { provider: "千帆", company: "百度", product: "千帆 Coding Plan", logoSrc: "/logos/yiyan.png", logoAlt: "文心一言", url: "https://qianfan.baidubce.com/v2/coding", region: "domestic" },
   { provider: "科大讯飞", company: "科大讯飞", product: "讯飞星辰 Astron Coding Plan", logoSrc: "/logos/xfyun.png", logoAlt: "讯飞星辰", url: "https://maas-coding-api.cn-huabei-1.xf-yun.com/v2", region: "domestic" },
   { provider: "京东云", company: "京东云", product: "京东云 Coding Plan", logoSrc: "/logos/jd.png", logoAlt: "京东", url: "https://modelservice.jdcloud.com/coding/openai/v1", region: "domestic" },
