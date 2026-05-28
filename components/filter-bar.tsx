@@ -43,7 +43,7 @@ export function FilterBar({
   onSortByChange,
 }: FilterBarProps) {
   return (
-    <div className="sticky top-14 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
+    <div className="sticky top-[5.5rem] sm:top-14 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="max-w-7xl mx-auto px-6 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Search */}
         <div role="search" className="relative flex-1 max-w-sm">

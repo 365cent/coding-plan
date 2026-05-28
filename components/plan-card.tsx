@@ -285,7 +285,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
       </div>
 
       {/* Models */}
-      <div className="px-5 pb-4 h-[96px] overflow-y-auto">
+      <div className="px-5 pb-4 h-[96px] overflow-hidden">
         <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-2">
           支持模型
         </p>

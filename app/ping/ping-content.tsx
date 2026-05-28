@@ -371,7 +371,7 @@ export function PingContent() {
         </p>
       </section>
 
-      <div className="sticky top-14 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
+      <div className="sticky top-[5.5rem] sm:top-14 z-30 bg-background/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between overflow-x-auto scrollbar-hide">
           <div className="flex items-center gap-1.5 shrink-0">
             {(["all", "domestic", "international"] as FilterMode[]).map((mode) => (
