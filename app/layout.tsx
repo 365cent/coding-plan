@@ -32,6 +32,8 @@ export const metadata: Metadata = {
     "GLM Coding Plan",
     "Kimi Code Plan",
     "MiniMax Token Plan",
+    "Step Plan",
+    "阶跃星辰",
     "AI编程工具价格",
   ],
   alternates: {
