@@ -1082,7 +1082,7 @@ export const plans: Plan[] = [
     company: "联通云",
     product: "Coding Plan",
     category: "其他",
-    links: { official: "https://www.cucloud.cn/activity/kickoffseason.html" },
+    links: { official: "https://www.cucloud.cn/Product/CodingPlan.html" },
     logo: { src: "/logos/cucloud.png", alt: "联通云" },
     models: [
       "aisp-auto-route",
