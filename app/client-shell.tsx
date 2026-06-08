@@ -21,6 +21,20 @@ function defaultLeaderRank(planId: string): number {
   return idx === -1 ? Number.POSITIVE_INFINITY : idx
 }
 
+function isFreeSubscription(plan: Plan): boolean {
+  const prices = purchasableRegularTiers(plan)
+    .map((t) => tierComparableMonthly(t))
+    .filter((p) => Number.isFinite(p))
+  return prices.length > 0 && Math.max(...prices) === 0
+}
+
+function compareFreeLast(a: Plan, b: Plan): number {
+  const freeA = isFreeSubscription(a)
+  const freeB = isFreeSubscription(b)
+  if (freeA === freeB) return 0
+  return freeA ? 1 : -1
+}
+
 function ClientShellInner({ plans }: { plans: Plan[] }) {
   const searchParams = useSearchParams()
   const initialSearch = searchParams.get("q") || ""
@@ -101,12 +115,18 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
       const effectiveToolCount = (plan: Plan) => Math.max(plan.toolCount, plan.tools.length)
 
       const getValueScore = (plan: Plan, price: number) => {
+        if (price <= 0) return 0
         const quota = getMonthQuota(plan)
         if (quota) return quota / price
         return (plan.models.length * 10 + effectiveToolCount(plan) * 5) / price
       }
 
       const getRequestFreq = (plan: Plan) => getMonthQuota(plan)
+
+      if (sortBy !== "default") {
+        const freeCmp = compareFreeLast(a, b)
+        if (freeCmp !== 0) return freeCmp
+      }
 
       switch (sortBy) {
         case "default": {
@@ -115,9 +135,11 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
           if (leaderA !== leaderB) {
             if (Number.isFinite(leaderA) || Number.isFinite(leaderB)) return leaderA - leaderB
           }
-          const ia = originalIndex.get(a.id) ?? 0
-          const ib = originalIndex.get(b.id) ?? 0
-          return ia - ib
+          const freeCmp = compareFreeLast(a, b)
+          if (freeCmp !== 0) return freeCmp
+          const valueDiff = getValueScore(b, priceB) - getValueScore(a, priceA)
+          if (valueDiff !== 0) return valueDiff
+          return (originalIndex.get(a.id) ?? 0) - (originalIndex.get(b.id) ?? 0)
         }
         case "price-asc":
           return priceA - priceB
