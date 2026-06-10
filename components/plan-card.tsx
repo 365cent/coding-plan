@@ -3,6 +3,7 @@
 import {
   type Plan,
   type Tier,
+  basicRegularTier,
   purchasableRegularTiers,
   tierComparableMonthly,
 } from "@/lib/plans-data"
@@ -53,15 +54,10 @@ export function PlanCard({ plan }: { plan: Plan }) {
     (t) => !t.discontinuedForNewSales && (t.isFirstMonthOnly || t.firstMonthPrice != null),
   )
   const buyUrl = plan.links.affiliate ?? plan.links.official
-  const lowestPriceInfo = (() => {
-    let best: { monthly: number; period: "月" | "季" | "年" | "包" } | undefined
-    for (const t of pricingTiers) {
-      const monthly = tierComparableMonthly(t)
-      if (!Number.isFinite(monthly)) continue
-      if (!best || monthly < best.monthly) best = { monthly, period: t.period }
-    }
-    return best
-  })()
+  const basicTier = basicRegularTier(plan)
+  const lowestPriceInfo = basicTier
+    ? { monthly: tierComparableMonthly(basicTier), period: basicTier.period }
+    : undefined
   const lowestPrice = lowestPriceInfo?.monthly ?? Infinity
 
   const lowestSecond = pricingTiers.reduce<number | undefined>((min, t) => {

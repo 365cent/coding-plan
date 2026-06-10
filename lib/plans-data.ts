@@ -124,10 +124,37 @@ export function basicRegularTier(plan: Plan): Tier | undefined {
   return lowestPaidRegularTier(plan) ?? purchasableRegularTiers(plan)[0]
 }
 
+/** 对比/排序用的常规月价：最低付费档正价；无付费档时回退首档（如全免费） */
+export function planComparableMonthlyPrice(plan: Plan): number | undefined {
+  const basic = basicRegularTier(plan)
+  if (!basic) return undefined
+  const monthly = tierComparableMonthly(basic)
+  return Number.isFinite(monthly) ? monthly : undefined
+}
+
 /** 全平台月等效调用配额（最低付费档），用于「请求频次」排序 */
 export function planMonthlyRequestEq(plan: Plan): number | undefined {
   const basic = lowestPaidRegularTier(plan)
   return basic ? tierMonthlyRequestEq(basic) : undefined
+}
+
+/** 请求频次排序：先比 5 小时，再比每周，最后比每月（高者优先，无数据排后） */
+export function comparePlanRateLimits(a: Plan, b: Plan): number {
+  const ta = basicRegularTier(a)
+  const tb = basicRegularTier(b)
+  // 月维度兜底 requestEqMonth，保证纯月配额平台（如 Cursor）可参与比较
+  const cols: [number | undefined, number | undefined][] = [
+    [ta?.limit5hCount, tb?.limit5hCount],
+    [ta?.limitWeekCount, tb?.limitWeekCount],
+    [ta?.limitMonthCount ?? ta?.requestEqMonth, tb?.limitMonthCount ?? tb?.requestEqMonth],
+  ]
+  for (const [va, vb] of cols) {
+    if (va === undefined && vb === undefined) continue
+    if (va === undefined) return 1
+    if (vb === undefined) return -1
+    if (va !== vb) return vb - va
+  }
+  return 0
 }
 
 /** 性价比：每元每月可得的等效调用次数（最低付费档，常规月价，不含首月优惠） */
@@ -460,8 +487,8 @@ export const plans: Plan[] = [
     tools: ["Claude Code", "Roo Code", "Kilo Code", "Cline", "OpenCode", "Cursor", "CodeGeeX"],
     toolCount: 20,
     tags: ["自研模型", "MCP工具"],
-    yearlyPrice: 411,  // Lite年费 ¥411 (7折)
-    quarterlyPrice: 132, // Lite季费 ¥132 (9折)
+    yearlyPrice: 411,
+    quarterlyPrice: 132,
   },
   {
     id: "kimi",
@@ -549,11 +576,14 @@ export const plans: Plan[] = [
         firstMonthPrice: 3.9,
         secondMonthPrice: 19,
         period: "月",
-        limit5h: "不限",
-        limitWeek: "不限",
-        limitMonth: "不限",
+        limit5h: "1,200 次",
+        limitWeek: "9,000 次",
+        limitMonth: "18,000 次",
+        limit5hCount: 1200,
+        limitWeekCount: 9000,
+        limitMonthCount: 18000,
         notes:
-          "首购 ¥3.90/月，后续 ¥19/月；不限次数；Spark-X2-Flash / Qwen3.6-35B-A3B / Qwen3.5-35B-A3B / Qwen3-Coder-Next-FP8 / GLM-4.7-Flash",
+          "首购 ¥3.90/月，后续 ¥19/月；Spark-X2-Flash / Qwen3.6-35B-A3B / Qwen3.5-35B-A3B / Qwen3-Coder-Next-FP8 / GLM-4.7-Flash",
       },
       {
         name: "专业版",
@@ -607,8 +637,6 @@ export const plans: Plan[] = [
       "MiMo-V2.5-TTS",
       "MiMo-V2-TTS",
     ],
-    // requestEqMonth 折算依据（官方扣减表）：mimo-v2.5 每 Token 扣 2(缓存)/100(输入)/200(输出) Credits；
-    // 按典型 Agent 请求（约 7.15万缓存 + 830 输入 + 295 输出 Token）≈ 28.5万 Credits/次
     tiers: [
       {
         name: "Lite",
@@ -1199,13 +1227,13 @@ export const plans: Plan[] = [
         firstMonthPrice: 35,
         secondMonthPrice: 70,
         period: "月",
-        limit5h: "$12",
+        limit5h: "$12 用量",
         limitWeek: "$30",
         limitMonth: "$60 用量",
         limit5hCount: 3275,
         limitWeekCount: 8175,
         limitMonthCount: 16300,
-        notes: "按美元额度滚动计费；次数为 14 款模型官方估算中位数，实际因模型单价而异；可充值",
+        notes: "按美元额度滚动计费；约 3,275 次/5h、16,300 次/月（14 款模型官方估算中位数）；可充值",
       },
     ],
     billingUnit: "按量计费",
@@ -1306,7 +1334,6 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "25,000 Credits",
-        // 官方折算：25,000 credits ≈ 2.27亿 tokens（按三款支持模型的中位单价 MiniMax-M2.5 1.10元/百万）
         limitMonthTokens: 227_000_000,
         notes: "轻度使用 AI 辅助的企业团队",
       },
@@ -1395,8 +1422,8 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "$20 用量",
-        requestEqMonth: 500,
-        notes: "$20/月（约 ¥135）；约 225 Sonnet / 550 Gemini / 500 GPT-5 次；推广首月 $10",
+        requestEqMonth: 1330,
+        notes: "$20/月（约 ¥135）；按统一 6万 Token/次折算约 1,330 次（Sonnet ~850 / Gemini Flash ~4,900）；另含 Auto+Composer 大额池；推广首月 $10",
       },
       {
         name: "Pro+",
@@ -1404,8 +1431,8 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "$70 用量",
-        requestEqMonth: 1500,
-        notes: "$60/月（约 ¥405）；约 675 Sonnet / 1,650 Gemini / 1,500 GPT-5 次",
+        requestEqMonth: 4650,
+        notes: "$60/月（约 ¥405）；含 $70 API 用量，按统一 6万 Token/次折算约 4,650 次",
       },
       {
         name: "Ultra",
@@ -1413,8 +1440,8 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "$400 用量",
-        requestEqMonth: 10000,
-        notes: "$200/月（约 ¥1350）；约 4,500 Sonnet / 11,000 Gemini / 10,000 GPT-5 次",
+        requestEqMonth: 26600,
+        notes: "$200/月（约 ¥1350）；含 $400 API 用量，按统一 6万 Token/次折算约 26,600 次",
       },
       {
         name: "Teams",

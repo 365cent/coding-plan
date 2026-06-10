@@ -5,7 +5,9 @@ import { useSearchParams } from "next/navigation"
 import {
   type Plan,
   type PlanCategory,
+  comparePlanRateLimits,
   lowestPaidRegularTier,
+  planComparableMonthlyPrice,
   planMonthlyRequestEq,
   planRequestsPerYuan,
   purchasableRegularTiers,
@@ -46,10 +48,7 @@ type PlanMetrics = {
 }
 
 function computeMetrics(plan: Plan): PlanMetrics {
-  const monthly = purchasableRegularTiers(plan)
-    .map((t) => tierComparableMonthly(t))
-    .filter((p) => Number.isFinite(p))
-  const price = monthly.length ? Math.min(...monthly) : Infinity
+  const price = planComparableMonthlyPrice(plan) ?? Infinity
   const basic = lowestPaidRegularTier(plan)
   const valuePrice = basic ? tierComparableMonthly(basic) : price
   return {
@@ -134,8 +133,14 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
     const metrics = new Map(result.map((p) => [p.id, computeMetrics(p)]))
 
     result = [...result].sort((a, b) => {
-      // For non-default sorts, keep category grouping first.
-      if (!categoryFilter && sortBy !== "default") {
+      // For non-default sorts (except price / requests), keep category grouping first.
+      if (
+        !categoryFilter &&
+        sortBy !== "default" &&
+        sortBy !== "price-asc" &&
+        sortBy !== "price-desc" &&
+        sortBy !== "requests"
+      ) {
         const ra = categoryRank(a.category)
         const rb = categoryRank(b.category)
         if (ra !== rb) return ra - rb
@@ -170,7 +175,7 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
         case "tools":
           return effectiveToolCount(b) - effectiveToolCount(a)
         case "requests":
-          return mb.monthlyRequestEq - ma.monthlyRequestEq
+          return comparePlanRateLimits(a, b)
         default:
           return 0
       }
