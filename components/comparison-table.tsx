@@ -2,6 +2,7 @@
 
 import {
   type Plan,
+  basicRegularTier,
   lowestFirstMonthInPlan,
   purchasableRegularTiers,
   tierComparableMonthly,
@@ -54,7 +55,7 @@ export function ComparisonTable({ plans }: { plans: Plan[] }) {
         <tbody>
           {plans.map((plan, i) => {
             const regularTiers = plan.tiers.filter((t) => !t.isFirstMonthOnly)
-            const baseTier = purchasableRegularTiers(plan)[0]
+            const baseTier = basicRegularTier(plan)
             const buyUrl = plan.links.affiliate ?? plan.links.official
             const standardMonthlyPrice = baseTier ? tierComparableMonthly(baseTier) : undefined
             const firstMonthPrice = baseTier?.firstMonthPrice

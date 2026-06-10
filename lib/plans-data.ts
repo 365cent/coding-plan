@@ -38,6 +38,12 @@ export type Tier = {
   limit5hCount?: number      // 结构化：5小时配额（次）
   limitWeekCount?: number    // 结构化：7天配额（次）
   limitMonthCount?: number   // 结构化：30天配额（次）
+  /** 月度 Token 配额（含官方公布的积分→Token 折算），用于跨计费单位比价 */
+  limitMonthTokens?: number
+  /** 直接给定的月等效模型调用次数（官方按积分/美元规则折算所得） */
+  requestEqMonth?: number
+  /** 配额按「对话/提问」计数（一次提问 ≈ 多次模型调用），而非按模型调用计数 */
+  countsPrompts?: boolean
   isFirstMonthOnly?: boolean // 新人专享一次性，不计入最低月付
   /** 已停止接受新购（仍展示供参考，UI 删除线） */
   discontinuedForNewSales?: boolean
@@ -67,6 +73,72 @@ export function tierComparableMonthly(t: Tier): number {
   if (t.period === "季") return Math.round(t.price / 3)
   if (t.period === "年") return Math.round(t.price / 12)
   return t.price
+}
+
+/**
+ * 跨计费单位比价的折算系数（均取自官方公开口径）：
+ * - TOKENS_PER_REQUEST：一次 Agent 模型调用约消耗的 Token 数。
+ *   OpenCode Go 官方观测均值约 5.3万–8.7万/次；腾讯 Hy 官方「35M tokens ≈ 70 轮问答」
+ *   配合「简单任务约 5-10 次调用/轮」≈ 6.6万/次。两个独立来源收敛于 ~6万。
+ * - CALLS_PER_PROMPT：一次对话/提问触发的模型调用次数。
+ *   火山方舟/京东云官方口径「简单 Agent 任务约消耗 5-10 次调用」，取中值 7.5。
+ * - 周→月、5小时→月：方舟/讯飞/京东/百度官方档位均满足 月配额 = 2×周配额 = 15×5小时配额。
+ */
+export const TOKENS_PER_REQUEST = 60_000
+export const CALLS_PER_PROMPT = 7.5
+const WEEKS_PER_MONTH = 4
+const FIVE_HOUR_WINDOWS_PER_MONTH = 15
+
+/** 单档位月等效模型调用次数；无可信折算依据时返回 undefined */
+export function tierMonthlyRequestEq(t: Tier): number | undefined {
+  if (t.requestEqMonth !== undefined) return t.requestEqMonth
+  if (t.limitMonthTokens !== undefined) return Math.round(t.limitMonthTokens / TOKENS_PER_REQUEST)
+  const counted =
+    t.limitMonthCount ??
+    (t.limitWeekCount !== undefined
+      ? t.limitWeekCount * WEEKS_PER_MONTH
+      : t.limit5hCount !== undefined
+        ? t.limit5hCount * FIVE_HOUR_WINDOWS_PER_MONTH
+        : undefined)
+  if (counted === undefined) return undefined
+  return t.countsPrompts ? Math.round(counted * CALLS_PER_PROMPT) : counted
+}
+
+/** 可购档位中最低正价档（常规月价，不含首月优惠） */
+export function lowestPaidRegularTier(plan: Plan): Tier | undefined {
+  let best: Tier | undefined
+  let minPrice = Infinity
+  for (const t of purchasableRegularTiers(plan)) {
+    const monthly = tierComparableMonthly(t)
+    if (!Number.isFinite(monthly) || monthly <= 0) continue
+    if (monthly < minPrice) {
+      minPrice = monthly
+      best = t
+    }
+  }
+  return best
+}
+
+/** 对比基准档：最低付费档；无付费档时回退首档 */
+export function basicRegularTier(plan: Plan): Tier | undefined {
+  return lowestPaidRegularTier(plan) ?? purchasableRegularTiers(plan)[0]
+}
+
+/** 全平台月等效调用配额（最低付费档），用于「请求频次」排序 */
+export function planMonthlyRequestEq(plan: Plan): number | undefined {
+  const basic = lowestPaidRegularTier(plan)
+  return basic ? tierMonthlyRequestEq(basic) : undefined
+}
+
+/** 性价比：每元每月可得的等效调用次数（最低付费档，常规月价，不含首月优惠） */
+export function planRequestsPerYuan(plan: Plan): number | undefined {
+  const basic = lowestPaidRegularTier(plan)
+  if (!basic) return undefined
+  const monthly = tierComparableMonthly(basic)
+  if (!Number.isFinite(monthly) || monthly <= 0) return undefined
+  const eq = tierMonthlyRequestEq(basic)
+  if (eq === undefined) return undefined
+  return eq / monthly
 }
 
 export const plans: Plan[] = [
@@ -139,7 +211,7 @@ export const plans: Plan[] = [
         price: 198,
         period: "月",
         limit5h: "-",
-        limitMonth: "25,000积分",
+        limitMonth: "25,000 积分",
         notes: "轻度使用 AI 辅助的团队成员",
       },
       {
@@ -147,7 +219,7 @@ export const plans: Plan[] = [
         price: 698,
         period: "月",
         limit5h: "-",
-        limitMonth: "100,000积分",
+        limitMonth: "100,000 积分",
         notes: "日常高频使用 AI 编码的团队成员",
       },
       {
@@ -155,7 +227,7 @@ export const plans: Plan[] = [
         price: 1398,
         period: "月",
         limit5h: "-",
-        limitMonth: "250,000积分",
+        limitMonth: "250,000 积分",
         notes: "重度依赖 AI 编码的核心开发者",
       },
       {
@@ -163,7 +235,7 @@ export const plans: Plan[] = [
         price: 5000,
         period: "包",
         limit5h: "-",
-        limitMonth: "625,000积分（有效期1个月）",
+        limitMonth: "625,000 积分（有效期1个月）",
         notes: "跨坐席共享，坐席额度用尽后抵扣；多个用量包按最近到期优先抵扣",
       },
     ],
@@ -267,7 +339,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "10,000 AFP",
         limitWeek: "35,000 AFP",
-        limitMonth: "100K AFP",
+        limitMonth: "100,000 AFP",
         notes: "日常高频额度 5× Small 用量；免费赠送 ArkClaw 轻量版",
       },
       {
@@ -276,7 +348,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "25,000 AFP",
         limitWeek: "87,500 AFP",
-        limitMonth: "250K AFP",
+        limitMonth: "250,000 AFP",
         notes: "复杂重度开发 12.5× Small 用量；领先支持 Seedance 2.0 系列",
       },
       {
@@ -285,7 +357,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "50,000 AFP",
         limitWeek: "175,000 AFP",
-        limitMonth: "500K AFP",
+        limitMonth: "500,000 AFP",
         notes: "顶配旗舰额度 25× Small 用量；领先支持 Seedance 2.0 系列",
       },
     ],
@@ -297,24 +369,46 @@ export const plans: Plan[] = [
   {
     id: "huawei",
     company: "华为云",
-    product: "CodeArts 码道",
+    product: "码道（CodeArts）",
     category: "国内大厂",
     links: { official: "https://www.huaweicloud.com/product/codearts/ai.html" },
     logo: { src: "/logos/huawei.png", alt: "华为云" },
-    models: ["盘古", "多模型接入"],
+    notice:
+      "2026年5月30日 00:00（北京时间）正式商用。原公测免费版自动转入体验版，仍可免费使用；基础版、专业版开始收费。不再使用请停止调用并删除资源，以免产生费用。",
+    models: ["GLM", "鸿蒙增训模型"],
     tiers: [
       {
-        name: "个人版（公测）",
+        name: "体验版",
         price: 0,
         period: "月",
-        limit5h: "公测免费",
-        notes: "公测版临时免费（后续可能调整）",
+        limit5h: "-",
+        limitMonth: "5M Token",
+        limitMonthTokens: 5_000_000,
+        notes: "个人体验/企业测试；至高50席位；500MB 知识空间",
+      },
+      {
+        name: "基础版",
+        price: 39,
+        period: "月",
+        limit5h: "-",
+        limitMonth: "20M Token",
+        limitMonthTokens: 20_000_000,
+        notes: "小型企业/团队；至高100席位；含 Agent 中心、技能和规则中心",
+      },
+      {
+        name: "专业版",
+        price: 139,
+        period: "月",
+        limit5h: "-",
+        limitMonth: "60M Token",
+        limitMonthTokens: 60_000_000,
+        notes: "中大型企业；至高1000席位；含审计日志、模型管理、企业自定义模型、用量管理",
       },
     ],
-    billingUnit: "积分制",
-    tools: ["CodeArts IDE", "VS Code", "主流开发工具"],
-    toolCount: 5,
-    tags: ["公测免费", "临时", "码道", "盘古"],
+    billingUnit: "Token计费",
+    tools: ["CodeArts IDE", "CLI/TUI", "JetBrains 插件", "VS Code 插件"],
+    toolCount: 4,
+    tags: ["按席位计费", "Agent Space", "CodeArts工具链"],
   },
   {
     id: "glm",
@@ -334,6 +428,9 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "~80 次对话",
         limitWeek: "~400 次对话",
+        limit5hCount: 80,
+        limitWeekCount: 400,
+        countsPrompts: true,
         notes: "MCP 100次/月；基础模型全支持",
       },
       {
@@ -342,6 +439,9 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "~400 次对话",
         limitWeek: "~2,000 次对话",
+        limit5hCount: 400,
+        limitWeekCount: 2000,
+        countsPrompts: true,
         notes: "MCP 1,000次/月；含 GLM-5",
       },
       {
@@ -350,6 +450,9 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "~1,600 次对话",
         limitWeek: "~8,000 次对话",
+        limit5hCount: 1600,
+        limitWeekCount: 8000,
+        countsPrompts: true,
         notes: "MCP 4,000次/月，高峰优先；含 GLM-5",
       },
     ],
@@ -375,6 +478,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "300–1,200 次",
         limitMonth: "~17M Token",
+        limitMonthTokens: 17_000_000,
         notes: "基础使用：含 Deep Research、网页部署、专业数据与 Kimi Code",
       },
       {
@@ -383,6 +487,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "1,200–4,800 次",
         limitMonth: "~69M Token",
+        limitMonthTokens: 69_000_000,
         notes: "进阶效率：2x Agent 积分 + Kimi Code 4x 配额，多设备登录",
       },
       {
@@ -391,6 +496,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "6,000–24,000 次",
         limitMonth: "~343M Token",
+        limitMonthTokens: 343_000_000,
         notes: "专业创作：4x Agent 积分，支持多任务、Kimi Claw 与 Agent Swarm",
       },
       {
@@ -399,6 +505,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "18,000–72,000 次",
         limitMonth: "~1B Token",
+        limitMonthTokens: 1_000_000_000,
         notes: "旗舰模式：10x Agent 积分 + Kimi Code 60x，含 Claw 与 Agent Swarm",
       },
     ],
@@ -444,9 +551,9 @@ export const plans: Plan[] = [
         name: "专业版",
         price: 39,
         period: "月",
-        limit5h: "1,200 次请求",
-        limitWeek: "9,000 次请求",
-        limitMonth: "18,000 次请求",
+        limit5h: "1,200 次",
+        limitWeek: "9,000 次",
+        limitMonth: "18,000 次",
         limit5hCount: 1200,
         limitWeekCount: 9000,
         limitMonthCount: 18000,
@@ -457,9 +564,9 @@ export const plans: Plan[] = [
         name: "高效版",
         price: 199,
         period: "月",
-        limit5h: "6,000 次请求",
-        limitWeek: "45,000 次请求",
-        limitMonth: "90,000 次请求",
+        limit5h: "6,000 次",
+        limitWeek: "45,000 次",
+        limitMonth: "90,000 次",
         limit5hCount: 6000,
         limitWeekCount: 45000,
         limitMonthCount: 90000,
@@ -492,6 +599,8 @@ export const plans: Plan[] = [
       "MiMo-V2.5-TTS",
       "MiMo-V2-TTS",
     ],
+    // requestEqMonth 折算依据（官方扣减表）：mimo-v2.5 每 Token 扣 2(缓存)/100(输入)/200(输出) Credits；
+    // 按典型 Agent 请求（约 7.15万缓存 + 830 输入 + 295 输出 Token）≈ 28.5万 Credits/次
     tiers: [
       {
         name: "Lite",
@@ -500,6 +609,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "4.1B 积分",
+        requestEqMonth: 14_400,
         notes: "定价不变，积分大幅提升",
       },
       {
@@ -509,6 +619,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "11B 积分",
+        requestEqMonth: 38_600,
         notes: "定价不变，积分大幅提升",
       },
       {
@@ -518,6 +629,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "38B 积分",
+        requestEqMonth: 133_300,
         notes: "定价不变，积分大幅提升",
       },
       {
@@ -527,6 +639,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "82B 积分",
+        requestEqMonth: 287_700,
         notes: "定价不变，积分大幅提升",
       },
     ],
@@ -562,7 +675,7 @@ export const plans: Plan[] = [
         limit5h: "-",
         limitWeek: "-",
         limitMonth: "~600M Token",
-        limitMonthCount: 600_000_000,
+        limitMonthTokens: 600_000_000,
         notes:
           "3-4 个 Agent 并发；1M 长上下文；M3 多模态（图像/视频输入）；全系模型共享额度",
       },
@@ -573,7 +686,7 @@ export const plans: Plan[] = [
         limit5h: "-",
         limitWeek: "-",
         limitMonth: "~1.8B Token",
-        limitMonthCount: 1_800_000_000,
+        limitMonthTokens: 1_800_000_000,
         notes:
           "最受欢迎；4-5 个 Agent 并发；视频生成 3 条/日；1M 长上下文；全系模型共享额度",
       },
@@ -584,7 +697,7 @@ export const plans: Plan[] = [
         limit5h: "-",
         limitWeek: "-",
         limitMonth: "~5.5B Token",
-        limitMonthCount: 5_500_000_000,
+        limitMonthTokens: 5_500_000_000,
         notes:
           "6-7 个 Agent 并发；视频生成 5 条/日；1M 长上下文；全系模型共享额度",
       },
@@ -681,6 +794,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "35M Token",
+        limitMonthTokens: 35_000_000,
         notes: "Hy 个人版体验套餐；0.4元/百万tokens；约 70 轮问答；限时 5 折活动价 14 元（2026.04.30-05.06，限 1 个）",
       },
       {
@@ -691,6 +805,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "100M Token",
+        limitMonthTokens: 100_000_000,
         notes: "Hy 个人版基础套餐；0.39元/百万tokens；约 200 轮问答；限时 5 折活动价 39 元（2026.04.30-05.06，限 1 个）",
       },
       {
@@ -699,6 +814,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "320M Token",
+        limitMonthTokens: 320_000_000,
         notes: "Hy 个人版进阶套餐；适合每天高频使用 AI 的开发者和效率达人",
       },
       {
@@ -707,6 +823,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "-",
         limitMonth: "650M Token",
+        limitMonthTokens: 650_000_000,
         notes: "Hy 个人版专业套餐；适合把 AI 当核心生产力工具的重度用户",
       },
     ],
@@ -831,7 +948,7 @@ export const plans: Plan[] = [
         name: "Free Trial",
         price: 0,
         period: "月",
-        limit5h: "~40 次 prompts",
+        limit5h: "~40 次对话",
         limit5hCount: 40,
         isFirstMonthOnly: true,
         notes: "约 Claude Pro 用量；领取日起 30 天内有效；高峰期可能排队",
@@ -840,28 +957,31 @@ export const plans: Plan[] = [
         name: "Lite Plan",
         price: 120,
         period: "季",
-        limit5h: "~120 次 prompts",
+        limit5h: "~120 次对话",
         limit5hCount: 120,
+        countsPrompts: true,
         notes: "约 Claude Pro 3 倍；订阅期享最新模型更新；月均 ¥40",
       },
       {
         name: "Pro Plan",
         price: 600,
         period: "季",
-        limit5h: "~600 次 prompts",
+        limit5h: "~600 次对话",
         limit5hCount: 600,
+        countsPrompts: true,
         notes: "约 Claude Max(5x) 3 倍；生成更快、响应速度保障；月均 ¥200",
       },
       {
         name: "Max Plan",
         price: 1200,
         period: "季",
-        limit5h: "~2,400 次 prompts",
+        limit5h: "~2,400 次对话",
         limit5hCount: 2400,
+        countsPrompts: true,
         notes: "约 Claude Max(20x) 3 倍；峰值优先、可抢先体验新功能；月均 ¥400",
       },
     ],
-    billingUnit: "请求次数",
+    billingUnit: "按量计费",
     tools: ["Claude Code", "OpenCode", "Cursor", "Cline", "Roo Code", "Kilo Code"],
     toolCount: 6,
     tags: ["GLM-4.7", "5小时额度", "30天试用"],
@@ -899,6 +1019,8 @@ export const plans: Plan[] = [
         secondMonthPrice: 29,
         period: "月",
         limit5h: "40 次对话",
+        limit5hCount: 40,
+        countsPrompts: true,
         notes: "首月优惠仅限1次；限时特惠期：2026-01-05~2026-03-22",
       },
       {
@@ -908,6 +1030,8 @@ export const plans: Plan[] = [
         secondMonthPrice: 70,
         period: "月",
         limit5h: "100 次对话",
+        limit5hCount: 100,
+        countsPrompts: true,
         notes: "首月优惠仅限1次；限时特惠期：2026-01-05~2026-03-22",
       },
       {
@@ -917,6 +1041,8 @@ export const plans: Plan[] = [
         secondMonthPrice: 140,
         period: "月",
         limit5h: "300 次对话",
+        limit5hCount: 300,
+        countsPrompts: true,
         notes: "首月优惠仅限1次；限时特惠期：2026-01-05~2026-03-22",
       },
       {
@@ -926,6 +1052,8 @@ export const plans: Plan[] = [
         secondMonthPrice: 350,
         period: "月",
         limit5h: "1,000 次对话",
+        limit5hCount: 1000,
+        countsPrompts: true,
         notes: "首月优惠仅限1次；限时特惠期：2026-01-05~2026-03-22",
       },
     ],
@@ -1041,20 +1169,20 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/opencode.png", alt: "OpenCode" },
     models: [
-      "GLM-5.1",
       "GLM-5",
-      "Kimi-K2.6",
-      "Kimi-K2.5",
+      "GLM-5.1",
+      "Kimi K2.5",
+      "Kimi K2.6",
       "MiMo-V2.5",
       "MiMo-V2.5-Pro",
-      "MiniMax-M3",
-      "MiniMax-M2.7",
-      "MiniMax-M2.5",
-      "Qwen3.7-Max",
-      "Qwen3.7-Plus",
-      "Qwen3.6-Plus",
-      "DeepSeek-V4-Pro",
-      "DeepSeek-V4-Flash",
+      "MiniMax M2.5",
+      "MiniMax M2.7",
+      "MiniMax M3",
+      "Qwen3.6 Plus",
+      "Qwen3.7 Plus",
+      "Qwen3.7 Max",
+      "DeepSeek V4 Pro",
+      "DeepSeek V4 Flash",
     ],
     tiers: [
       {
@@ -1063,16 +1191,16 @@ export const plans: Plan[] = [
         firstMonthPrice: 35,
         secondMonthPrice: 70,
         period: "月",
-        limit5h: "3,275 次",
-        limitWeek: "8,175 次",
-        limitMonth: "16,300 次",
+        limit5h: "$12",
+        limitWeek: "$30",
+        limitMonth: "$60 用量",
         limit5hCount: 3275,
         limitWeekCount: 8175,
         limitMonthCount: 16300,
-        notes: "14 款模型配额中位数；订阅含 $12/$30/$60 美元额度，可充值",
+        notes: "按美元额度滚动计费；次数为 14 款模型官方估算中位数，实际因模型单价而异；可充值",
       },
     ],
-    billingUnit: "请求次数",
+    billingUnit: "按量计费",
     tools: ["OpenCode", "Claude Code", "Cursor", "Cline", "Codex CLI", "Roo Code", "任意 Agent"],
     toolCount: 7,
     tags: [],
@@ -1142,7 +1270,8 @@ export const plans: Plan[] = [
         price: 15,
         period: "月",
         limit5h: "-",
-        limitMonth: "600万 tokens",
+        limitMonth: "6M Token",
+        limitMonthTokens: 6_000_000,
         notes: "适合首次体验龙虾的尝鲜用户",
       },
       {
@@ -1150,7 +1279,8 @@ export const plans: Plan[] = [
         price: 30,
         period: "月",
         limit5h: "-",
-        limitMonth: "1,200万 tokens",
+        limitMonth: "12M Token",
+        limitMonthTokens: 12_000_000,
         notes: "适合高频使用 AI 的效率达人；2倍于 Lite 额度",
       },
       {
@@ -1158,7 +1288,8 @@ export const plans: Plan[] = [
         price: 45,
         period: "月",
         limit5h: "-",
-        limitMonth: "1,800万 tokens",
+        limitMonth: "18M Token",
+        limitMonthTokens: 18_000_000,
         notes: "适合重度依赖 AI 的核心开发者；3倍于 Lite 额度",
       },
       {
@@ -1166,7 +1297,9 @@ export const plans: Plan[] = [
         price: 198,
         period: "月",
         limit5h: "-",
-        limitMonth: "25,000 credits",
+        limitMonth: "25,000 Credits",
+        // 官方折算：25,000 credits ≈ 2.27亿 tokens（按三款支持模型的中位单价 MiniMax-M2.5 1.10元/百万）
+        limitMonthTokens: 227_000_000,
         notes: "轻度使用 AI 辅助的企业团队",
       },
       {
@@ -1174,7 +1307,8 @@ export const plans: Plan[] = [
         price: 698,
         period: "月",
         limit5h: "-",
-        limitMonth: "100,000 credits",
+        limitMonth: "100,000 Credits",
+        limitMonthTokens: 909_000_000,
         notes: "高频使用 AI 编程的开发团队；4倍于 Lite 团队额度",
       },
       {
@@ -1182,7 +1316,8 @@ export const plans: Plan[] = [
         price: 1398,
         period: "月",
         limit5h: "-",
-        limitMonth: "250,000 credits",
+        limitMonth: "250,000 Credits",
+        limitMonthTokens: 2_270_000_000,
         notes: "重度依赖 AI 编程的核心开发团队；10倍于 Lite 团队额度",
       },
     ],
@@ -1228,46 +1363,42 @@ export const plans: Plan[] = [
         firstMonthPrice: 67,
         secondMonthPrice: 135,
         period: "月",
-        limit5h: "Auto+Composer",
-        limitMonth: "$20 API额度",
-        notes: "$20/月（约 ¥135）；含 $20 API 池 + 充足 Auto/Composer；推广首月 $10",
+        limit5h: "-",
+        limitMonth: "$20 用量",
+        requestEqMonth: 500,
+        notes: "$20/月（约 ¥135）；约 225 Sonnet / 550 Gemini / 500 GPT-5 次；推广首月 $10",
       },
       {
-        name: "Pro Plus",
+        name: "Pro+",
         price: 405,
         period: "月",
-        limit5h: "Auto+Composer",
-        limitMonth: "$70 API额度",
-        notes: "$60/月（约 ¥405）；含 $70 API 池 + 充足 Auto/Composer",
+        limit5h: "-",
+        limitMonth: "$70 API用量+赠送",
+        requestEqMonth: 1500,
+        notes: "$60/月（约 ¥405）；约 675 Sonnet / 1,650 Gemini / 1,500 GPT-5 次",
       },
       {
         name: "Ultra",
         price: 1350,
         period: "月",
-        limit5h: "Auto+Composer",
-        limitMonth: "$400 API额度",
-        notes: "$200/月（约 ¥1350）；含 $400 API 池 + 充足 Auto/Composer",
+        limit5h: "-",
+        limitMonth: "$400 API用量+赠送",
+        requestEqMonth: 10000,
+        notes: "$200/月（约 ¥1350）；约 4,500 Sonnet / 11,000 Gemini / 10,000 GPT-5 次",
       },
       {
-        name: "Teams Standard",
+        name: "Teams",
         price: 270,
         period: "月",
         limit5h: "-",
-        limitMonth: "团队计费",
-        notes: "$40/用户/月（约 ¥270）；SSO、团队市场、Bugbot、用量分析",
-      },
-      {
-        name: "Teams Premium",
-        price: 810,
-        period: "月",
-        limit5h: "-",
-        limitMonth: "Standard 5× Agent",
-        notes: "$120/用户/月（约 ¥810）；Agent 限额为 Standard 5 倍",
+        limitMonth: "500 次/席位",
+        limitMonthCount: 500,
+        notes: "多数模型 1 次/请求；Sonnet 思考模式 2 次；MAX Mode 按 Token 计费",
       },
     ],
     billingUnit: "按量计费",
     tools: ["Cursor"],
     toolCount: 1,
-    tags: ["IDE", "双用量池", "首月5折"],
+    tags: ["IDE", "用量预算计费", "首月5折"],
   },
 ]

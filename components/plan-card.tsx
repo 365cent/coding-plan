@@ -3,7 +3,6 @@
 import {
   type Plan,
   type Tier,
-  lowestFirstMonthInPlan,
   purchasableRegularTiers,
   tierComparableMonthly,
 } from "@/lib/plans-data"
@@ -64,7 +63,6 @@ export function PlanCard({ plan }: { plan: Plan }) {
     return best
   })()
   const lowestPrice = lowestPriceInfo?.monthly ?? Infinity
-  const lowestFirst = lowestFirstMonthInPlan(plan)
 
   const lowestSecond = pricingTiers.reduce<number | undefined>((min, t) => {
     if (t.secondMonthPrice === undefined) return min
@@ -79,7 +77,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
     return Math.min(min, p)
   }, undefined)
 
-  /** 底部 CTA：取最低首月价及对应档位周期（仅统计明确配置了 firstMonthPrice 的档） */
+  /** 最低首月价及对应档位周期（仅统计明确配置了 firstMonthPrice 的未停售档） */
   const lowestFirstMonthTier = (() => {
     let best: { price: number; period: Tier["period"] } | undefined
     for (const t of plan.tiers) {
@@ -92,6 +90,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
     }
     return best
   })()
+  const lowestFirst = lowestFirstMonthTier?.price
 
   const ctaPriceSuffix = (period: Tier["period"]) => {
     if (period === "包") return "/包"

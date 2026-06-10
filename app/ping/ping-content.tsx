@@ -3,7 +3,7 @@
 import { Notice } from "@/components/notice"
 import { FaqSection } from "@/components/faq-section"
 
-import { ArrowDown, ArrowUp, Check, Copy, Gauge, Waves, Info, X } from "lucide-react"
+import { Check, Copy, Info } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useCallback, useMemo, useRef, useState } from "react"
@@ -130,15 +130,6 @@ async function testEndpoint(ep: Endpoint, signal?: AbortSignal): Promise<PingRes
   }
   const samples = robustSamples(rawSamples)
   return { endpoint: ep, samples, failed, avg: avg(samples), min: min(samples), max: max(samples), jitter: jitter(samples) }
-}
-
-function rankResults(items: PingResult[]) {
-  return [...items].sort((a, b) => {
-    if (a.avg == null && b.avg == null) return 0
-    if (a.avg == null) return 1
-    if (b.avg == null) return -1
-    return a.avg - b.avg
-  })
 }
 
 function ms(v: number | null) {

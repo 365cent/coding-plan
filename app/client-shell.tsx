@@ -5,6 +5,9 @@ import { useSearchParams } from "next/navigation"
 import {
   type Plan,
   type PlanCategory,
+  lowestPaidRegularTier,
+  planMonthlyRequestEq,
+  planRequestsPerYuan,
   purchasableRegularTiers,
   tierComparableMonthly,
 } from "@/lib/plans-data"
@@ -18,7 +21,7 @@ const DEFAULT_TABLE_LEADER_IDS = ["tencent", "bailian-token-team", "ark-agent", 
 
 function defaultLeaderRank(planId: string): number {
   const idx = DEFAULT_TABLE_LEADER_IDS.indexOf(planId as (typeof DEFAULT_TABLE_LEADER_IDS)[number])
-  return idx === -1 ? Number.POSITIVE_INFINITY : idx
+  return idx === -1 ? DEFAULT_TABLE_LEADER_IDS.length : idx
 }
 
 function isFreeSubscription(plan: Plan): boolean {
@@ -28,11 +31,52 @@ function isFreeSubscription(plan: Plan): boolean {
   return prices.length > 0 && Math.max(...prices) === 0
 }
 
-function compareFreeLast(a: Plan, b: Plan): number {
-  const freeA = isFreeSubscription(a)
-  const freeB = isFreeSubscription(b)
-  if (freeA === freeB) return 0
-  return freeA ? 1 : -1
+function effectiveToolCount(plan: Plan): number {
+  return Math.max(plan.toolCount, plan.tools.length)
+}
+
+type PlanMetrics = {
+  price: number
+  free: boolean
+  /** 性价比主指标：每元月等效调用次数（有官方可折算配额时） */
+  requestsPerYuan: number | undefined
+  /** 性价比兜底指标：无配额数据时按模型/工具丰富度估算 */
+  fallbackPerYuan: number
+  monthlyRequestEq: number
+}
+
+function computeMetrics(plan: Plan): PlanMetrics {
+  const monthly = purchasableRegularTiers(plan)
+    .map((t) => tierComparableMonthly(t))
+    .filter((p) => Number.isFinite(p))
+  const price = monthly.length ? Math.min(...monthly) : Infinity
+  const basic = lowestPaidRegularTier(plan)
+  const valuePrice = basic ? tierComparableMonthly(basic) : price
+  return {
+    price,
+    free: isFreeSubscription(plan),
+    requestsPerYuan: planRequestsPerYuan(plan),
+    fallbackPerYuan:
+      valuePrice > 0 && Number.isFinite(valuePrice)
+        ? (plan.models.length * 10 + effectiveToolCount(plan) * 5) / valuePrice
+        : 0,
+    monthlyRequestEq: planMonthlyRequestEq(plan) ?? 0,
+  }
+}
+
+/** 性价比对比：有官方可折算配额的平台一律排在仅能按模型/工具数估算的平台之前 */
+function compareValue(ma: PlanMetrics, mb: PlanMetrics): number {
+  if (ma.requestsPerYuan !== undefined || mb.requestsPerYuan !== undefined) {
+    if (ma.requestsPerYuan === undefined) return 1
+    if (mb.requestsPerYuan === undefined) return -1
+    if (ma.requestsPerYuan !== mb.requestsPerYuan) return mb.requestsPerYuan - ma.requestsPerYuan
+  }
+  return mb.fallbackPerYuan - ma.fallbackPerYuan
+}
+
+function compareFreeLast(ma: PlanMetrics, mb: PlanMetrics): number {
+  if (ma.free === mb.free) return 0
+  return ma.free ? 1 : -1
 }
 
 function ClientShellInner({ plans }: { plans: Plan[] }) {
@@ -52,9 +96,9 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
   }, [searchParams])
 
   const billingOptions = useMemo(() => {
-    const preferred = ["全部", "API请求", "按量计费", "Token计费", "积分制", "请求次数"] as const
-    const set = new Set(plans.map((p) => p.billingUnit))
-    const rest = Array.from(set).filter((x) => !preferred.includes(x as any))
+    const preferred: readonly string[] = ["全部", "API请求", "按量计费", "Token计费", "积分制", "请求次数"]
+    const set = new Set<string>(plans.map((p) => p.billingUnit))
+    const rest = Array.from(set).filter((x) => !preferred.includes(x))
     return [...preferred.filter((x) => x === "全部" || set.has(x)), ...rest]
   }, [plans])
 
@@ -87,6 +131,7 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
     }
 
     const categoryRank = (c: PlanCategory) => CATEGORY_ORDER.indexOf(c)
+    const metrics = new Map(result.map((p) => [p.id, computeMetrics(p)]))
 
     result = [...result].sort((a, b) => {
       // For non-default sorts, keep category grouping first.
@@ -96,63 +141,36 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
         if (ra !== rb) return ra - rb
       }
 
-      const monthlyA = purchasableRegularTiers(a).map((t) => tierComparableMonthly(t))
-      const monthlyB = purchasableRegularTiers(b).map((t) => tierComparableMonthly(t))
-      const priceA = monthlyA.length ? Math.min(...monthlyA) : Infinity
-      const priceB = monthlyB.length ? Math.min(...monthlyB) : Infinity
-
-      const getBaseTier = (plan: Plan) => purchasableRegularTiers(plan)[0]
-
-      const getMonthQuota = (plan: Plan) => {
-        if (plan.billingUnit !== "API请求" && plan.billingUnit !== "请求次数") return 0
-        const tier = getBaseTier(plan)
-        if (!tier) return 0
-        if (tier.limitMonthCount) return tier.limitMonthCount
-        if (tier.limitWeekCount) return tier.limitWeekCount * 4
-        return 0
-      }
-
-      const effectiveToolCount = (plan: Plan) => Math.max(plan.toolCount, plan.tools.length)
-
-      const getValueScore = (plan: Plan, price: number) => {
-        if (price <= 0) return 0
-        const quota = getMonthQuota(plan)
-        if (quota) return quota / price
-        return (plan.models.length * 10 + effectiveToolCount(plan) * 5) / price
-      }
-
-      const getRequestFreq = (plan: Plan) => getMonthQuota(plan)
+      const ma = metrics.get(a.id)!
+      const mb = metrics.get(b.id)!
 
       if (sortBy !== "default") {
-        const freeCmp = compareFreeLast(a, b)
+        const freeCmp = compareFreeLast(ma, mb)
         if (freeCmp !== 0) return freeCmp
       }
 
       switch (sortBy) {
         case "default": {
-          const leaderA = defaultLeaderRank(a.id)
-          const leaderB = defaultLeaderRank(b.id)
-          if (leaderA !== leaderB) {
-            if (Number.isFinite(leaderA) || Number.isFinite(leaderB)) return leaderA - leaderB
-          }
-          const freeCmp = compareFreeLast(a, b)
+          const leaderDiff = defaultLeaderRank(a.id) - defaultLeaderRank(b.id)
+          if (leaderDiff) return leaderDiff
+          const freeCmp = compareFreeLast(ma, mb)
           if (freeCmp !== 0) return freeCmp
-          const valueDiff = getValueScore(b, priceB) - getValueScore(a, priceA)
-          if (valueDiff !== 0) return valueDiff
+          const valueCmp = compareValue(ma, mb)
+          if (valueCmp !== 0) return valueCmp
           return (originalIndex.get(a.id) ?? 0) - (originalIndex.get(b.id) ?? 0)
         }
         case "price-asc":
-          return priceA - priceB
+          return ma.price - mb.price
         case "price-desc":
-          return priceB - priceA
+          return mb.price - ma.price
         case "value":
-          return getValueScore(b, priceB) - getValueScore(a, priceA)
+          return compareValue(ma, mb)
         case "models":
           return b.models.length - a.models.length
         case "tools":
           return effectiveToolCount(b) - effectiveToolCount(a)
         case "requests":
-          return getRequestFreq(b) - getRequestFreq(a)
+          return mb.monthlyRequestEq - ma.monthlyRequestEq
         default:
           return 0
       }
