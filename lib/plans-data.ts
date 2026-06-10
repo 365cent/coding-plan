@@ -218,6 +218,7 @@ export const plans: Plan[] = [
     category: "国内大厂",
     links: {
       official: "https://cn.aliyun.com/benefit/scene/tokenplan",
+      affiliate: "https://www.aliyun.com/benefit/client/cross?userCode=y44p2mtf",
     },
     logo: { src: "/logos/qwen.png", alt: "通义千问" },
     notice:
