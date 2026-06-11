@@ -690,7 +690,7 @@ export const plans: Plan[] = [
     category: "其他",
     links: {
       official: "https://platform.minimaxi.com/subscribe/token-plan",
-      affiliate: "https://platform.minimaxi.com/subscribe/token-plan?code=uQkm#YTxQ#SGio4O&source=link",
+      affiliate: "https://platform.minimaxi.com/subscribe/token-plan?code=JRiikacsOL&source=img",
     },
     logo: { src: "/logos/minimax.png", alt: "MiniMax" },
     notice:
