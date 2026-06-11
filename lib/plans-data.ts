@@ -325,6 +325,7 @@ export const plans: Plan[] = [
     category: "国内大厂",
     links: {
       official: "https://www.volcengine.com/activity/agentplan",
+      affiliate: "https://www.volcengine.com/activity/agentplan?utm_campaign=20260611&utm_content=agentplan&utm_medium=agentplan-koc&utm_source=agentplan-koc&utm_term=01",
     },
     logo: { src: "/logos/volcengine.png", alt: "火山引擎" },
     notice:
