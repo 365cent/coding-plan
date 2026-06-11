@@ -443,7 +443,7 @@ export const plans: Plan[] = [
     category: "其他",
     links: {
       official: "https://www.bigmodel.cn/glm-coding",
-      affiliate: "https://www.bigmodel.cn/glm-coding?ic=R8RQ6LQCRJ",
+      affiliate: "https://www.bigmodel.cn/glm-coding?ic=R3C4QNZHF0",
     },
     logo: { src: "/logos/bigmodel.png", alt: "智谱AI" },
     models: ["GLM-5.1", "GLM-5-Turbo", "GLM-4.7", "GLM-4.6", "GLM-4.5-Air", "GLM-5（Max/Pro）"],
