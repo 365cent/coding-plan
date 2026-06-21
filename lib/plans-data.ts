@@ -447,7 +447,7 @@ export const plans: Plan[] = [
       affiliate: "https://www.bigmodel.cn/glm-coding?ic=R3C4QNZHF0",
     },
     logo: { src: "/logos/bigmodel.png", alt: "智谱AI" },
-    models: ["GLM-5.1", "GLM-5-Turbo", "GLM-4.7", "GLM-4.6", "GLM-4.5-Air", "GLM-5（Max/Pro）"],
+    models: ["GLM-5.2", "GLM-5.1", "GLM-5-Turbo", "GLM-4.7", "GLM-4.6", "GLM-4.5-Air", "GLM-5（Max/Pro）"],
     tiers: [
       {
         name: "Lite",
@@ -469,7 +469,7 @@ export const plans: Plan[] = [
         limit5hCount: 400,
         limitWeekCount: 2000,
         countsPrompts: true,
-        notes: "MCP 1,000次/月；含 GLM-5",
+        notes: "MCP 1,000次/月；含 GLM-5.2",
       },
       {
         name: "Max",
@@ -480,7 +480,7 @@ export const plans: Plan[] = [
         limit5hCount: 1600,
         limitWeekCount: 8000,
         countsPrompts: true,
-        notes: "MCP 4,000次/月，高峰优先；含 GLM-5",
+        notes: "MCP 4,000次/月，高峰优先；含 GLM-5.2",
       },
     ],
     billingUnit: "按量计费",
@@ -497,7 +497,7 @@ export const plans: Plan[] = [
     category: "其他",
     links: { official: "https://www.kimi.com/membership/pricing" },
     logo: { src: "/logos/kimi.png", alt: "Kimi" },
-    models: ["Kimi K2.6", "Kimi K2.5", "Kimi K2 Thinking"],
+    models: ["Kimi K2.7 Code", "Kimi K2.6", "Kimi K2.5", "Kimi K2 Thinking"],
     tiers: [
       {
         name: "Andante",
@@ -539,7 +539,7 @@ export const plans: Plan[] = [
     billingUnit: "Token计费",
     tools: ["Kimi Code CLI", "Kimi Code for VS Code", "Claude Code", "Roo Code"],
     toolCount: 4,
-    tags: ["K2.6 / K2.5", "7天滚动刷新", "256K上下文"],
+    tags: ["K2.7 Code / K2.6", "7天滚动刷新", "256K上下文"],
     yearlyPrice: 468,
   },
   {
@@ -1106,9 +1106,10 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/ucloud.png", alt: "UCloud" },
     models: [
-      "MiniMax-M2.7",
-      "Kimi-K2.6",
+      "GLM-5.2",
       "GLM-5.1",
+      "Kimi-K2.6",
+      "MiniMax-M2.7",
       "DeepSeek-V3.2",
       "DeepSeek-V4-Flash",
     ],
@@ -1202,8 +1203,10 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/opencode.png", alt: "OpenCode" },
     models: [
+      "GLM-5.2",
       "GLM-5",
       "GLM-5.1",
+      "Kimi K2.7 Code",
       "Kimi K2.5",
       "Kimi K2.6",
       "MiMo-V2.5",
@@ -1230,7 +1233,7 @@ export const plans: Plan[] = [
         limit5hCount: 3275,
         limitWeekCount: 8175,
         limitMonthCount: 16300,
-        notes: "按美元额度滚动计费；约 3,275 次/5h、16,300 次/月（14 款模型官方估算中位数）；可充值",
+        notes: "按美元额度滚动计费；约 3,275 次/5h、16,300 次/月（16 款模型官方估算中位数）；可充值",
       },
     ],
     billingUnit: "按量计费",
