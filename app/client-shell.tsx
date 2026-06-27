@@ -19,7 +19,7 @@ import { PlanCard } from "@/components/plan-card"
 import { ComparisonTable } from "@/components/comparison-table"
 
 const CATEGORY_ORDER: PlanCategory[] = ["国内大厂", "其他"]
-const DEFAULT_TABLE_LEADER_IDS = ["tencent", "bailian-token-team", "ark-agent", "minimax", "cursor"] as const
+const DEFAULT_TABLE_LEADER_IDS = ["tencent", "bailian-token-team", "ark-agent", "minimax", "opencode-go"] as const
 
 function defaultLeaderRank(planId: string): number {
   const idx = DEFAULT_TABLE_LEADER_IDS.indexOf(planId as (typeof DEFAULT_TABLE_LEADER_IDS)[number])

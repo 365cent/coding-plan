@@ -282,7 +282,18 @@ export const plans: Plan[] = [
     logo: { src: "/logos/volcengine.png", alt: "火山引擎" },
     notice:
       "2026年6月8日至8月8日，Lite/Pro 新购、续费、升配享首两个月 2.5 折（¥9.9/¥49.9），第三个月起恢复原价；优惠资格共享且名额有限，先到先得。",
-    models: ["Doubao", "GLM", "DeepSeek", "Kimi", "MiniMax"],
+    models: [
+      "Auto",
+      "Doubao-Seed-2.0",
+      "Doubao-Seed",
+      "GLM-5.2",
+      "Kimi-K2.7-Code",
+      "MiniMax-M3",
+      "DeepSeek-V4-Flash",
+      "DeepSeek-V4-Pro",
+      "MiniMax-M2.7",
+      "Kimi-K2.6"
+    ],
     tiers: [
       {
         name: "Lite",
@@ -331,20 +342,21 @@ export const plans: Plan[] = [
     notice:
       "方舟 Agent Plan 面向个人用户，采用 Agent 燃料值（AFP）统一计量；文本/向量/视频按原始 token 抵扣，图片按张抵扣。套餐额度仅在 AI 工具中生效，不可用于普通 API 调用；误用普通 API 可能导致订阅停用或账号封禁。",
     models: [
-      "doubao-seed-2.0-mini",
-      "doubao-seed-2.0-lite",
-      "doubao-seed-2.0-code",
-      "doubao-seed-2.0-pro",
-      "deepseek-v3.2",
-      "minimax-m2.7",
-      "glm-5.1",
-      "kimi-k2.6",
-      "doubao-embedding-vision",
-      "doubao-seedream-5.0-lite",
-      "doubao-seedance-1.5-pro",
-      "doubao-seedance-2.0",
-      "doubao-seedance-2.0-fast",
-      "联网搜索 Harness",
+      "Auto",
+      "Doubao-Seed-2.0",
+      "Doubao-Seedance-2.0",
+      "Doubao-Seedream-5.0",
+      "Doubao-embedding-vision",
+      "GLM-5.2",
+      "Kimi-K2.7-Code",
+      "DeepSeek-V4-Pro",
+      "DeepSeek-V4-Flash",
+      "MiniMax-M3",
+      "Doubao-Seed-TTS-2.0",
+      "Doubao-Seed-ASR-2.0",
+      "MiniMax-M2.7",
+      "Kimi-K2.6",
+      "DeepSeek-V3.2"
     ],
     tiers: [
       {
