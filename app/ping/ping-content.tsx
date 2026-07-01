@@ -35,8 +35,8 @@ const ENDPOINTS: Endpoint[] = [
   { provider: "火山方舟 Agent Plan", company: "字节跳动", product: "火山方舟 Agent Plan", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.cn-beijing.volces.com/api/plan/v3", region: "domestic" },
   { provider: "BytePlus（字节国际站）", company: "字节跳动（国际站）", product: "BytePlus Coding", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.ap-southeast.bytepluses.com/api/coding", region: "international" },
   { provider: "腾讯云", company: "腾讯云", product: "腾讯云 Token Plan", logoSrc: "/logos/tencentcloud.png", logoAlt: "腾讯云", url: "https://api.lkeap.cloud.tencent.com/plan/v3", region: "domestic" },
-  { provider: "智谱 GLM", company: "智谱AI", product: "GLM Coding Plan", logoSrc: "/logos/bigmodel.png", logoAlt: "智谱AI", url: "https://open.bigmodel.cn/api/coding/paas/v4", region: "domestic" },
-  { provider: "智谱 Z.ai（国际站）", company: "智谱AI（国际站）", product: "Z.ai Coding", logoSrc: "/logos/bigmodel.png", logoAlt: "智谱AI", url: "https://api.z.ai/api/coding/paas/v4", region: "international" },
+  { provider: "智谱大模型", company: "智谱华章", product: "GLM Coding Plan", logoSrc: "/logos/bigmodel.png", logoAlt: "智谱华章", url: "https://open.bigmodel.cn/api/coding/paas/v4", region: "domestic" },
+  { provider: "智谱Z.ai", company: "智谱华章（国际站）", product: "GLM Coding Plan", logoSrc: "/logos/zai.svg", logoAlt: "智谱华章（国际站）", url: "https://api.z.ai/api/coding/paas/v4", region: "international" },
   { provider: "Kimi", company: "月之暗面", product: "Kimi Code Plan", logoSrc: "/logos/kimi.png", logoAlt: "Kimi", url: "https://api.kimi.com/coding/v1", region: "domestic" },
   { provider: "MiniMax", company: "MiniMax", product: "MiniMax Token Plan", logoSrc: "/logos/minimax.png", logoAlt: "MiniMax", url: "https://api.minimaxi.com/v1/", region: "domestic" },
   { provider: "MiniMax（国际站）", company: "MiniMax（国际站）", product: "MiniMax Token Plan", logoSrc: "/logos/minimax.png", logoAlt: "MiniMax", url: "https://api.minimax.io/v1", region: "international" },
@@ -51,8 +51,6 @@ const ENDPOINTS: Endpoint[] = [
   { provider: "科大讯飞", company: "科大讯飞", product: "讯飞星辰 Astron Coding Plan", logoSrc: "/logos/xfyun.png", logoAlt: "讯飞星辰", url: "https://maas-coding-api.cn-huabei-1.xf-yun.com/v2", region: "domestic" },
   { provider: "京东云", company: "京东云", product: "京东云 Coding Plan", logoSrc: "/logos/jd.png", logoAlt: "京东", url: "https://modelservice.jdcloud.com/coding/openai/v1", region: "domestic" },
   { provider: "快手 KwaiKAT", company: "快手", product: "KwaiKAT Coding Plan", logoSrc: "/logos/kuaishou.png", logoAlt: "快手", url: "https://wanqing.streamlakeapi.com/api/gateway/coding/v1", region: "domestic" },
-  { provider: "联通云（贵阳）", company: "联通云（贵阳）", product: "Coding Plan", logoSrc: "/logos/cucloud.png", logoAlt: "联通云", url: "https://aigw-gzgy2.cucloud.cn:8443/v1", region: "domestic" },
-  { provider: "联通云（济南）", company: "联通云（济南）", product: "Coding Plan", logoSrc: "/logos/cucloud.png", logoAlt: "联通云", url: "https://aigw-jnzs5.cucloud.cn:8443/v1", region: "domestic" },
 ]
 
 const SAMPLE_COUNT = 5
