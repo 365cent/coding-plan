@@ -276,8 +276,8 @@ export const plans: Plan[] = [
     product: "火山方舟 Coding Plan",
     category: "国内大厂",
     links: {
-      official: "https://www.volcengine.com/activity/codingplan",
-      affiliate: "https://volcengine.com/L/htePBo7G28s/",
+      official: "https://www.volcengine.com/activity/codingplan?utm_campaign=CG&utm_content=CG&utm_medium=CakeGrowth&utm_source=OWO&utm_term=CG&utm=cg&cgv=p3kqx4gnol",
+      affiliate: "https://www.volcengine.com/activity/codingplan?utm_campaign=CG&utm_content=CG&utm_medium=CakeGrowth&utm_source=OWO&utm_term=CG&utm=cg&cgv=p3kqx4gnol",
     },
     logo: { src: "/logos/volcengine.png", alt: "火山引擎" },
     notice:
