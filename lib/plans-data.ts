@@ -617,8 +617,8 @@ export const plans: Plan[] = [
     product: "讯飞星辰 Astron Coding Plan",
     category: "其他",
     links: {
-      official: "https://maas.xfyun.cn/packageSubscription",
-      affiliate: "https://maas.xfyun.cn/packageSubscription?inviteCode=MAAS-23F9F34A",
+      official: "https://maas.xfyun.cn/packageSubscription?ch=maas-cg-kol-120",
+      affiliate: "https://maas.xfyun.cn/packageSubscription?ch=maas-cg-kol-120",
     },
     logo: { src: "/logos/xfyun.png", alt: "讯飞星辰" },
     models: [
