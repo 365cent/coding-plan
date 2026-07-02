@@ -505,7 +505,7 @@ export const plans: Plan[] = [
   {
     id: "zai-glm",
     company: "智谱华章",
-    product: "GLM Coding Plan（国际版）",
+    product: "GLM Plan（国际版）",
     category: "其他",
     links: {
       official: "https://z.ai/subscribe",
@@ -557,7 +557,7 @@ export const plans: Plan[] = [
     billingUnit: "按量计费",
     tools: ["Claude Code", "Roo Code", "Kilo Code", "Cline", "OpenCode", "Cursor", "CodeGeeX"],
     toolCount: 20,
-    tags: ["开源SOTA", "自研模型"],
+    tags: ["持续有货", "开源SOTA", "自研模型"],
   },
   {
     id: "kimi",
