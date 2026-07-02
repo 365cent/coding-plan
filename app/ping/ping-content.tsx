@@ -36,7 +36,7 @@ const ENDPOINTS: Endpoint[] = [
   { provider: "BytePlus（字节国际站）", company: "字节跳动（国际站）", product: "BytePlus Coding", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.ap-southeast.bytepluses.com/api/coding", region: "international" },
   { provider: "腾讯云", company: "腾讯云", product: "腾讯云 Token Plan", logoSrc: "/logos/tencentcloud.png", logoAlt: "腾讯云", url: "https://api.lkeap.cloud.tencent.com/plan/v3", region: "domestic" },
   { provider: "智谱大模型", company: "智谱华章", product: "GLM Coding Plan", logoSrc: "/logos/bigmodel.png", logoAlt: "智谱华章", url: "https://open.bigmodel.cn/api/coding/paas/v4", region: "domestic" },
-  { provider: "智谱Z.ai", company: "智谱华章（国际站）", product: "GLM Coding Plan", logoSrc: "/logos/zai.svg", logoAlt: "智谱华章（国际站）", url: "https://api.z.ai/api/coding/paas/v4", region: "international" },
+  { provider: "智谱Z.ai", company: "智谱华章", product: "GLM Coding Plan（国际版）", logoSrc: "/logos/zai.svg", logoAlt: "智谱华章", url: "https://api.z.ai/api/coding/paas/v4", region: "international" },
   { provider: "Kimi", company: "月之暗面", product: "Kimi Code Plan", logoSrc: "/logos/kimi.png", logoAlt: "Kimi", url: "https://api.kimi.com/coding/v1", region: "domestic" },
   { provider: "MiniMax", company: "MiniMax", product: "MiniMax Token Plan", logoSrc: "/logos/minimax.png", logoAlt: "MiniMax", url: "https://api.minimaxi.com/v1/", region: "domestic" },
   { provider: "MiniMax（国际站）", company: "MiniMax（国际站）", product: "MiniMax Token Plan", logoSrc: "/logos/minimax.png", logoAlt: "MiniMax", url: "https://api.minimax.io/v1", region: "international" },

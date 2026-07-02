@@ -504,8 +504,8 @@ export const plans: Plan[] = [
   },
   {
     id: "zai-glm",
-    company: "智谱华章（国际站）",
-    product: "GLM Coding Plan",
+    company: "智谱华章",
+    product: "GLM Coding Plan（国际版）",
     category: "其他",
     links: {
       official: "https://z.ai/subscribe",
@@ -623,9 +623,10 @@ export const plans: Plan[] = [
     logo: { src: "/logos/xfyun.png", alt: "讯飞星辰" },
     models: [
       "Spark X2",
+      "GLM-5",
+      "GLM-5.2",
       "DeepSeek-V4-Pro",
       "DeepSeek-V4-Flash",
-      "GLM-5",
       "Kimi-K2.6",
       "GLM-5.1",
       "MiniMax-M2.5",
@@ -633,9 +634,9 @@ export const plans: Plan[] = [
       "DeepSeek-V3.2",
       "Spark-X2-Flash",
       "Qwen3.6-35B-A3B",
+      "GLM-4.7-Flash",
       "Qwen3.5-35B-A3B",
       "Qwen3-Coder-Next-FP8",
-      "GLM-4.7-Flash",
       "Qwen3.5-397B-A17B",
     ],
     tiers: [
@@ -652,7 +653,7 @@ export const plans: Plan[] = [
         limitWeekCount: 9000,
         limitMonthCount: 18000,
         notes:
-          "首购 ¥3.90/月，后续 ¥19/月；Spark-X2-Flash / Qwen3.6-35B-A3B / Qwen3.5-35B-A3B / Qwen3-Coder-Next-FP8 / GLM-4.7-Flash",
+          "首购 ¥3.90/月，后续 ¥19/月；请求次数不限；Spark-X2-Flash / Qwen3.6-35B-A3B / Qwen3.5-35B-A3B / Qwen3-Coder-Next-FP8 / GLM-4.7-Flash",
       },
       {
         name: "专业版",
@@ -678,7 +679,7 @@ export const plans: Plan[] = [
         limitWeekCount: 45000,
         limitMonthCount: 90000,
         notes:
-          "极致性能；Spark X2 / GLM-5 / DeepSeek-V4-Pro / DeepSeek-V4-Flash / Kimi-K2.6 / GLM-5.1 / MiniMax-M2.5 / Kimi-K2.5 / DeepSeek-V3.2 / Spark-X2-Flash / Qwen3.6-35B-A3B / GLM-4.7-Flash / Qwen3.5-35B-A3B / Qwen3-Coder-Next-FP8 / Qwen3.5-397B-A17B",
+          "极致性能；Spark X2 / GLM-5 / GLM-5.2 / DeepSeek-V4-Pro / DeepSeek-V4-Flash / Kimi-K2.6 / GLM-5.1 / MiniMax-M2.5 / Kimi-K2.5 / DeepSeek-V3.2 / Spark-X2-Flash / Qwen3.6-35B-A3B / GLM-4.7-Flash / Qwen3.5-35B-A3B / Qwen3-Coder-Next-FP8 / Qwen3.5-397B-A17B",
       },
     ],
     billingUnit: "API请求",
