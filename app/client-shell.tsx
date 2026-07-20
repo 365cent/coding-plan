@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState, useEffect, Suspense } from "react"
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import {
   type Plan,
@@ -79,21 +79,23 @@ function compareFreeLast(ma: PlanMetrics, mb: PlanMetrics): number {
   return ma.free ? 1 : -1
 }
 
-function ClientShellInner({ plans }: { plans: Plan[] }) {
-  const searchParams = useSearchParams()
-  const initialSearch = searchParams.get("q") || ""
-  const [search, setSearch] = useState(initialSearch)
+function SearchParamsSync({ onChange }: { onChange: (q: string) => void }) {
+  const q = useSearchParams().get("q") ?? ""
+  useEffect(() => onChange(q), [q, onChange])
+  return null
+}
+
+export function ClientShell({ plans }: { plans: Plan[] }) {
+  const [search, setSearch] = useState("")
   const [billingFilter, setBillingFilter] = useState("全部")
   const [categoryFilter, setCategoryFilter] = useState<PlanCategory | "">("")
   const [sortBy, setSortBy] = useState("default")
-  const isByProvider = initialSearch.startsWith("by:provider ")
-  const [view, setView] = useState<"cards" | "table">(isByProvider ? "cards" : "table")
+  const [view, setView] = useState<"cards" | "table">("table")
 
-  // Sync search state if URL changes (optional, but good practice)
-  useEffect(() => {
-    const q = searchParams.get("q")
-    setSearch(q ?? "")
-  }, [searchParams])
+  const syncFromUrl = useCallback((q: string) => {
+    setSearch(q)
+    setView(q.startsWith("by:provider ") ? "cards" : "table")
+  }, [])
 
   const billingOptions = useMemo(() => {
     const preferred: readonly string[] = ["全部", "API请求", "按量计费", "Token计费", "积分制", "请求次数"]
@@ -102,9 +104,16 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
     return [...preferred.filter((x) => x === "全部" || set.has(x)), ...rest]
   }, [plans])
 
+  const { metrics, originalIndex } = useMemo(
+    () => ({
+      metrics: new Map(plans.map((p) => [p.id, computeMetrics(p)])),
+      originalIndex: new Map(plans.map((p, idx) => [p.id, idx])),
+    }),
+    [plans],
+  )
+
   const filtered = useMemo(() => {
     let result = plans
-    const originalIndex = new Map(plans.map((p, idx) => [p.id, idx]))
 
     if (categoryFilter) {
       result = result.filter((p) => p.category === categoryFilter)
@@ -131,7 +140,6 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
     }
 
     const categoryRank = (c: PlanCategory) => CATEGORY_ORDER.indexOf(c)
-    const metrics = new Map(result.map((p) => [p.id, computeMetrics(p)]))
 
     result = [...result].sort((a, b) => {
       // For non-default sorts (except price / requests), keep category grouping first.
@@ -183,10 +191,13 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
     })
 
     return result
-  }, [plans, search, billingFilter, categoryFilter, sortBy])
+  }, [plans, search, billingFilter, categoryFilter, sortBy, metrics, originalIndex])
 
   return (
     <>
+      <Suspense fallback={null}>
+        <SearchParamsSync onChange={syncFromUrl} />
+      </Suspense>
       <FilterBar
         search={search}
         onSearchChange={setSearch}
@@ -224,13 +235,5 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
         )}
       </div>
     </>
-  )
-}
-
-export function ClientShell({ plans }: { plans: Plan[] }) {
-  return (
-    <Suspense fallback={<div className="min-h-[400px]" />}>
-      <ClientShellInner plans={plans} />
-    </Suspense>
   )
 }

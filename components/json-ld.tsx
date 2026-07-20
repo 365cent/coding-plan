@@ -1,4 +1,5 @@
 import { type Plan, planComparableMonthlyPrice } from "@/lib/plans-data"
+import { faqItems } from "@/components/faq-section"
 import { getSiteOrigin } from "@/lib/site-origin"
 
 function jsonLd(data: unknown) {
@@ -86,56 +87,11 @@ export function FAQPageJsonLd() {
   const data = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: "国内哪家AI Coding Plan性价比最高？",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "综合首月优惠期看，部分平台首月低价更划算；长期订阅则应以续费价和用量上限为准，选择适合自己使用频率与模型需求的套餐。",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "API请求和请求次数有什么区别？",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "API请求通常指底层模型调用次数；请求次数更接近用户侧的对话轮次。不同平台口径不同，应以官方说明为准，不宜直接用“次数”做跨平台对比。",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "国内Coding Plan支持Claude Code吗？",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "不少平台提供OpenAI兼容接口或在工具列表中明确支持Claude Code等客户端工具；具体支持范围与配置方式以各平台文档为准。",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "5小时限额是什么意思？",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "表示任意连续5小时窗口内的使用上限，用于衡量突发使用能力。不同平台可能按对话轮次、请求或Token计量。",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "哪家平台模型选择最多？",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "模型数量会随时间变化。通常大型平台会提供更丰富的自研与第三方模型选择，建议查看各平台当前模型列表与上新频率。",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "Token计费和按请求次数计费哪个划算？",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "取决于场景：Token计费对长上下文更透明；按请求次数计费对高频短对话更直观。建议结合自己的对话长度与调用频率评估。",
-        },
-      },
-    ],
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
   }
 
   return <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(data)} />

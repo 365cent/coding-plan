@@ -33,7 +33,9 @@ export default function Page() {
         </p>
         <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
           <strong>最后更新：</strong>{" "}
-          {new Date().toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
+          <time dateTime={new Date().toISOString().split("T")[0]}>
+            {new Date().toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}
+          </time>
         </p>
       </section>
     </main>

@@ -3,7 +3,7 @@ export type FaqItem = {
   a: string
 }
 
-const defaultFaqItems: FaqItem[] = [
+export const faqItems: FaqItem[] = [
   {
     q: "国内哪家AI Coding Plan性价比最高？",
     a: "没有单一“最划算”。建议用续费价（标准价）做基准，再结合你的使用强度（5小时/周/月限额）和模型/工具需求选择；首月优惠只适合短期体验，不适合长期对比。",
@@ -30,7 +30,7 @@ const defaultFaqItems: FaqItem[] = [
   },
 ]
 
-export function FaqSection({ items = defaultFaqItems }: { items?: FaqItem[] }) {
+export function FaqSection({ items = faqItems }: { items?: FaqItem[] }) {
   return (
     <section
       id="faq"

@@ -4,7 +4,6 @@ import {
   type Plan,
   basicRegularTier,
   lowestFirstMonthInPlan,
-  purchasableRegularTiers,
   tierComparableMonthly,
 } from "@/lib/plans-data"
 import { ExternalLink } from "lucide-react"

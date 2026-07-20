@@ -89,6 +89,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
+      <head>
+        <link
+          rel="search"
+          type="application/opensearchdescription+xml"
+          title={siteName}
+          href="/opensearch.xml"
+        />
+      </head>
       <body className="font-sans antialiased">
         <a
           href="#main-content"

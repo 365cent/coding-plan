@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import {
   type Plan,
   type Tier,
@@ -47,7 +48,8 @@ function renderNoticeWithLinks(text: string) {
   )
 }
 
-export function PlanCard({ plan }: { plan: Plan }) {
+/** plan 引用稳定（来自模块级 plans 数组），memo 可让排序/筛选时未变化的卡片跳过重渲染 */
+export const PlanCard = memo(function PlanCard({ plan }: { plan: Plan }) {
   const regularTiers = plan.tiers.filter((t) => !t.isFirstMonthOnly)
   const pricingTiers = purchasableRegularTiers(plan)
   const dealTiers = plan.tiers.filter(
@@ -368,4 +370,4 @@ export function PlanCard({ plan }: { plan: Plan }) {
       </div>
     </div>
   )
-}
+})
