@@ -7,6 +7,7 @@ import {
   type PlanCategory,
   comparePlanRateLimits,
   lowestPaidRegularTier,
+  modelMatchesQuery,
   planComparableMonthlyPrice,
   planMonthlyRequestEq,
   planRequestsPerYuan,
@@ -119,7 +120,7 @@ function ClientShellInner({ plans }: { plans: Plan[] }) {
           (p) =>
             p.company.toLowerCase().includes(q) ||
             p.product.toLowerCase().includes(q) ||
-            p.models.some((m) => m.toLowerCase().includes(q)) ||
+            p.models.some((m) => modelMatchesQuery(m, search)) ||
             p.tools.some((t) => t.toLowerCase().includes(q)),
         )
       }
