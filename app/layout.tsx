@@ -104,12 +104,14 @@ export default function RootLayout({
         >
           跳到主要内容
         </a>
-        <Script
-          defer
-          data-domain="coding.mcppla.net"
-          src="/script.js"
-          strategy="afterInteractive"
-        />
+        {process.env.NODE_ENV === "production" && (
+          <Script
+            defer
+            data-domain="coding.mcppla.net"
+            src="/script.js"
+            strategy="afterInteractive"
+          />
+        )}
         <WebSiteJsonLd />
         <ItemListJsonLd plans={plans} />
         <FAQPageJsonLd />
