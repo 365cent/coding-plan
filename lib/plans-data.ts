@@ -417,8 +417,8 @@ export const plans: Plan[] = [
     product: "火山方舟 Agent Plan",
     category: "国内大厂",
     links: {
-      official: "https://www.volcengine.com/activity/agentplan?utm_campaign=20260611&utm_content=agentplan&utm_medium=agentplan-koc&utm_source=agentplan-koc&utm_term=01",
-      affiliate: "https://www.volcengine.com/activity/agentplan?utm_campaign=20260611&utm_content=agentplan&utm_medium=agentplan-koc&utm_source=agentplan-koc&utm_term=01",
+      official: "https://www.volcengine.com/activity/agentplan?utm_campaign=CG&utm_content=CG&utm_medium=CakeGrowth&utm_source=OWO&utm_term=CG&utm=cg&cgv=ogewxv7kp2",
+      affiliate: "https://www.volcengine.com/activity/agentplan?utm_campaign=CG&utm_content=CG&utm_medium=CakeGrowth&utm_source=OWO&utm_term=CG&utm=cg&cgv=ogewxv7kp2",
     },
     logo: { src: "/logos/volcengine.png", alt: "火山引擎" },
     models: [
