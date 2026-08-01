@@ -4,14 +4,14 @@
 
 [[redirects]]
   from = "/script.js"
-  to = "https://endpoint-b.longlive.cloud/script.js"
+  to = "https://endpoint-a.longlive.cloud/script.js"
   status = 200
   force = true
-  headers = { Cache-Control = "public, max-age=600" }
+  headers = { Cache-Control = "public, max-age=7200" }
 
 [[redirects]]
   from = "/api/event"
-  to = "https://endpoint-b.longlive.cloud/api/event"
+  to = "https://endpoint-a.longlive.cloud/api/event"
   status = 200
   force = true
 
