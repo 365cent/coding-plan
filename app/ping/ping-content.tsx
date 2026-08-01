@@ -503,20 +503,20 @@ export function PingContent() {
         </div>
 
         <div className="hidden md:block overflow-x-auto rounded-lg border border-border bg-card">
-          <table className="w-full text-left text-sm">
+          <table className="w-full table-fixed text-left text-sm xl:table-auto">
             <thead>
               <tr className="border-b border-border bg-secondary/40">
                 <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap w-10">排名</th>
                 <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">平台</th>
-                <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap hidden md:table-cell">区域</th>
-                <th className="hidden px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap md:table-cell md:w-80 xl:w-auto">
+                <th className="hidden px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap lg:table-cell">区域</th>
+                <th className="hidden px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap md:table-cell md:w-64 lg:w-72 xl:w-auto">
                   接口地址
                 </th>
                 <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap text-right hidden md:table-cell">平均</th>
                 <th className="hidden px-4 py-3 text-right text-xs font-semibold text-muted-foreground whitespace-nowrap 2xl:table-cell">最低</th>
                 <th className="hidden px-4 py-3 text-right text-xs font-semibold text-muted-foreground whitespace-nowrap 2xl:table-cell">最高</th>
-                <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap text-right hidden md:table-cell">抖动</th>
-                <th className="px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap" style={{ minWidth: 160 }}>
+                <th className="hidden px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap text-right lg:table-cell">抖动</th>
+                <th className="w-40 px-4 py-3 text-xs font-semibold text-muted-foreground whitespace-nowrap">
                   延迟
                 </th>
               </tr>
@@ -584,7 +584,7 @@ export function PingContent() {
                           </div>
                         </div>
                       </th>
-                      <td className="px-4 py-3 whitespace-nowrap hidden md:table-cell">
+                      <td className="hidden px-4 py-3 whitespace-nowrap lg:table-cell">
                         <span
                           className={`px-1.5 py-0.5 rounded-sm text-[10px] font-medium ${
                             endpoint.region === "domestic"
@@ -599,7 +599,7 @@ export function PingContent() {
                           })()}
                         </span>
                       </td>
-                      <td className="hidden px-4 py-3 md:table-cell md:w-80 xl:w-auto">
+                      <td className="hidden px-4 py-3 md:table-cell md:w-64 lg:w-72 xl:w-auto">
                         <div className="flex w-full min-w-0 items-center gap-1 rounded-md border border-border/40 bg-muted/20 px-1.5 py-0.5 xl:inline-flex xl:w-auto xl:min-w-80">
                           <code className="w-0 min-w-0 flex-1 truncate whitespace-nowrap text-[11px] font-normal leading-snug text-muted-foreground/80 xl:w-auto xl:flex-none xl:overflow-visible xl:text-clip">
                             {endpoint.url}
@@ -626,11 +626,11 @@ export function PingContent() {
                       <td className="px-4 py-3 whitespace-nowrap text-right tabular-nums hidden md:table-cell">{ms(result?.avg ?? null)}</td>
                       <td className="hidden px-4 py-3 text-right text-muted-foreground tabular-nums whitespace-nowrap 2xl:table-cell">{ms(result?.min ?? null)}</td>
                       <td className="hidden px-4 py-3 text-right text-muted-foreground tabular-nums whitespace-nowrap 2xl:table-cell">{ms(result?.max ?? null)}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-right tabular-nums text-muted-foreground hidden md:table-cell">{ms(result?.jitter ?? null)}</td>
-                      <td className="px-4 py-3">
+                      <td className="hidden px-4 py-3 whitespace-nowrap text-right tabular-nums text-muted-foreground lg:table-cell">{ms(result?.jitter ?? null)}</td>
+                      <td className="min-w-0 px-4 py-3">
                         {result?.avg != null ? (
                           <div className="flex flex-col items-end sm:flex-row sm:items-center gap-1 sm:gap-2">
-                            <div className="flex-1 h-2 rounded-full bg-secondary overflow-hidden">
+                            <div className="min-w-0 flex-1 h-2 rounded-full bg-secondary overflow-hidden">
                               <div
                                 className="h-full rounded-full transition-all duration-500"
                                 style={{

@@ -151,15 +151,20 @@ export function planMonthlyRequestEq(plan: Plan): number | undefined {
   return basic ? tierMonthlyRequestEq(basic) : undefined
 }
 
+function tierMonthlyRateLimitEq(t: Tier | undefined): number | undefined {
+  if (!t) return undefined
+  if (t.limitMonthCount !== undefined) return t.limitMonthCount
+  return tierMonthlyRequestEq(t)
+}
+
 /** 请求频次排序：先比 5 小时，再比每周，最后比每月（高者优先，无数据排后） */
 export function comparePlanRateLimits(a: Plan, b: Plan): number {
   const ta = basicRegularTier(a)
   const tb = basicRegularTier(b)
-  // 月维度兜底 requestEqMonth，保证纯月配额平台（如 Cursor）可参与比较
   const cols: [number | undefined, number | undefined][] = [
     [ta?.limit5hCount, tb?.limit5hCount],
     [ta?.limitWeekCount, tb?.limitWeekCount],
-    [ta?.limitMonthCount ?? ta?.requestEqMonth, tb?.limitMonthCount ?? tb?.requestEqMonth],
+    [tierMonthlyRateLimitEq(ta), tierMonthlyRateLimitEq(tb)],
   ]
   for (const [va, vb] of cols) {
     if (va === undefined && vb === undefined) continue
@@ -235,7 +240,7 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/qwen.png", alt: "通义千问" },
     notice:
-      "Token Plan 目前仅支持华北2（北京）。采用 Credits 统一抵扣，一份订阅可用于 Claude Code、Cursor、Qwen Code、OpenClaw 等工具。与 Coding Plan 独立，不可迁移；Coding Plan Lite 已停新购/续费。qwen3.8-max-preview 预览期间 Credits 消耗 1 折（约 10 倍用量）；个人版每晚 22:00–08:00 再享 2 折。",
+      "Token Plan 目前仅支持华北2（北京）。采用积分统一抵扣，一份订阅可用于 Claude Code、Cursor、Qwen Code、OpenClaw 等工具。与 Coding Plan 独立，不可迁移；Coding Plan Lite 已停新购/续费。qwen3.8-max-preview 预览期间积分消耗 1 折（约 10 倍用量）；个人版每晚 22:00–08:00 再享 2 折。",
     models: [
       "Qwen3.8 Max Preview",
       "Qwen3.7 Max",
@@ -267,8 +272,8 @@ export const plans: Plan[] = [
         firstMonthPrice: 39,
         secondMonthPrice: 39,
         period: "月",
-        limit5h: "700 Credits",
-        limitWeek: "2,500 Credits",
+        limit5h: "700 积分",
+        limitWeek: "2,500 积分",
         limit5hCount: 700,
         limitWeekCount: 2500,
         notes: "限时 ¥39/月（原价 ¥60）；5h/7d 滑动窗口；并发 Agent 1–2；含 Harness 工具",
@@ -279,8 +284,8 @@ export const plans: Plan[] = [
         firstMonthPrice: 139,
         secondMonthPrice: 139,
         period: "月",
-        limit5h: "3,000 Credits",
-        limitWeek: "10,000 Credits",
+        limit5h: "3,000 积分",
+        limitWeek: "10,000 积分",
         limit5hCount: 3000,
         limitWeekCount: 10000,
         notes: "限时 ¥139/月（原价 ¥180）；5h/7d 滑动窗口；并发 Agent 3–4；含 Harness 工具",
@@ -291,8 +296,8 @@ export const plans: Plan[] = [
         firstMonthPrice: 499,
         secondMonthPrice: 499,
         period: "月",
-        limit5h: "12,000 Credits",
-        limitWeek: "40,000 Credits",
+        limit5h: "12,000 积分",
+        limitWeek: "40,000 积分",
         limit5hCount: 12000,
         limitWeekCount: 40000,
         notes: "限时 ¥499/月（原价 ¥600）；5h/7d 滑动窗口；并发 Agent 6–8；含 Harness 工具",
@@ -305,7 +310,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "无限制",
         limitWeek: "无限制",
-        limitMonth: "25,000 Credits/座席",
+        limitMonth: "25,000 积分/座席",
         notes: "限时 ¥150/座席/月（原价 ¥198）；月度总额度制，无 5h/7d 滑动窗口；支持多席位管理与用量分析",
       },
       {
@@ -316,7 +321,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "无限制",
         limitWeek: "无限制",
-        limitMonth: "100,000 Credits/座席",
+        limitMonth: "100,000 积分/座席",
         notes: "限时 ¥550/座席/月（原价 ¥698）；月度总额度制；承诺不使用数据训练模型",
       },
       {
@@ -325,7 +330,7 @@ export const plans: Plan[] = [
         period: "月",
         limit5h: "无限制",
         limitWeek: "无限制",
-        limitMonth: "250,000 Credits/座席",
+        limitMonth: "250,000 积分/座席",
         notes: "¥1,398/座席/月；月度总额度制；到期未用额度不结转",
       },
       {
@@ -333,7 +338,7 @@ export const plans: Plan[] = [
         price: 5000,
         period: "包",
         limit5h: "-",
-        limitMonth: "625,000 Credits（有效期1个月）",
+        limitMonth: "625,000 积分（有效期1个月）",
         notes: "跨坐席共享，坐席额度用尽后抵扣；多个用量包按最近到期优先抵扣",
       },
     ],
@@ -350,7 +355,7 @@ export const plans: Plan[] = [
       "Qoder",
     ],
     toolCount: 9,
-    tags: ["Credits计量", "Harness工具"],
+    tags: ["积分计量", "Harness工具"],
   },
   {
     id: "ark",
@@ -565,48 +570,70 @@ export const plans: Plan[] = [
       affiliate: "https://www.bigmodel.cn/glm-coding?ic=R8RQ6LQCRJ",
     },
     logo: { src: "/logos/bigmodel.png", alt: "智谱AI" },
-    models: ["GLM 5.2", "GLM 5.1", "GLM 5 Turbo", "GLM 4.7", "GLM 4.6", "GLM 4.5 Air", "GLM 5（Max/Pro）"],
+    notice:
+      "官方公告（2026-07-30）：GLM Coding Plan 已更新为按 Token 消耗的积分制；新个人版 Lite/Pro/Max 为 ¥118/538/1,078/月。现有套餐权益不受影响，周末全天按非高峰规则抵扣。V1 用户到期前可按历史 V2 价 ¥49/149/469/月续订或升级（包季 9 折、包年 8 折，入口预计 8 月中旬开放）；团队套餐到期后可订阅新版。详情：https://docs.bigmodel.cn/cn/coding-plan/notice/usage-revision",
+    models: ["GLM 5.2", "GLM 5 Turbo", "GLM 4.7"],
     tiers: [
       {
         name: "Lite",
-        price: 49,
+        price: 118,
         period: "月",
-        limit5h: "~80 次对话",
-        limitWeek: "~400 次对话",
-        limit5hCount: 80,
-        limitWeekCount: 400,
-        countsPrompts: true,
-        notes: "MCP 100次/月；基础模型全支持",
+        limit5h: "2,000 积分",
+        limitWeek: "10,000 积分/周",
+        limitMonth: "40,000 积分",
+        limitMonthTokens: 348_000_000,
+        notes:
+          "适合小型 Repo 轻量级迭代；逐步开放最新旗舰模型及功能；支持 ZCode、Claude Code 等 20+ 编程工具。以 GLM-5.2、90.9% 缓存命中率估算，约 43–87M Token/周（高峰至非高峰）。",
       },
       {
         name: "Pro",
-        price: 149,
+        price: 538,
         period: "月",
-        limit5h: "~400 次对话",
-        limitWeek: "~2,000 次对话",
-        limit5hCount: 400,
-        limitWeekCount: 2000,
-        countsPrompts: true,
-        notes: "MCP 1,000次/月；含 GLM-5.2",
+        limit5h: "12,000 积分",
+        limitWeek: "60,000 积分/周",
+        limitMonth: "240,000 积分",
+        limitMonthTokens: 2_104_000_000,
+        notes:
+          "适合中型 Repo 日常开发；6 倍 Lite 用量额度，含 Lite 全部权益；优先体验最新旗舰模型及功能，覆盖多款精选 MCP 工具，生成速度更快。以 GLM-5.2、90.9% 缓存命中率估算，约 263–526M Token/周（高峰至非高峰）。",
       },
       {
         name: "Max",
-        price: 469,
+        price: 1078,
         period: "月",
-        limit5h: "~1,600 次对话",
-        limitWeek: "~8,000 次对话",
-        limit5hCount: 1600,
-        limitWeekCount: 8000,
-        countsPrompts: true,
-        notes: "MCP 4,000次/月，高峰优先；含 GLM-5.2",
+        limit5h: "28,000 积分",
+        limitWeek: "140,000 积分/周",
+        limitMonth: "560,000 积分",
+        limitMonthTokens: 4_904_000_000,
+        notes:
+          "适合高阶用户中大型 Repo 深度开发；14 倍 Lite 用量额度，含 Pro 全部权益；首发接入最新旗舰模型及功能，高峰期专属资源优先保障。以 GLM-5.2、90.9% 缓存命中率估算，约 613M–1.226B Token/周（高峰至非高峰）。",
+      },
+      {
+        name: "标准席位",
+        price: 598,
+        period: "月",
+        limit5h: "15,000 积分",
+        limitWeek: "66,000 积分/周",
+        limitMonth: "264,000 积分",
+        limitMonthTokens: 2_312_000_000,
+        notes:
+          "适合中型 Repo 日常开发；2 席起购，年付 9 折，低至 ¥538.2/月。支持组织席位与权限统一管理、团队用量与研发效能看板、超额按量付费及预算控制、指定固定 IP 地址访问、集中式账单与发票管理；数据默认不用于模型训练。以 GLM-5.2、90.9% 缓存命中率估算，约 289–578M Token/周（高峰至非高峰）。",
+      },
+      {
+        name: "高级席位",
+        price: 1198,
+        period: "月",
+        limit5h: "35,000 积分",
+        limitWeek: "155,000 积分/周",
+        limitMonth: "620,000 积分",
+        limitMonthTokens: 5_428_000_000,
+        notes:
+          "适合中大型 Repo 深度开发；2 席起购，年付 9 折，低至 ¥1,078.2/月。含标准席位全部权益；首发接入最新旗舰模型及功能，高峰期专属资源优先保障。以 GLM-5.2、90.9% 缓存命中率估算，约 679M–1.357B Token/周（高峰至非高峰）。",
       },
     ],
-    billingUnit: "按量计费",
-    tools: ["Claude Code", "Roo Code", "Kilo Code", "Cline", "OpenCode", "Cursor", "CodeGeeX"],
+    billingUnit: "积分制",
+    tools: ["ZCode", "Claude Code", "Kilo Code", "OpenClaw", "OpenCode", "TRAE", "CodeBuddy"],
     toolCount: 20,
-    tags: ["开源SOTA", "自研模型", "MCP工具"],
-    yearlyPrice: 411,
-    quarterlyPrice: 132,
+    tags: ["GLM-5.2", "每周积分", "团队席位", "精选 MCP", "高峰优先"],
   },
   {
     id: "zai-glm",
