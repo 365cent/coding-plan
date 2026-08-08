@@ -44,6 +44,7 @@ const ENDPOINTS: Endpoint[] = [
   { provider: "MiMo（亚太）", company: "小米（亚太）", product: "MiMo Token Plan", logoSrc: "/logos/xiaomi.png", logoAlt: "小米", url: "https://token-plan-sgp.xiaomimimo.com/v1", region: "international" },
   { provider: "MiMo（欧洲）", company: "小米（欧洲）", product: "MiMo Token Plan", logoSrc: "/logos/xiaomi.png", logoAlt: "小米", url: "https://token-plan-ams.xiaomimimo.com/v1", region: "international" },
   { provider: "Infini", company: "无问芯穹", product: "Infini Coding Plan", logoSrc: "/logos/infini.png", logoAlt: "无问芯穹", url: "https://cloud.infini-ai.com/maas/coding/v1", region: "domestic" },
+  { provider: "超算互联网", company: "中科曙光", product: "超算互联网", logoSrc: "/logos/scnet.png", logoAlt: "超算互联网", url: "https://api.scnet.cn/api/llm/v1", region: "domestic" },
   { provider: "UCloud", company: "UCloud 优刻得", product: "优云智算 Agent Plan", logoSrc: "/logos/ucloud.png", logoAlt: "UCloud", url: "https://cp.compshare.cn/v1", region: "domestic" },
   { provider: "OpenCode Go", company: "Anomaly", product: "OpenCode Go", logoSrc: "/logos/opencode.png", logoAlt: "OpenCode", url: "https://opencode.ai/zen/go/v1", region: "international" },
   { provider: "Cursor", company: "Cursor", product: "Cursor Plan", logoSrc: "/logos/cursor.png", logoAlt: "Cursor", url: "https://api2.cursor.sh/", region: "international" },
