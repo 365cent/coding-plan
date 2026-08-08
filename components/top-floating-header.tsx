@@ -43,6 +43,13 @@ export function TopFloatingHeader() {
           >
             测速
           </Link>
+          <a
+            href="https://office.mcppla.net/"
+            target="_blank"
+            className={`${navItemBase} ${navItemInactive}`}
+          >
+            办公AI工具
+          </a>
           <Link
             href="#faq"
             className={`${navItemBase} ${pathname === "/" && hash === "#faq" ? navItemActive : navItemInactive}`}
