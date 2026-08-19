@@ -28,9 +28,8 @@ type PingResult = {
 }
 
 const ENDPOINTS: Endpoint[] = [
-  { provider: "百炼", company: "阿里云", product: "百炼 Coding Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://coding.dashscope.aliyuncs.com/v1", region: "domestic" },
   { provider: "百炼 Token Plan", company: "阿里云（华北）", product: "百炼 Token Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1", region: "domestic" },
-  { provider: "百炼（国际站）", company: "阿里云（国际站）", product: "百炼 Coding Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://coding-intl.dashscope.aliyuncs.com/v1", region: "international" },
+  { provider: "团结 Codely", company: "Unity中国", product: "团结AI Plan", logoSrc: "/logos/unity.png", logoAlt: "Unity", url: "https://codely.tuanjie.cn/api/coding/v1", region: "domestic" },
   { provider: "火山方舟", company: "字节跳动", product: "火山方舟 Coding Plan", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.cn-beijing.volces.com/api/coding/v3", region: "domestic" },
   { provider: "火山方舟 Agent Plan", company: "字节跳动", product: "火山方舟 Agent Plan", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.cn-beijing.volces.com/api/plan/v3", region: "domestic" },
   { provider: "BytePlus（字节国际站）", company: "字节跳动（国际站）", product: "BytePlus Coding", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.ap-southeast.bytepluses.com/api/coding", region: "international" },
