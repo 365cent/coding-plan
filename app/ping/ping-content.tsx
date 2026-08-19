@@ -2,12 +2,16 @@
 
 import { Notice } from "@/components/notice"
 import { FaqSection } from "@/components/faq-section"
+import { plans } from "@/lib/plans-data"
+import { buildPlanOrderIndex, compareByHomepageDefaultOrder } from "@/lib/plan-default-sort"
 
 import { Check, Copy, Info } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useCallback, useMemo, useRef, useState } from "react"
 type Endpoint = {
+  planId: string
+  endpointOrder?: number
   provider: string
   company: string
   product: string
@@ -27,32 +31,34 @@ type PingResult = {
   jitter: number | null
 }
 
-const ENDPOINTS: Endpoint[] = [
-  { provider: "百炼", company: "阿里云", product: "百炼 Coding Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://coding.dashscope.aliyuncs.com/v1", region: "domestic" },
-  { provider: "百炼 Token Plan", company: "阿里云（华北）", product: "百炼 Token Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1", region: "domestic" },
-  { provider: "百炼（国际站）", company: "阿里云（国际站）", product: "百炼 Coding Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://coding-intl.dashscope.aliyuncs.com/v1", region: "international" },
-  { provider: "火山方舟", company: "字节跳动", product: "火山方舟 Coding Plan", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.cn-beijing.volces.com/api/coding/v3", region: "domestic" },
-  { provider: "火山方舟 Agent Plan", company: "字节跳动", product: "火山方舟 Agent Plan", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.cn-beijing.volces.com/api/plan/v3", region: "domestic" },
-  { provider: "BytePlus（字节国际站）", company: "字节跳动（国际站）", product: "BytePlus Coding", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.ap-southeast.bytepluses.com/api/coding", region: "international" },
-  { provider: "腾讯云", company: "腾讯云", product: "腾讯云 Token Plan", logoSrc: "/logos/tencentcloud.png", logoAlt: "腾讯云", url: "https://api.lkeap.cloud.tencent.com/plan/v3", region: "domestic" },
-  { provider: "智谱大模型", company: "智谱华章", product: "GLM Coding Plan", logoSrc: "/logos/bigmodel.png", logoAlt: "智谱华章", url: "https://open.bigmodel.cn/api/coding/paas/v4", region: "domestic" },
-  { provider: "智谱Z.ai", company: "智谱华章", product: "GLM Coding Plan（国际版）", logoSrc: "/logos/zai.svg", logoAlt: "智谱华章", url: "https://api.z.ai/api/coding/paas/v4", region: "international" },
-  { provider: "Kimi", company: "月之暗面", product: "Kimi Code Plan", logoSrc: "/logos/kimi.png", logoAlt: "Kimi", url: "https://api.kimi.com/coding/v1", region: "domestic" },
-  { provider: "MiniMax", company: "MiniMax", product: "MiniMax Token Plan", logoSrc: "/logos/minimax.png", logoAlt: "MiniMax", url: "https://api.minimaxi.com/v1/", region: "domestic" },
-  { provider: "MiniMax（国际站）", company: "MiniMax（国际站）", product: "MiniMax Token Plan", logoSrc: "/logos/minimax.png", logoAlt: "MiniMax", url: "https://api.minimax.io/v1", region: "international" },
-  { provider: "MiMo", company: "小米", product: "MiMo Token Plan", logoSrc: "/logos/xiaomi.png", logoAlt: "小米", url: "https://token-plan-cn.xiaomimimo.com/v1", region: "domestic" },
-  { provider: "MiMo（亚太）", company: "小米（亚太）", product: "MiMo Token Plan", logoSrc: "/logos/xiaomi.png", logoAlt: "小米", url: "https://token-plan-sgp.xiaomimimo.com/v1", region: "international" },
-  { provider: "MiMo（欧洲）", company: "小米（欧洲）", product: "MiMo Token Plan", logoSrc: "/logos/xiaomi.png", logoAlt: "小米", url: "https://token-plan-ams.xiaomimimo.com/v1", region: "international" },
-  { provider: "Infini", company: "无问芯穹", product: "Infini Coding Plan", logoSrc: "/logos/infini.png", logoAlt: "无问芯穹", url: "https://cloud.infini-ai.com/maas/coding/v1", region: "domestic" },
-  { provider: "超算互联网", company: "中科曙光", product: "超算互联网", logoSrc: "/logos/scnet.png", logoAlt: "超算互联网", url: "https://api.scnet.cn/api/llm/v1", region: "domestic" },
-  { provider: "UCloud", company: "UCloud 优刻得", product: "优云智算 Agent Plan", logoSrc: "/logos/ucloud.png", logoAlt: "UCloud", url: "https://cp.compshare.cn/v1", region: "domestic" },
-  { provider: "OpenCode Go", company: "Anomaly", product: "OpenCode Go", logoSrc: "/logos/opencode.png", logoAlt: "OpenCode", url: "https://opencode.ai/zen/go/v1", region: "international" },
-  { provider: "Cursor", company: "Cursor", product: "Cursor Plan", logoSrc: "/logos/cursor.png", logoAlt: "Cursor", url: "https://api2.cursor.sh/", region: "international" },
-  { provider: "千帆", company: "百度", product: "千帆 Token Plan", logoSrc: "/logos/yiyan.png", logoAlt: "文心一言", url: "https://qianfan.baidubce.com/v2/tokenplan/personal", region: "domestic" },
-  { provider: "科大讯飞", company: "科大讯飞", product: "星辰 Astron Token Plan", logoSrc: "/logos/xfyun.png", logoAlt: "讯飞星辰", url: "https://maas-token-api.cn-huabei-1.xf-yun.com/v2", region: "domestic" },
-  { provider: "京东云", company: "京东云", product: "京东云 Coding Plan", logoSrc: "/logos/jd.png", logoAlt: "京东", url: "https://modelservice.jdcloud.com/coding/openai/v1", region: "domestic" },
-  { provider: "快手 KwaiKAT", company: "快手", product: "KwaiKAT Coding Plan", logoSrc: "/logos/kuaishou.png", logoAlt: "快手", url: "https://wanqing.streamlakeapi.com/api/gateway/coding/v1", region: "domestic" },
+const ENDPOINTS_RAW: Endpoint[] = [
+  { planId: "bailian-token-team", provider: "百炼 Token Plan", company: "阿里云（华北）", product: "百炼 Token Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1", region: "domestic" },
+  { planId: "tencent", provider: "腾讯云", company: "腾讯云", product: "腾讯云 Token Plan", logoSrc: "/logos/tencentcloud.png", logoAlt: "腾讯云", url: "https://api.lkeap.cloud.tencent.com/plan/v3", region: "domestic" },
+  { planId: "ark-agent", provider: "火山方舟 Agent Plan", company: "字节跳动", product: "火山方舟 Agent Plan", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.cn-beijing.volces.com/api/plan/v3", region: "domestic" },
+  { planId: "opencode-go", provider: "OpenCode Go", company: "Anomaly", product: "OpenCode Go", logoSrc: "/logos/opencode.png", logoAlt: "OpenCode", url: "https://opencode.ai/zen/go/v1", region: "international" },
+  { planId: "ark", endpointOrder: 0, provider: "火山方舟", company: "字节跳动", product: "火山方舟 Coding Plan", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.cn-beijing.volces.com/api/coding/v3", region: "domestic" },
+  { planId: "ark", endpointOrder: 1, provider: "BytePlus（字节国际站）", company: "字节跳动（国际站）", product: "BytePlus Coding", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.ap-southeast.bytepluses.com/api/coding", region: "international" },
+  { planId: "jdcloud", provider: "京东云", company: "京东云", product: "京东云 Coding Plan", logoSrc: "/logos/jd.png", logoAlt: "京东", url: "https://modelservice.jdcloud.com/coding/openai/v1", region: "domestic" },
+  { planId: "xiaomi-mimo", endpointOrder: 0, provider: "MiMo", company: "小米", product: "MiMo Token Plan", logoSrc: "/logos/xiaomi.png", logoAlt: "小米", url: "https://token-plan-cn.xiaomimimo.com/v1", region: "domestic" },
+  { planId: "xiaomi-mimo", endpointOrder: 1, provider: "MiMo（亚太）", company: "小米（亚太）", product: "MiMo Token Plan", logoSrc: "/logos/xiaomi.png", logoAlt: "小米", url: "https://token-plan-sgp.xiaomimimo.com/v1", region: "international" },
+  { planId: "xiaomi-mimo", endpointOrder: 2, provider: "MiMo（欧洲）", company: "小米（欧洲）", product: "MiMo Token Plan", logoSrc: "/logos/xiaomi.png", logoAlt: "小米", url: "https://token-plan-ams.xiaomimimo.com/v1", region: "international" },
+  { planId: "infini", provider: "Infini", company: "无问芯穹", product: "Infini Coding Plan", logoSrc: "/logos/infini.png", logoAlt: "无问芯穹", url: "https://cloud.infini-ai.com/maas/coding/v1", region: "domestic" },
+  { planId: "minimax", endpointOrder: 0, provider: "MiniMax", company: "MiniMax", product: "MiniMax Token Plan", logoSrc: "/logos/minimax.png", logoAlt: "MiniMax", url: "https://api.minimaxi.com/v1/", region: "domestic" },
+  { planId: "minimax", endpointOrder: 1, provider: "MiniMax（国际站）", company: "MiniMax（国际站）", product: "MiniMax Token Plan", logoSrc: "/logos/minimax.png", logoAlt: "MiniMax", url: "https://api.minimax.io/v1", region: "international" },
+  { planId: "kuaishou", provider: "快手 KwaiKAT", company: "快手", product: "KwaiKAT Coding Plan", logoSrc: "/logos/kuaishou.png", logoAlt: "快手", url: "https://wanqing.streamlakeapi.com/api/gateway/coding/v1", region: "domestic" },
+  { planId: "tuanjie-codely", provider: "团结 Codely", company: "Unity团结引擎", product: "团结 Codely Plan", logoSrc: "/logos/unity-cn.png", logoAlt: "Unity团结引擎", url: "https://codely-litellm.tuanjie.cn/v1", region: "domestic" },
+  { planId: "xfyun", provider: "科大讯飞", company: "科大讯飞", product: "星辰 Astron Token Plan", logoSrc: "/logos/xfyun.png", logoAlt: "讯飞星辰", url: "https://maas-token-api.cn-huabei-1.xf-yun.com/v2", region: "domestic" },
+  { planId: "glm", provider: "智谱大模型", company: "智谱华章", product: "GLM Coding Plan", logoSrc: "/logos/bigmodel.png", logoAlt: "智谱华章", url: "https://open.bigmodel.cn/api/coding/paas/v4", region: "domestic" },
+  { planId: "zai-glm", provider: "智谱Z.ai", company: "智谱华章", product: "GLM Coding Plan（国际版）", logoSrc: "/logos/zai.svg", logoAlt: "智谱华章", url: "https://api.z.ai/api/coding/paas/v4", region: "international" },
+  { planId: "ucloud", provider: "UCloud", company: "UCloud 优刻得", product: "优云智算 Agent Plan", logoSrc: "/logos/ucloud.png", logoAlt: "UCloud", url: "https://cp.compshare.cn/v1", region: "domestic" },
+  { planId: "baidu", provider: "千帆", company: "百度", product: "千帆 Token Plan", logoSrc: "/logos/yiyan.png", logoAlt: "文心一言", url: "https://qianfan.baidubce.com/v2/tokenplan/personal", region: "domestic" },
+  { planId: "kimi", provider: "Kimi", company: "月之暗面", product: "Kimi Code Plan", logoSrc: "/logos/kimi.png", logoAlt: "Kimi", url: "https://api.kimi.com/coding/v1", region: "domestic" },
+  { planId: "cursor", provider: "Cursor", company: "Cursor", product: "Cursor Plan", logoSrc: "/logos/cursor.png", logoAlt: "Cursor", url: "https://api2.cursor.sh/", region: "international" },
+  { planId: "scnet", provider: "超算互联网", company: "中科曙光", product: "超算互联网", logoSrc: "/logos/scnet.png", logoAlt: "超算互联网", url: "https://api.scnet.cn/api/llm/v1", region: "domestic" },
 ]
+
+const PLAN_ORDER = buildPlanOrderIndex(plans)
+const ENDPOINTS = [...ENDPOINTS_RAW].sort((a, b) => compareByHomepageDefaultOrder(PLAN_ORDER, a, b))
 
 const SAMPLE_COUNT = 5
 const TIMEOUT_MS = 5000
