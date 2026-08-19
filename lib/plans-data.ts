@@ -197,7 +197,7 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/unity-cn.png", alt: "Unity团结引擎" },
     notice:
-      "新用户前 2 个月享 2 折优惠，之后恢复对应周期的常态折扣（月付恢复原价、季付 8 折、年付 7 折）。每日 11:00–12:00、14:00–18:00 为高峰时段，其余闲时积分消耗减半（可用 Token 翻倍）。团队版套餐即将上线；企业版支持私有化部署与专属解决方案架构师 1:1 陪跑。",
+      "官方 Release Notes 摘要（截至 2026-08-19）：Tuanjie Cowork 2.0.5 新增 KIMI K3 模型、Unity Insight 自动启用与四步索引进度；2.0.4 上线「套餐与用量」页与额度耗尽升级引导；2.0.3 支持 Memory 全局管理、TJHub 状态推送与 Unity 联动优化。新用户前 2 个月享 2 折优惠（之后恢复常态折扣）；闲时积分消耗减半。",
     models: ["GLM 5.2", "Qwen 3.8 Max", "DeepSeek V4 Flash"],
     tiers: [
       {
