@@ -49,7 +49,7 @@ const ENDPOINTS: Endpoint[] = [
   { provider: "OpenCode Go", company: "Anomaly", product: "OpenCode Go", logoSrc: "/logos/opencode.png", logoAlt: "OpenCode", url: "https://opencode.ai/zen/go/v1", region: "international" },
   { provider: "Cursor", company: "Cursor", product: "Cursor Plan", logoSrc: "/logos/cursor.png", logoAlt: "Cursor", url: "https://api2.cursor.sh/", region: "international" },
   { provider: "千帆", company: "百度", product: "千帆 Token Plan", logoSrc: "/logos/yiyan.png", logoAlt: "文心一言", url: "https://qianfan.baidubce.com/v2/tokenplan/personal", region: "domestic" },
-  { provider: "科大讯飞", company: "科大讯飞", product: "讯飞星辰 Astron Coding Plan", logoSrc: "/logos/xfyun.png", logoAlt: "讯飞星辰", url: "https://maas-coding-api.cn-huabei-1.xf-yun.com/v2", region: "domestic" },
+  { provider: "科大讯飞", company: "科大讯飞", product: "星辰 Astron Token Plan", logoSrc: "/logos/xfyun.png", logoAlt: "讯飞星辰", url: "https://maas-token-api.cn-huabei-1.xf-yun.com/v2", region: "domestic" },
   { provider: "京东云", company: "京东云", product: "京东云 Coding Plan", logoSrc: "/logos/jd.png", logoAlt: "京东", url: "https://modelservice.jdcloud.com/coding/openai/v1", region: "domestic" },
   { provider: "快手 KwaiKAT", company: "快手", product: "KwaiKAT Coding Plan", logoSrc: "/logos/kuaishou.png", logoAlt: "快手", url: "https://wanqing.streamlakeapi.com/api/gateway/coding/v1", region: "domestic" },
 ]
