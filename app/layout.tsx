@@ -11,7 +11,7 @@ const siteName = "国内Coding Plan对比"
 const titleDefault = "国内 Coding Plan 性价比排行 2026 | 价格·模型·用量对比"
 const titleTemplate = "%s | Coding Plan 对比"
 const description =
-  "国内AI Coding Plan（AI编程套餐）性价比对比，2026年持续更新：覆盖Unity中国团结AI、阿里云百炼、字节火山方舟、腾讯云、智谱GLM、Kimi、MiniMax、华为云等22家平台，逐项对比月付/年付价格、可用模型、用量限制、首月优惠与每元请求数，并给出性价比排行，帮你快速选出最划算的国内AI编程订阅方案。"
+  "国内AI Coding Plan（AI编程套餐）性价比对比，2026年持续更新：覆盖Unity团结引擎、阿里云百炼、字节火山方舟、腾讯云、智谱GLM、Kimi、MiniMax、华为云等22家平台，逐项对比月付/年付价格、可用模型、用量限制、首月优惠与每元请求数，并给出性价比排行，帮你快速选出最划算的国内AI编程订阅方案。"
 
 const metadataBase = getMetadataBase()
 
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "国内 Coding Plan 性价比排行 2026",
     description:
-      "22家国内平台AI编程套餐横评：Unity中国团结AI、阿里云百炼、字节火山方舟、腾讯云、智谱GLM、Kimi、MiniMax等价格、模型、用量限制、每元请求数一键对比，找出最划算的AI Coding Plan。",
+      "22家国内平台AI编程套餐横评：Unity团结引擎、阿里云百炼、字节火山方舟、腾讯云、智谱GLM、Kimi、MiniMax等价格、模型、用量限制、每元请求数一键对比，找出最划算的AI Coding Plan。",
     url: "/",
     siteName,
     locale: "zh_CN",

@@ -29,7 +29,7 @@ export default function Page() {
       <section id="about" className="max-w-7xl mx-auto px-6 mt-8">
         <h2 className="text-base font-semibold mb-2">关于本站</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          本站持续更新国内主流AI Coding Plan（AI编程订阅套餐）的最新定价与功能变化，覆盖Unity中国团结AI、阿里云百炼、字节跳动火山方舟、京东云JoyBuilder、腾讯云、百度千帆、华为云、智谱AI、月之暗面Kimi、MiniMax、无问芯穹、摩尔线程、快手、UCloud、科大讯飞、联通云等平台。数据会随平台公告更新，购买前请以官网为准。
+          本站持续更新国内主流AI Coding Plan（AI编程订阅套餐）的最新定价与功能变化，覆盖Unity团结引擎、阿里云百炼、字节跳动火山方舟、京东云JoyBuilder、腾讯云、百度千帆、华为云、智谱AI、月之暗面Kimi、MiniMax、无问芯穹、摩尔线程、快手、UCloud、科大讯飞、联通云等平台。数据会随平台公告更新，购买前请以官网为准。
         </p>
         <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
           <strong>最后更新：</strong>{" "}

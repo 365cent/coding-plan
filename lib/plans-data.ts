@@ -189,13 +189,13 @@ export function planRequestsPerYuan(plan: Plan): number | undefined {
 export const plans: Plan[] = [
   {
     id: "tuanjie-codely",
-    company: "Unity中国",
+    company: "Unity团结引擎",
     product: "团结AI Plan",
     category: "国内大厂",
     links: {
       official: "https://codely.tuanjie.cn/pricing",
     },
-    logo: { src: "/logos/unity.png", alt: "Unity" },
+    logo: { src: "/logos/unity-cn.png", alt: "Unity团结引擎" },
     notice:
       "新用户前 2 个月享 2 折优惠，之后恢复对应周期的常态折扣（月付恢复原价、季付 8 折、年付 7 折）。每日 11:00–12:00、14:00–18:00 为高峰时段，其余闲时积分消耗减半（可用 Token 翻倍）。团队版套餐即将上线；企业版支持私有化部署与专属解决方案架构师 1:1 陪跑。",
     models: ["GLM 5.2", "Qwen 3.8 Max", "DeepSeek V4 Flash"],
