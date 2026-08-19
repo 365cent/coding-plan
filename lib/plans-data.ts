@@ -197,8 +197,8 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/unity-cn.png", alt: "Unity团结引擎" },
     notice:
-      "官方 Release Notes 摘要（截至 2026-08-19）：Tuanjie Cowork 2.0.5 新增 KIMI K3 模型、Unity Insight 自动启用与四步索引进度；2.0.4 上线「套餐与用量」页与额度耗尽升级引导；2.0.3 支持 Memory 全局管理、TJHub 状态推送与 Unity 联动优化。新用户前 2 个月享 2 折优惠（之后恢复常态折扣）；闲时积分消耗减半。",
-    models: ["GLM 5.2", "Qwen 3.8 Max", "DeepSeek V4 Flash"],
+      "2026年8月19日 Tuanjie Cowork 2.0.5：新增 Kimi K3 模型支持，Unity Insight 自动启用与四步索引进度。2026年8月11日 2.0.4：上线「套餐与用量」页与额度耗尽升级引导。新用户前 2 个月享 2 折优惠（月付恢复原价、季付 8 折、年付 7 折）；闲时积分消耗减半。",
+    models: ["Kimi K3", "GLM 5.2", "Qwen 3.8 Max", "DeepSeek V4 Flash"],
     tiers: [
       {
         name: "Lite",
