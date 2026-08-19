@@ -190,7 +190,7 @@ export const plans: Plan[] = [
   {
     id: "tuanjie-codely",
     company: "Unity团结引擎",
-    product: "团结AI Plan",
+    product: "团结 Codely Plan",
     category: "国内大厂",
     links: {
       official: "https://codely.tuanjie.cn/pricing",

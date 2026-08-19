@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "国内AI编程套餐",
     "Coding Plan对比",
     "Claude Code替代",
-    "团结AI Plan",
+    "团结 Codely Plan",
     "火山方舟Coding Plan",
     "GLM Coding Plan",
     "Kimi Code Plan",
