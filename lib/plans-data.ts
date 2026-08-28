@@ -1600,7 +1600,6 @@ export const plans: Plan[] = [
     category: "其他",
     links: {
       official: "https://opencode.ai/go",
-      affiliate: "https://opencode.ai/go?ref=KZCWENKJQ4",
     },
     logo: { src: "/logos/opencode.png", alt: "OpenCode" },
     models: [
@@ -1624,8 +1623,6 @@ export const plans: Plan[] = [
       {
         name: "Go",
         price: 70,
-        firstMonthPrice: 35,
-        secondMonthPrice: 70,
         period: "月",
         limit5h: "$12 用量",
         limitWeek: "$30",
