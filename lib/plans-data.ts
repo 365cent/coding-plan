@@ -1202,7 +1202,7 @@ export const plans: Plan[] = [
     company: "京东云",
     product: "京东云 Token Plan",
     category: "其他",
-    links: { official: "https://docs.jdcloud.com/cn/jdaip/tokenplan-overview" },
+    links: { official: "https://www.jdcloud.com/cn/products/tokenplan" },
     logo: { src: "/logos/jd.png", alt: "京东" },
     notice:
       "京东云 Coding Plan 已升级为 Token Plan（JoyBuilder 模型开发平台 2.0 订阅服务）。新购统一按 Credits 额度计费，额度用尽即止、未用额度不结转；个人版每日限量发售（售完次日 0 点重置），同时仅可持有一个生效订阅。须使用 Token Plan 专属 API Key（pk- 开头）与 Base URL（https://modelservice.jdcloud.com/tokenPlan/openai/v1），与按量付费及原 Coding Plan 的 Key 不通用。企业版当前为白名单邀请制（最多 50 席位，一席位一 Key）。",
@@ -1600,7 +1600,6 @@ export const plans: Plan[] = [
     category: "其他",
     links: {
       official: "https://opencode.ai/go",
-      affiliate: "https://opencode.ai/go?ref=KZCWENKJQ4",
     },
     logo: { src: "/logos/opencode.png", alt: "OpenCode" },
     models: [
@@ -1624,8 +1623,6 @@ export const plans: Plan[] = [
       {
         name: "Go",
         price: 70,
-        firstMonthPrice: 35,
-        secondMonthPrice: 70,
         period: "月",
         limit5h: "$12 用量",
         limitWeek: "$30",
