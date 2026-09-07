@@ -45,7 +45,6 @@ const ENDPOINTS_RAW: Endpoint[] = [
   { planId: "infini", provider: "Infini", company: "无问芯穹", product: "Infini Coding Plan", logoSrc: "/logos/infini.png", logoAlt: "无问芯穹", url: "https://cloud.infini-ai.com/maas/coding/v1", region: "domestic" },
   { planId: "minimax", endpointOrder: 0, provider: "MiniMax", company: "MiniMax", product: "MiniMax Token Plan", logoSrc: "/logos/minimax.png", logoAlt: "MiniMax", url: "https://api.minimaxi.com/v1/", region: "domestic" },
   { planId: "minimax", endpointOrder: 1, provider: "MiniMax（国际站）", company: "MiniMax（国际站）", product: "MiniMax Token Plan", logoSrc: "/logos/minimax.png", logoAlt: "MiniMax", url: "https://api.minimax.io/v1", region: "international" },
-  { planId: "kuaishou", provider: "快手 KwaiKAT", company: "快手", product: "KwaiKAT Coding Plan", logoSrc: "/logos/kuaishou.png", logoAlt: "快手", url: "https://wanqing.streamlakeapi.com/api/gateway/coding/v1", region: "domestic" },
   { planId: "tuanjie-codely", provider: "团结 Codely", company: "Unity团结引擎", product: "团结 Codely Plan", logoSrc: "/logos/unity-cn.png", logoAlt: "Unity团结引擎", url: "https://codely-litellm.tuanjie.cn/v1", region: "domestic" },
   { planId: "xfyun", provider: "科大讯飞", company: "科大讯飞", product: "星辰 Astron Token Plan", logoSrc: "/logos/xfyun.png", logoAlt: "讯飞星辰", url: "https://maas-token-api.cn-huabei-1.xf-yun.com/v2", region: "domestic" },
   { planId: "glm", provider: "智谱大模型", company: "智谱华章", product: "GLM Coding Plan", logoSrc: "/logos/bigmodel.png", logoAlt: "智谱华章", url: "https://open.bigmodel.cn/api/coding/paas/v4", region: "domestic" },
