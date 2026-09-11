@@ -1682,7 +1682,7 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/chinatelecom.png", alt: "天翼云" },
     notice:
-      "天翼云暂未公开模型列表 API，本站模型 ID 为人工整理，可能与官网展示略有出入。请使用 Coding Plan 专属 Base URL（https://eaichat.ctyun.cn/ai/platform/v2/cp）。本站 API Ping 暂不支持该套餐，聊天与对话场景可正常使用。订阅请通过「天翼云电脑」手机 App：进入「我的 Token」，下滑至 Coding Plan 区域完成订购。套餐开通后不支持退订，敬请知悉。",
+      "请求方式与其他平台略有不同，本站 API Ping 暂不支持该套餐测试，实际 API 调用可正常使用。订阅请通过「天翼云电脑」手机 App：进入「我的 Token」，下滑至 Coding Plan 区域完成订购。套餐开通后不支持退订，敬请知悉。",
     models: [
       "DeepSeek-V4-Flash-0731",
       "MiniMax-M2.5",
