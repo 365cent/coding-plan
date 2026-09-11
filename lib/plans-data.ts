@@ -1682,7 +1682,7 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/chinatelecom.png", alt: "天翼云" },
     notice:
-      "请求方式与其他平台略有不同，本站 API Ping 暂不支持该套餐测试，实际 API 调用可正常使用。订阅请通过「天翼云电脑」手机 App：进入「我的 Token」，下滑至 Coding Plan 区域完成订购。套餐开通后不支持退订，敬请知悉。",
+      "请求方式与其他平台略有不同，实际 API 调用可正常使用。订阅请通过「天翼云电脑」手机 App：进入「我的 Token」，下滑至 Coding Plan 区域完成订购。套餐开通后不支持退订，敬请知悉。",
     models: [
       "DeepSeek-V4-Flash-0731",
       "MiniMax-M2.5",
