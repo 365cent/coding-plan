@@ -54,6 +54,7 @@ const ENDPOINTS_RAW: Endpoint[] = [
   { planId: "kimi", provider: "Kimi", company: "月之暗面", product: "Kimi Code Plan", logoSrc: "/logos/kimi.png", logoAlt: "Kimi", url: "https://api.kimi.com/coding/v1", region: "domestic" },
   { planId: "cursor", provider: "Cursor", company: "Cursor", product: "Cursor Plan", logoSrc: "/logos/cursor.png", logoAlt: "Cursor", url: "https://api2.cursor.sh/", region: "international" },
   { planId: "scnet", provider: "超算互联网", company: "中科曙光", product: "超算互联网", logoSrc: "/logos/scnet.png", logoAlt: "超算互联网", url: "https://api.scnet.cn/api/llm/v1", region: "domestic" },
+  { planId: "ctyun-coding", provider: "天翼云", company: "中国电信", product: "天翼云 Coding Plan", logoSrc: "/logos/chinatelecom.png", logoAlt: "中国电信", url: "https://eaichat.ctyun.cn/ai/platform/v2/cp", region: "domestic" },
 ]
 
 const PLAN_ORDER = buildPlanOrderIndex(plans)
