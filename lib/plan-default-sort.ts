@@ -8,7 +8,7 @@ import {
   tierComparableMonthly,
 } from "./plans-data"
 
-export const DEFAULT_TABLE_LEADER_IDS = ["tencent", "bailian-token-team", "ark-agent", "opencode-go"] as const
+export const DEFAULT_TABLE_LEADER_IDS = ["aliyun-token", "ark-agent", "tencent"] as const
 
 type PlanMetrics = {
   price: number

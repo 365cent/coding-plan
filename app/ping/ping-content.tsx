@@ -32,7 +32,7 @@ type PingResult = {
 }
 
 const ENDPOINTS_RAW: Endpoint[] = [
-  { planId: "bailian-token-team", provider: "百炼 Token Plan", company: "阿里云（华北）", product: "百炼 Token Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1", region: "domestic" },
+  { planId: "aliyun-token", provider: "百炼 Token Plan", company: "阿里云（华北）", product: "百炼 Token Plan", logoSrc: "/logos/qwen.png", logoAlt: "通义千问", url: "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1", region: "domestic" },
   { planId: "tencent", provider: "腾讯云", company: "腾讯云", product: "腾讯云 Token Plan", logoSrc: "/logos/tencentcloud.png", logoAlt: "腾讯云", url: "https://api.lkeap.cloud.tencent.com/plan/v3", region: "domestic" },
   { planId: "ark-agent", provider: "火山方舟 Agent Plan", company: "字节跳动", product: "火山方舟 Agent Plan", logoSrc: "/logos/volcengine.png", logoAlt: "火山引擎", url: "https://ark.cn-beijing.volces.com/api/plan/v3", region: "domestic" },
   { planId: "opencode-go", provider: "OpenCode Go", company: "Anomaly", product: "OpenCode Go", logoSrc: "/logos/opencode.png", logoAlt: "OpenCode", url: "https://opencode.ai/zen/go/v1", region: "international" },
