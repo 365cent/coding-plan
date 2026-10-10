@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     "火山方舟Coding Plan",
     "GLM Coding Plan",
     "Kimi Code Plan",
-    "MiniMax Token Plan",
+    "MiniMax M Plan",
     "Step Plan",
     "阶跃星辰",
     "AI编程工具价格",
