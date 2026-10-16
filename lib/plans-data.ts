@@ -911,14 +911,10 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/xiaomi.png", alt: "小米" },
     notice:
-      "MiMo-V2-Pro / Omni 将于北京时间 2026.6.1 00:00 自动转发至 V2.5 系列，并按 V2.5 系列的定价计费。最终于 2026.6.30 00:00 正式下线，届时原模型名称将失效，请及时核对并完成 V2.5 系列的切换。",
+      "mimo-v2.5 / mimo-v2.5-pro 将于北京时间 2026-10-21 10:00 正式下线，届时模型名称将失效，请及时迁移至 MiMo V2.6 Pro 或 MiMo V2.6 Flash。",
     models: [
-      "MiMo V2.5 Pro",
-      "MiMo V2.5",
-      "MiMo V2.5 TTS VoiceClone",
-      "MiMo V2.5 TTS VoiceDesign",
-      "MiMo V2.5 TTS",
-      "MiMo V2 TTS",
+      "MiMo V2.6 Pro",
+      "MiMo V2.6 Flash",
     ],
     tiers: [
       {
@@ -977,7 +973,7 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/minimax.png", alt: "MiniMax" },
     notice:
-      "M Plan 套餐额度按 API 目录价扣减（1,000 积分 = ¥7）；非视频受 5 小时与周窗口双限制，H3 仅周窗口。Go / Explore / Build 窗口上限为 1× / 3× / 12×（相对 Go）。站内各窗口「积分」为目录价折算参考：沿用 Token Plan 文本窗口口径（升级 M Plan 不变），按 FAQ 示例输入 ¥2.10/百万 tokens≈300 积分/百万 tokens 换算，多模态/输出/缓存实际扣减以控制台为准。另售积分包与订阅额度无关。订阅 Key 与按量 Key 独立。月付首月 5 折至 2026-10-14。",
+      "M Plan 套餐额度按 API 目录价扣减（1,000 积分 = ¥7）；非视频受 5 小时与周窗口双限制，H3 仅周窗口。Go / Explore / Build 窗口上限为 1× / 3× / 12×（相对 Go）。站内各窗口「积分」为目录价折算参考：沿用 Token Plan 文本窗口口径（升级 M Plan 不变），按 FAQ 示例输入 ¥2.10/百万 tokens≈300 积分/百万 tokens 换算，多模态/输出/缓存实际扣减以控制台为准。另售积分包与订阅额度无关。订阅 Key 与按量 Key 独立。",
     models: [
       "MiniMax M3.1 Flash Preview",
       "MiniMax H3",
@@ -990,8 +986,6 @@ export const plans: Plan[] = [
       {
         name: "Go",
         price: 49,
-        firstMonthPrice: 24.5,
-        secondMonthPrice: 49,
         period: "月",
         limit5h: "1,500 积分",
         limitWeek: "45,000 积分",
@@ -1001,13 +995,11 @@ export const plans: Plan[] = [
         limitMonthCount: 180_000,
         requestEqMonth: 10_000,
         notes:
-          "1× 基准；5h/周窗口目录价折算积分（≈原 Token Plan Plus 文本窗口）；不含 H3；首月 5 折 ¥24.5",
+          "1× 基准；5h/周窗口目录价折算积分（≈原 Token Plan Plus 文本窗口）；不含 H3",
       },
       {
         name: "Explore",
         price: 119,
-        firstMonthPrice: 59.5,
-        secondMonthPrice: 119,
         period: "月",
         limit5h: "4,500 积分",
         limitWeek: "135,000 积分",
@@ -1016,13 +1008,11 @@ export const plans: Plan[] = [
         limitWeekCount: 135_000,
         limitMonthCount: 540_000,
         requestEqMonth: 30_000,
-        notes: "3× Go 窗口额度；含 H3 视频（仅周窗口）；首月 5 折 ¥59.5",
+        notes: "3× Go 窗口额度；含 H3 视频（仅周窗口）",
       },
       {
         name: "Build",
         price: 469,
-        firstMonthPrice: 234.5,
-        secondMonthPrice: 469,
         period: "月",
         limit5h: "15,000 积分",
         limitWeek: "510,000 积分",
@@ -1031,7 +1021,7 @@ export const plans: Plan[] = [
         limitWeekCount: 510_000,
         limitMonthCount: 2_130_000,
         requestEqMonth: 118_333,
-        notes: "12× Go 窗口额度（5h 按 Ultra 口径）；含 H3；首月 5 折 ¥234.5",
+        notes: "12× Go 窗口额度（5h 按 Ultra 口径）；含 H3",
       },
     ],
     billingUnit: "积分制",
