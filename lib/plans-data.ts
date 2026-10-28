@@ -197,8 +197,15 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/unity-cn.png", alt: "Unity团结引擎" },
     notice:
-      "新用户前 2 个月享 3 折优惠（仅一次；之后月付恢复刊例价、季付 8 折、年付 7 折）。闲时窗口 LLM 积分消耗减半；扣费顺序为赠送→订阅→增值包。算力增值包：即日起至 10 月 31 日购得积分 5 倍到账，11 月 1 日起 2.5 倍；活动积分有效期 3 个月。Ultra 不设 5 小时窗口，仅受周/月额度约束。内置按 Basic/Core/Flash/Air/VL 计费；具体模型名单以客户端登录后模型菜单为准。",
-    models: ["Codely Core", "Codely Flash", "Codely Air", "Codely VL"],
+      "新用户前 2 个月享 3 折优惠（仅一次；之后月付恢复刊例价、季付 8 折、年付 7 折）。闲时窗口 LLM 积分消耗减半；扣费顺序为赠送→订阅→增值包。算力增值包：即日起至 10 月 31 日购得积分 5 倍到账，11 月 1 日起 2.5 倍；活动积分有效期 3 个月。Ultra 不设 5 小时窗口，仅受周/月额度约束。",
+    models: [
+      "DeepSeek V4 Flash",
+      "DeepSeek V4.1 Flash",
+      "GLM 5.3",
+      "GLM 5.3 Flash",
+      "Kimi K3",
+      "Kimi K3.1 Pro",
+    ],
     tiers: [
       {
         name: "Lite",
