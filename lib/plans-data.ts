@@ -764,8 +764,15 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/kimi.png", alt: "Kimi" },
     notice:
-      "新套餐 Go/Plus/Pro/Max/Ultra 已上线；Go 不含 Kimi Code，Plus 起可用；新会员取消周限额、保留 5 小时滚动窗口，与会员共享月额度。旧档 Andante/Moderato/Allegretto/Allegro 可继续续费。额度用尽可开加油包。",
-    models: ["Kimi K3", "Kimi K2.7 Code", "Kimi K2.7 Code Highspeed"],
+      "新套餐 Go/Plus/Pro/Max/Ultra；Go 不含 Kimi Code，Plus 起可用；新会员无周限额、保留 5h 滚动，共享月额度。Plus 起 K3.1 Pro 与 K3（Plus 限 K3 256K）；Pro 起 1M 与高速版（K3.1 Pro Highspeed、K2.7 Code Highspeed）。K3.1 Pro 初期可能排队或失败。旧档 Andante/Moderato/Allegretto/Allegro 可续费；可开加油包。",
+    models: [
+      "Kimi K3.1 Pro",
+      "Kimi K3.1 Pro Highspeed",
+      "Kimi K3",
+      "Kimi K2.8 Preview",
+      "Kimi K2.7 Code",
+      "Kimi K2.7 Code Highspeed",
+    ],
     tiers: [
       {
         name: "Go",
@@ -784,7 +791,7 @@ export const plans: Plan[] = [
         limitMonth: "~132M Token",
         limitMonthTokens: 132_000_000,
         notes:
-          "¥99/月；Kimi Code；2× Agent、4× Code 积分；K3；5h 滚动限流；共享月额度",
+          "¥99/月；Kimi Code；2× Agent、4× Code；K3.1 Pro、K3（256K）；5h 滚动；共享月额度",
       },
       {
         name: "Pro",
@@ -794,7 +801,7 @@ export const plans: Plan[] = [
         limitMonth: "~660M Token",
         limitMonthTokens: 660_000_000,
         notes:
-          "¥199/月；Kimi Code；4× Agent、20× Code；K3 1M 与高速版；Goal、Kimi Claw；共享月额度",
+          "¥199/月；Kimi Code；4× Agent、20× Code；K3/K3.1 Pro 1M、高速版、K2.8 Preview；Goal、Kimi Claw",
       },
       {
         name: "Max",
