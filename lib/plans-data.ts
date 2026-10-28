@@ -197,14 +197,14 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/unity-cn.png", alt: "Unity团结引擎" },
     notice:
-      "2026年8月19日 Tuanjie Cowork 2.0.5：新增 Kimi K3 模型支持，Unity Insight 自动启用与四步索引进度。2026年8月11日 2.0.4：上线「套餐与用量」页与额度耗尽升级引导。新用户前 2 个月享 2 折优惠（月付恢复原价、季付 8 折、年付 7 折）；闲时积分消耗减半。",
+      "新用户前 2 个月享 3 折优惠（仅一次；之后月付恢复刊例价、季付 8 折、年付 7 折）。闲时窗口 LLM 积分消耗减半；扣费顺序为赠送→订阅→增值包。算力增值包：即日起至 10 月 31 日购得积分 5 倍到账，11 月 1 日起 2.5 倍；活动积分有效期 3 个月。Ultra 不设 5 小时窗口，仅受周/月额度约束。",
     models: ["Kimi K3", "GLM 5.2", "Qwen 3.8 Max", "DeepSeek V4 Flash"],
     tiers: [
       {
         name: "Lite",
         price: 98,
-        firstMonthPrice: 19.6,
-        secondMonthPrice: 19.6,
+        firstMonthPrice: 29.4,
+        secondMonthPrice: 29.4,
         period: "月",
         limit5h: "800 积分",
         limitWeek: "4,000 积分",
@@ -219,8 +219,8 @@ export const plans: Plan[] = [
       {
         name: "Pro",
         price: 328,
-        firstMonthPrice: 65.6,
-        secondMonthPrice: 65.6,
+        firstMonthPrice: 98.4,
+        secondMonthPrice: 98.4,
         period: "月",
         limit5h: "3,200 积分",
         limitWeek: "16,000 积分",
@@ -235,8 +235,8 @@ export const plans: Plan[] = [
       {
         name: "Max",
         price: 648,
-        firstMonthPrice: 129.6,
-        secondMonthPrice: 129.6,
+        firstMonthPrice: 194.4,
+        secondMonthPrice: 194.4,
         period: "月",
         limit5h: "8,000 积分",
         limitWeek: "40,000 积分",
@@ -247,6 +247,21 @@ export const plans: Plan[] = [
         limitMonthTokens: 6_400_000_000,
         notes:
           "适合重度开发与复杂任务、大型 Repo 长上下文分析；支持高阶多模态与旗舰编程模型，高峰期专属资源优先保障。编码场景约 1.6B Token/周（高峰）/ 3.2B（闲时）。",
+      },
+      {
+        name: "Ultra",
+        price: 1288,
+        firstMonthPrice: 386.4,
+        secondMonthPrice: 386.4,
+        period: "月",
+        limit5h: "无 5 小时窗口",
+        limitWeek: "62,500 积分",
+        limitMonth: "250,000 积分",
+        limitWeekCount: 62500,
+        limitMonthCount: 250000,
+        limitMonthTokens: 10_000_000_000,
+        notes:
+          "面向日均 2万—3 万积分重度需求；仅受周/月额度约束；支持高阶多模态与旗舰编程模型，高峰期专属资源优先保障。编码场景约 1.56B Token/周（高峰）/ 3.12B（闲时）。",
       },
     ],
     billingUnit: "积分制",
