@@ -546,8 +546,6 @@ export const plans: Plan[] = [
     category: "国内大厂",
     links: { official: "https://codearts.huaweicloud.com/" },
     logo: { src: "/logos/huawei.png", alt: "华为云" },
-    notice:
-      "2026年9月4日 23:59:59（北京时间）起个人版升级为积分计费模式（体验版/标准版/高级版/旗舰版）。9月5日起新用户仅可选购积分套餐；存量旧套餐用户可按原价续费或升级。限时活动：新用户注册赠 4,000 积分（1个月有效）、每日签到领 1,000 积分。扣减顺序：福利积分 → 套餐积分 → 积分包；未用套餐额度不结转。体验版积分用尽后不可购积分包。模型消耗系数：GLM-5.2 / GLM-5.2-ArkTS-SPARK / OpenPangu-2.0-Pro 0.7，OpenPangu-2.0-Flash 0.32。",
     models: [
       "GLM-5.2",
       "GLM-5.2-ArkTS-SPARK",
@@ -766,65 +764,64 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/kimi.png", alt: "Kimi" },
     notice:
-      "新会员计划即将上线，届时 Kimi 与 Kimi Code 权益将分离；现有订阅用户不受影响，仍可在新计划上线前购买当前套餐。",
-    models: [
-      "Kimi K3",
-      "Kimi K2.7 Code",
-      "Kimi K2.7 Code Highspeed",
-      "Kimi K2.6",
-      "Kimi K2.5",
-    ],
+      "新套餐 Go/Plus/Pro/Max/Ultra 已上线；Go 不含 Kimi Code，Plus 起可用；新会员取消周限额、保留 5 小时滚动窗口，与会员共享月额度。旧档 Andante/Moderato/Allegretto/Allegro 可继续续费。额度用尽可开加油包。",
+    models: ["Kimi K3", "Kimi K2.7 Code", "Kimi K2.7 Code Highspeed"],
     tiers: [
       {
-        name: "Andante",
+        name: "Go",
         price: 49,
         period: "月",
-        limit5h: "~1.6M Token",
-        limitWeek: "~8.2M Token",
-        limitMonth: "~33M Token",
-        limitMonthTokens: 33_000_000,
+        limit5h: "-",
+        limitMonth: "会员共享月额度",
         notes:
-          "基础使用：Kimi Code 1× 积分；含 Docs/Sheets/Slides、Deep Research、网页部署、Research Preview、任务看板、定时任务与插件",
+          "¥49/月；不含 Kimi Code；含文档/PPT/深度研究、网页部署等会员能力；共享月额度",
       },
       {
-        name: "Moderato",
+        name: "Plus",
         price: 99,
         period: "月",
         limit5h: "~6.4M Token",
-        limitWeek: "~32.8M Token",
         limitMonth: "~132M Token",
         limitMonthTokens: 132_000_000,
         notes:
-          "进阶流程：2× Agent 积分、Kimi Code 4× 积分；升级可退差价；含 Swarm、任务看板、定时任务与插件",
+          "¥99/月；Kimi Code；2× Agent、4× Code 积分；K3；5h 滚动限流；共享月额度",
       },
       {
-        name: "Allegretto",
+        name: "Pro",
         price: 199,
         period: "月",
         limit5h: "~32M Token",
-        limitWeek: "~164M Token",
         limitMonth: "~660M Token",
         limitMonthTokens: 660_000_000,
         notes:
-          "专业选择：4× Agent 积分、Kimi Code 20× 积分；支持多任务、Goal 模式、Kimi Claw 一键部署、Swarm 与定时任务",
+          "¥199/月；Kimi Code；4× Agent、20× Code；K3 1M 与高速版；Goal、Kimi Claw；共享月额度",
       },
       {
-        name: "Allegro",
+        name: "Max",
         price: 699,
         period: "月",
         limit5h: "~96M Token",
-        limitWeek: "~492M Token",
         limitMonth: "~1.98B Token",
         limitMonthTokens: 1_980_000_000,
         notes:
-          "高级模式：10× Agent 积分、Kimi Code 60× 积分；Agent 并发 4、K3 超长上下文（最高 1M Token）、Goal 模式、Kimi Claw 与 Swarm",
+          "¥699/月；Kimi Code；14× Agent、60× Code；4 并发；K3 超长上下文；共享月额度",
+      },
+      {
+        name: "Ultra",
+        price: 1399,
+        period: "月",
+        limit5h: "~192M Token",
+        limitMonth: "~3.96B Token",
+        limitMonthTokens: 3_960_000_000,
+        notes:
+          "¥1,399/月；Kimi Code；28× Agent；4 并发；定时/小组件各 25；100 项目、50GB 存储",
       },
     ],
     billingUnit: "Token计费",
     tools: ["Kimi Code CLI", "Kimi Code for VS Code", "Claude Code", "Roo Code"],
     toolCount: 4,
     tags: ["K3", "Agent 积分", "Kimi Code"],
-    yearlyPrice: 468,
+    yearlyPrice: 948,
   },
   {
     id: "xfyun",
@@ -1160,8 +1157,6 @@ export const plans: Plan[] = [
     category: "其他",
     links: { official: "https://www.scnet.cn/ui/console/index.html#/llm/token-plan" },
     logo: { src: "/logos/scnet.png", alt: "超算互联网" },
-    notice:
-      "限时特惠价为首月价，续费按原价。采用积分统一计量；须使用 sk-tp- 开头专属 API Key；仅限 AI 工具交互使用；额度用尽不自动转按量、到期未用积分不结转；不支持升/降档与退款。积分抵扣规则自 2026-08-08 起生效。",
     models: [
       "GLM 5.2",
       "GLM 5.1",
@@ -1231,8 +1226,6 @@ export const plans: Plan[] = [
     category: "其他",
     links: { official: "https://www.jdcloud.com/cn/products/tokenplan" },
     logo: { src: "/logos/jd.png", alt: "京东" },
-    notice:
-      "京东云 Token Plan（JoyBuilder 2.0）：个人版限时 8 折、每日限量发售（售完次日 0 点重置），同时仅可持有一个生效订阅；企业版限时 6 折、灰度开放中，提交申请后约 3 个工作日内开通。Credits 用尽即止、未用不结转。须使用 pk- 开头专属 API Key 与 Base URL（https://modelservice.jdcloud.com/tokenPlan/openai/v1）。",
     models: [
       "GLM 5.2",
       "GLM 5.1",
@@ -1343,8 +1336,6 @@ export const plans: Plan[] = [
     category: "国内大厂",
     links: { official: "https://cloud.baidu.com/product/codingplan.html" },
     logo: { src: "/logos/yiyan.png", alt: "文心一言" },
-    notice:
-      "2026年7月千帆 Coding Plan 已升级迁移至 Token Plan 个人版（迁移协议发布于 2026-07-12）。新购统一按 Token 额度计费，取消原有三层限流；首购限时5折仅限首次购买，续费按标准价。原 Coding Plan 用户可在控制台一键升级：迁移为权益置换（非叠加），升级后立即获得所选 Token Plan 完整额度、已用 Coding Plan 额度清零，原剩余有效期顺延 1 个月；迁移后须使用 Token Plan 专属 API Key 与 Base URL（https://qianfan.baidubce.com/v2/tokenplan/personal），旧 Coding Plan 配置将无法调用。迁移不支持撤销、退款或回退。",
     models: [
       "DeepSeek V4 Pro",
       "DeepSeek V4 Flash",
@@ -1571,28 +1562,29 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/opencode.png", alt: "OpenCode" },
     notice:
-      "面向国际用户（$10 Go / $40 Go Plus，约 ¥67 / ¥268/月）。各模型独立美元用量上限（5h=20%、周=50%、月=100%），非共享 Token 池。站内 Token 估算取 Kimi K2.7 Code、MiniMax M3、GLM-5.3 Flash、GPT 6 Luna 四款主力编程模型的官方预估算术平均（含缓存输入，非固定配额）。推荐计划已结束；Personal 工作区不可邀成员；达限可用免费模型或开启 Use balance。",
+      "国际订阅 $10 Go / $40 Go Plus（约 ¥67 / ¥268/月）。各模型独立美元上限（5h=20%、周=50%、月=100%），非共享池。Personal 工作区不可邀成员；达限可用免费模型或开启 Extra Usage 扣余额。",
     models: [
       "Grok 4.7",
-      "Grok 4.6",
       "GLM-5.3-Flash",
       "GLM-5.3",
       "GLM-5.2",
       "GPT 6 Luna",
       "GPT 5.6 Luna",
       "Claude Haiku 5.5",
+      "Gemini 4 Argon",
+      "Kimi K3.1 Pro",
       "Kimi K3",
       "Kimi K2.7 Code",
-      "Kimi K2.6",
       "LongCat-2.0",
-      "LongCat 2.5 Preview Free",
-      "Step 5 Preview Free",
+      "Step 5 Preview",
+      "Beam Free",
+      "Iceman Contributor Free",
       "MiMo-V2.6-Flash",
       "MiMo-V2.6-Pro",
       "MiMo-V2.5",
       "MiMo-V2.5-Pro",
+      "MiniMax M3.1 Flash",
       "MiniMax M3",
-      "MiniMax M2.7",
       "Muse Spark 1.3 Contributor",
       "Muse Spark 1.2 Contributor",
       "Qwen3.8 Max",
@@ -1600,11 +1592,8 @@ export const plans: Plan[] = [
       "Qwen3.7 Plus",
       "DeepSeek V4.1 Flash",
       "DeepSeek V4 Pro",
-      "DeepSeek V4 Flash",
-      "DeepSeek V4 Flash Vision Exp",
       "Hy4 preview",
       "Hy3",
-      "Space Bunny",
     ],
     tiers: [
       {
@@ -1616,7 +1605,7 @@ export const plans: Plan[] = [
         limitMonth: "$60",
         limitMonthTokens: 1_035_750_000,
         notes:
-          "$10/月；表内 $ 为例（GLM-5.3-Flash 窗口 $12/$30/$60）；四款主力模型 Token 均值约 208M/5h、518M/周、1.04B/月（K2.7 / M3 / GLM-5.3 Flash / GPT 6 Luna）；LongCat 2.5 / Step 5 限时免费",
+          "$10/月；GLM-5.3-Flash 示例 $12/$30/$60；四款主力 Token 均值约 208M/5h、518M/周、1.04B/月；Beam/Iceman 限时免费",
       },
       {
         name: "Go Plus",
@@ -1627,7 +1616,7 @@ export const plans: Plan[] = [
         limitMonth: "$180",
         limitMonthTokens: 3_380_000_000,
         notes:
-          "$40/月；表内 $ 为例（GLM-5.3-Flash $36/$90/$180）；四款主力模型 Token 均值约 676M/5h、1.69B/周、3.38B/月",
+          "$40/月；Go 的 3× 美元上限；GLM-5.3-Flash 示例 $36/$90/$180；四款主力 Token 均值约 676M/5h、1.69B/周、3.38B/月",
       },
     ],
     billingUnit: "按量计费",
@@ -1654,7 +1643,6 @@ export const plans: Plan[] = [
     category: "其他",
     links: { official: "https://www.cucloud.cn/product/tokenplan.html" },
     logo: { src: "/logos/cucloud.png", alt: "联通云" },
-    notice: "个人版与团队版不可互转，仅支持同版本内 Lite > Pro > Max 升级。",
     models: ["DeepSeek V4 Pro", "DeepSeek V4 Flash", "MiniMax M2.5"],
     tiers: [
       {
@@ -1857,7 +1845,7 @@ export const plans: Plan[] = [
         limitMonth: "$20额度",
         requestEqMonth: 1330,
         notes:
-          "$8/月（约 ¥53.6）；共享周额度池；Cursor 自有模型 + Grok Chat/Voice/Imagine/Build；无 Grok Bot、Cloud Agents、第三方",
+          "$8/月（约 ¥53.6）；自有模型 + Grok Chat/Voice/Imagine/Build；无 Grok Bot、Cloud Agents、第三方",
       },
       {
         name: "Premium",
@@ -1867,7 +1855,7 @@ export const plans: Plan[] = [
         limitMonth: "$80额度 包含第三方SOTA",
         requestEqMonth: 5320,
         notes:
-          "$30/月（约 ¥201）；4× Plus 周池；含 Grok Bot、Cloud Agents、Bugbot、Origin；第三方按 API 刊例价预付扣费",
+          "$30/月（约 ¥201）；4× Plus 额度；含 Grok Bot、Cloud Agents、Bugbot、Origin；第三方按 API 刊例价预付扣费",
       },
       {
         name: "Super",
@@ -1877,7 +1865,7 @@ export const plans: Plan[] = [
         limitMonth: "$300额度 包含第三方SOTA",
         requestEqMonth: 19950,
         notes:
-          "$100/月（约 ¥670）；15× Plus 周池；含 Premium 全部能力与 Grok Bot；高峰优先",
+          "$100/月（约 ¥670）；15× Plus 额度；含 Premium 全部能力与 Grok Bot；高峰优先",
       },
       {
         name: "Ultra",
@@ -1887,7 +1875,7 @@ export const plans: Plan[] = [
         limitMonth: "$1000额度 包含第三方SOTA",
         requestEqMonth: 66500,
         notes:
-          "$200/月（约 ¥1340）；50× Plus 周池；含 Super 全部能力与 Grok Bot；优先体验新品与新模型",
+          "$200/月（约 ¥1340）；50× Plus 额度；含 Super 全部能力与 Grok Bot；优先体验新品与新模型",
       },
       {
         name: "Teams",
@@ -1897,7 +1885,7 @@ export const plans: Plan[] = [
         limitMonth: "$80～$1000额度 包含第三方SOTA",
         requestEqMonth: 5320,
         notes:
-          "席位 $30/$100/$200·月（约 ¥201/¥670/¥1340）；周池对齐个人档；含 Grok Bot；团队管理/SSO；第三方可能加 Cursor Token Rate",
+          "席位 $30/$100/$200·月（约 ¥201/¥670/¥1340）；额度对齐个人档；含 Grok Bot；团队管理/SSO；第三方可能加 Cursor Token Rate",
       },
     ],
     billingUnit: "按量计费",
