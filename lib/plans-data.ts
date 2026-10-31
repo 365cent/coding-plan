@@ -1610,7 +1610,7 @@ export const plans: Plan[] = [
         limit5h: "$7.5",
         limitWeek: "$18.8",
         limitMonth: "$37.5",
-        limitMonthTokens: 3_364_412_000,
+        limitMonthTokens: 3_364_068_000,
         requestEqMonth: 45_692,
         notes:
           "$10/月 Personal；展示配额=28 款付费模型官方月 $ 上限算术均值×(20%/50%/100%)，非单模型；Beam/Iceman 未计入；requestEq/limitMonthTokens=各模型官方月估请求×文档 tokens/次 再均值",
@@ -1622,8 +1622,8 @@ export const plans: Plan[] = [
         limit5h: "$23.2",
         limitWeek: "$58",
         limitMonth: "$116",
-        limitMonthTokens: 1_607_036_000,
-        requestEqMonth: 21_950,
+        limitMonthTokens: 8_036_093_000,
+        requestEqMonth: 109_758,
         notes:
           "$40/月 Personal；同上跨模型均值（Go Plus 档月 $ 上限表）；DeepSeek V4.1 Flash 单模型月 $200",
       },
@@ -1634,8 +1634,8 @@ export const plans: Plan[] = [
         limit5h: "$8.5",
         limitWeek: "$21.3",
         limitMonth: "$42.5",
-        limitMonthTokens: 739_170_000,
-        requestEqMonth: 10_061,
+        limitMonthTokens: 3_695_954_000,
+        requestEqMonth: 50_307,
         notes:
           "$20/成员/月；跨模型均值（Teams 档=Go 同表 +$5/模型）；Extra Usage 默认开启；不含 Service Account",
       },
