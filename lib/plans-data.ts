@@ -1591,7 +1591,7 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/opencode.png", alt: "OpenCode" },
     notice:
-      "国际订阅 $10 Go / $40 Go Plus（约 ¥67 / ¥268/月）。各模型独立美元上限（5h=20%、周=50%、月=100%），非共享池。Personal 工作区不可邀成员；达限可用免费模型或开启 Extra Usage 扣余额。",
+      "三档 Go $10 / Go Plus $40 / Go Teams $20/人；模型独立美元上限（5h 20% · 周 50% · 月 100%）；达限可用免费模型或 Extra Usage；Go/Plus 仅单人 Personal；Teams 每成员独立额度。",
     models: [
       "Grok 4.7",
       "GLM-5.3-Flash",
@@ -1647,6 +1647,17 @@ export const plans: Plan[] = [
         notes:
           "$40/月；Go 的 3× 美元上限；GLM-5.3-Flash 示例 $36/$90/$180；四款主力 Token 均值约 676M/5h、1.69B/周、3.38B/月",
       },
+      {
+        name: "Go Teams",
+        price: 134,
+        period: "月",
+        limit5h: "$13",
+        limitWeek: "$32.5",
+        limitMonth: "$65",
+        limitMonthTokens: 1_923_000_000,
+        notes:
+          "$20/成员/月；每成员各模型较 Go +$5（示例 GLM-5.3-Flash $13/$32.5/$65）；Extra Usage 默认开启；不含 Service Account",
+      },
     ],
     billingUnit: "按量计费",
     tools: [
@@ -1663,7 +1674,7 @@ export const plans: Plan[] = [
       "Roo Code",
     ],
     toolCount: 11,
-    tags: ["美元用量", "Go Plus", "开源模型"],
+    tags: ["美元用量", "Go Plus", "Go Teams", "开源模型"],
   },
   {
     id: "cucloud-token",
