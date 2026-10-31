@@ -8,11 +8,13 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       { userAgent: "*", allow: "/" },
       { userAgent: "GPTBot", allow: "/" },
+      { userAgent: "OAI-SearchBot", allow: "/" },
       { userAgent: "ChatGPT-User", allow: "/" },
       { userAgent: "CCBot", allow: "/" },
       { userAgent: "anthropic-ai", allow: "/" },
       { userAgent: "Claude-Web", allow: "/" },
       { userAgent: "PerplexityBot", allow: "/" },
+      { userAgent: "Google-Extended", allow: "/" },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,
   }

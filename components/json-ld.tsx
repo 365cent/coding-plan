@@ -1,4 +1,5 @@
 import { type Plan, planComparableMonthlyPrice } from "@/lib/plans-data"
+import { sortPlansDefault } from "@/lib/plan-default-sort"
 import { faqItems } from "@/components/faq-section"
 import { getSiteOrigin } from "@/lib/site-origin"
 
@@ -34,10 +35,16 @@ export function WebSiteJsonLd() {
       "@context": "https://schema.org",
       "@type": "WebPage",
       name: "国内 Coding Plan 性价比排行 2026",
+      description: "22家国内平台AI编程套餐横评：价格、模型、用量限制、每元请求数一键对比",
       ...(siteUrl ? { url: siteUrl } : {}),
       datePublished: "2026-01-01",
       dateModified,
       inLanguage: "zh-CN",
+      isPartOf: {
+        "@type": "WebSite",
+        name: "国内Coding Plan对比",
+        ...(siteUrl ? { url: siteUrl } : {}),
+      },
       author: {
         "@type": "Organization",
         name: "国内Coding Plan对比",
@@ -49,14 +56,15 @@ export function WebSiteJsonLd() {
 }
 
 export function ItemListJsonLd({ plans }: { plans: Plan[] }) {
+  const sortedPlans = sortPlansDefault(plans)
   const data = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     ...(siteUrl ? { "@id": `${siteUrl}#itemlist` } : {}),
     name: "国内AI Coding Plan套餐对比列表",
     description: "2026年国内主流AI编程订阅套餐价格对比",
-    numberOfItems: plans.length,
-    itemListElement: plans.map((plan, idx) => {
+    numberOfItems: sortedPlans.length,
+    itemListElement: sortedPlans.map((plan, idx) => {
       const minPrice = lowestRegularMonthlyPrice(plan)
       const models = plan.models.slice(0, 3).join("、")
       const desc = `${plan.company}的${plan.product}，支持${models}等模型，最低¥${minPrice ?? "—"}/月`

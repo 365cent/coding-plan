@@ -7,20 +7,20 @@ import {
   type PlanCategory,
   comparePlanRateLimits,
   lowestPaidRegularTier,
-  modelMatchesQuery,
   planComparableMonthlyPrice,
   planMonthlyRequestEq,
   planRequestsPerYuan,
+  planSearchMatchRank,
   purchasableRegularTiers,
   tierComparableMonthly,
 } from "@/lib/plans-data"
+import { DEFAULT_TABLE_LEADER_IDS } from "@/lib/plan-default-sort"
 import { FilterBar } from "@/components/filter-bar"
 import { ViewToggle } from "@/components/view-toggle"
 import { PlanCard } from "@/components/plan-card"
 import { ComparisonTable } from "@/components/comparison-table"
 
 const CATEGORY_ORDER: PlanCategory[] = ["国内大厂", "其他"]
-const DEFAULT_TABLE_LEADER_IDS = ["aliyun-token", "ark-agent", "tencent"] as const
 
 function defaultLeaderRank(planId: string): number {
   const idx = DEFAULT_TABLE_LEADER_IDS.indexOf(planId as (typeof DEFAULT_TABLE_LEADER_IDS)[number])
@@ -119,19 +119,21 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
       result = result.filter((p) => p.category === categoryFilter)
     }
 
+    let searchRanks: Map<string, number> | undefined
+
     if (search) {
       if (search.startsWith("by:provider ")) {
         const providerName = search.slice(12).trim()
         result = result.filter((p) => p.company === providerName)
       } else {
-        const q = search.toLowerCase()
-        result = result.filter(
-          (p) =>
-            p.company.toLowerCase().includes(q) ||
-            p.product.toLowerCase().includes(q) ||
-            p.models.some((m) => modelMatchesQuery(m, search)) ||
-            p.tools.some((t) => t.toLowerCase().includes(q)),
-        )
+        const ranks = new Map<string, number>()
+        result = result.filter((p) => {
+          const rank = planSearchMatchRank(p, search)
+          if (rank === null) return false
+          ranks.set(p.id, rank)
+          return true
+        })
+        searchRanks = ranks
       }
     }
 
@@ -142,6 +144,11 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
     const categoryRank = (c: PlanCategory) => CATEGORY_ORDER.indexOf(c)
 
     result = [...result].sort((a, b) => {
+      if (searchRanks) {
+        const rankDiff = (searchRanks.get(a.id) ?? 99) - (searchRanks.get(b.id) ?? 99)
+        if (rankDiff !== 0) return rankDiff
+      }
+
       // For non-default sorts (except price / requests), keep category grouping first.
       if (
         !categoryFilter &&

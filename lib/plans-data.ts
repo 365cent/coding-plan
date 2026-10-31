@@ -13,6 +13,67 @@ export function modelMatchesQuery(model: string, query: string): boolean {
   return normalizeModelText(model).includes(normalizeModelText(query))
 }
 
+function textMatchesQuery(text: string, q: string, nq: string): boolean {
+  if (text.toLowerCase().includes(q)) return true
+  if (!nq) return false
+  return normalizeModelText(text).includes(nq)
+}
+
+function textStartsWithQuery(text: string, q: string, nq: string): boolean {
+  const lower = text.toLowerCase().trim()
+  if (lower.startsWith(q)) return true
+  if (!nq) return false
+  return normalizeModelText(text).startsWith(nq)
+}
+
+function textEqualsQuery(text: string, q: string, nq: string): boolean {
+  const lower = text.toLowerCase().trim()
+  if (lower === q) return true
+  if (!nq) return false
+  return normalizeModelText(text) === nq
+}
+
+/**
+ * 搜索匹配优先级（数值越小越优先，null 表示不匹配）：
+ * 0: 套餐名（product）或平台名（company）完全匹配
+ * 1: 套餐名（product）或平台名（company）前缀匹配
+ * 2: 套餐名（product）或平台名（company）包含匹配
+ * 3: 品牌别名（logo.alt / id）匹配
+ * 4: 模型列表（models）匹配
+ * 5: 适配工具（tools）或标签（tags）匹配
+ */
+export function planSearchMatchRank(plan: Plan, rawQuery: string): number | null {
+  const q = rawQuery.trim().toLowerCase()
+  if (!q) return 0
+  const nq = normalizeModelText(rawQuery)
+
+  if (textEqualsQuery(plan.product, q, nq) || textEqualsQuery(plan.company, q, nq)) {
+    return 0
+  }
+  if (textStartsWithQuery(plan.product, q, nq) || textStartsWithQuery(plan.company, q, nq)) {
+    return 1
+  }
+  if (textMatchesQuery(plan.product, q, nq) || textMatchesQuery(plan.company, q, nq)) {
+    return 2
+  }
+  if (
+    (plan.logo?.alt && textMatchesQuery(plan.logo.alt, q, nq)) ||
+    textMatchesQuery(plan.id, q, nq)
+  ) {
+    return 3
+  }
+  if (plan.models.some((m) => modelMatchesQuery(m, rawQuery))) {
+    return 4
+  }
+  if (
+    plan.tools.some((t) => textMatchesQuery(t, q, nq)) ||
+    plan.tags.some((tag) => textMatchesQuery(tag, q, nq))
+  ) {
+    return 5
+  }
+  return null
+}
+
 export type Plan = {
   id: string
   company: string
@@ -255,6 +316,106 @@ export const plans: Plan[] = [
     tags: ["闲时半价", "游戏开发"],
   },
   {
+    id: "ark-agent",
+    company: "字节跳动",
+    product: "火山方舟 Agent Plan",
+    category: "国内大厂",
+    links: {
+      official: "https://www.volcengine.com/activity/agentplan?utm_campaign=CG&utm_content=CG&utm_medium=CakeGrowth&utm_source=OWO&utm_term=CG&utm=cg&cgv=ogewxv7kp2",
+      affiliate: "https://www.volcengine.com/activity/agentplan?utm_campaign=CG&utm_content=CG&utm_medium=CakeGrowth&utm_source=OWO&utm_term=CG&utm=cg&cgv=ogewxv7kp2",
+    },
+    logo: { src: "/logos/volcengine.png", alt: "火山引擎" },
+    models: [
+      "Doubao Seed 2.0 Mini",
+      "Doubao Seed 2.0 Lite",
+      "DeepSeek V4 Flash",
+      "Doubao Seed Evolving",
+      "Doubao Seed 2.0 Code",
+      "Doubao Seed 2.0 Pro",
+      "MiniMax M2.7",
+      "MiniMax M3",
+      "GLM 5.2",
+      "Kimi K2.6",
+      "Kimi K2.7 Code",
+      "DeepSeek V4 Pro",
+      "Kimi K3",
+      "Doubao Embedding Vision",
+      "Doubao Seedream 5.0 Lite",
+      "Doubao Seedance 2.0",
+      "Doubao Seed TTS 2.0",
+      "Doubao Seed ASR 2.0",
+    ],
+    tiers: [
+      {
+        name: "Small",
+        price: 40,
+        firstMonthPrice: 9.9,
+        secondMonthPrice: 9.9,
+        period: "月",
+        limit5h: "2,000 AFP",
+        limitWeek: "7,000 AFP",
+        limitMonth: "20,000 AFP",
+        limit5hCount: 2000,
+        limitWeekCount: 7000,
+        limitMonthCount: 20000,
+        notes: "限时 ¥9.9/月（刊例价 ¥40）；体验版本，仅供测试；不支持视频生成；视觉模型日额度 10,000 AFP（仅图片）；建议 1 个项目",
+      },
+      {
+        name: "Medium",
+        price: 200,
+        firstMonthPrice: 49.9,
+        secondMonthPrice: 49.9,
+        period: "月",
+        limit5h: "10,000 AFP",
+        limitWeek: "35,000 AFP",
+        limitMonth: "100,000 AFP",
+        limit5hCount: 10000,
+        limitWeekCount: 35000,
+        limitMonthCount: 100000,
+        notes: "限时 ¥49.9/月（刊例价 ¥200）；免费赠送 ArkClaw 轻量版；5× Small 用量；支持 Kimi K3 及视频生成；豆包搜索 500 次/月；视觉日额度 50,000 AFP；建议 1–2 个项目",
+      },
+      {
+        name: "Large",
+        price: 500,
+        period: "月",
+        limit5h: "25,000 AFP",
+        limitWeek: "87,500 AFP",
+        limitMonth: "250,000 AFP",
+        limit5hCount: 25000,
+        limitWeekCount: 87500,
+        limitMonthCount: 250000,
+        notes: "免费赠送 ArkClaw 轻量版；12.5× Small 用量；支持 Seedance 2.0 及 Kimi K3；豆包搜索 500 次/月；视觉日额度 125,000 AFP；建议 2+ 个项目",
+      },
+      {
+        name: "Max",
+        price: 1000,
+        period: "月",
+        limit5h: "50,000 AFP",
+        limitWeek: "175,000 AFP",
+        limitMonth: "500,000 AFP",
+        limit5hCount: 50000,
+        limitWeekCount: 175000,
+        limitMonthCount: 500000,
+        notes: "免费赠送 ArkClaw 轻量版；25× Small 用量；支持 Seedance 2.0 及 Kimi K3；豆包搜索 500 次/月；视觉日额度 250,000 AFP",
+      },
+    ],
+    billingUnit: "积分制",
+    tools: [
+      "Claude Code",
+      "TRAE",
+      "Roo Code",
+      "Codex CLI",
+      "OpenCode",
+      "Cline",
+      "Kilo Code",
+      "OpenClaw",
+      "Cursor",
+      "Hermes Agent",
+    ],
+    toolCount: 10,
+    tags: ["AFP积分", "豆包搜索"],
+  },
+  {
     id: "aliyun-token",
     company: "阿里云",
     product: "百炼 Token Plan",
@@ -303,12 +464,12 @@ export const plans: Plan[] = [
       {
         name: "Essential 个人",
         price: 120,
-        firstMonthPrice: 9.9,
+        firstMonthPrice: 79,
         secondMonthPrice: 79,
         period: "月",
         limit5h: "-",
         limitMonth: "25,500 积分",
-        notes: "首月 ¥9.9，次月起限时 ¥79/月（原价 ¥120）；25,500 Credits/月；并发 Agent 2–3",
+        notes: "限时 ¥79/月（原价 ¥120）；25,500 Credits/月；并发 Agent 2–3",
       },
       {
         name: "Standard 个人",
@@ -438,106 +599,6 @@ export const plans: Plan[] = [
     tools: ["Claude Code", "Cursor", "Cline", "Codex CLI", "Kilo Code", "Roo Code", "OpenCode", "Moltbot"],
     toolCount: 11,
     tags: ["Auto模式"],
-  },
-  {
-    id: "ark-agent",
-    company: "字节跳动",
-    product: "火山方舟 Agent Plan",
-    category: "国内大厂",
-    links: {
-      official: "https://www.volcengine.com/activity/agentplan?utm_campaign=CG&utm_content=CG&utm_medium=CakeGrowth&utm_source=OWO&utm_term=CG&utm=cg&cgv=ogewxv7kp2",
-      affiliate: "https://www.volcengine.com/activity/agentplan?utm_campaign=CG&utm_content=CG&utm_medium=CakeGrowth&utm_source=OWO&utm_term=CG&utm=cg&cgv=ogewxv7kp2",
-    },
-    logo: { src: "/logos/volcengine.png", alt: "火山引擎" },
-    models: [
-      "Doubao Seed 2.0 Mini",
-      "Doubao Seed 2.0 Lite",
-      "DeepSeek V4 Flash",
-      "Doubao Seed Evolving",
-      "Doubao Seed 2.0 Code",
-      "Doubao Seed 2.0 Pro",
-      "MiniMax M2.7",
-      "MiniMax M3",
-      "GLM 5.2",
-      "Kimi K2.6",
-      "Kimi K2.7 Code",
-      "DeepSeek V4 Pro",
-      "Kimi K3",
-      "Doubao Embedding Vision",
-      "Doubao Seedream 5.0 Lite",
-      "Doubao Seedance 2.0",
-      "Doubao Seed TTS 2.0",
-      "Doubao Seed ASR 2.0",
-    ],
-    tiers: [
-      {
-        name: "Small",
-        price: 40,
-        firstMonthPrice: 9.9,
-        secondMonthPrice: 9.9,
-        period: "月",
-        limit5h: "2,000 AFP",
-        limitWeek: "7,000 AFP",
-        limitMonth: "20,000 AFP",
-        limit5hCount: 2000,
-        limitWeekCount: 7000,
-        limitMonthCount: 20000,
-        notes: "限时 ¥9.9/月（刊例价 ¥40）；体验版本，仅供测试；不支持视频生成；视觉模型日额度 10,000 AFP（仅图片）；建议 1 个项目",
-      },
-      {
-        name: "Medium",
-        price: 200,
-        firstMonthPrice: 49.9,
-        secondMonthPrice: 49.9,
-        period: "月",
-        limit5h: "10,000 AFP",
-        limitWeek: "35,000 AFP",
-        limitMonth: "100,000 AFP",
-        limit5hCount: 10000,
-        limitWeekCount: 35000,
-        limitMonthCount: 100000,
-        notes: "限时 ¥49.9/月（刊例价 ¥200）；免费赠送 ArkClaw 轻量版；5× Small 用量；支持 Kimi K3 及视频生成；豆包搜索 500 次/月；视觉日额度 50,000 AFP；建议 1–2 个项目",
-      },
-      {
-        name: "Large",
-        price: 500,
-        period: "月",
-        limit5h: "25,000 AFP",
-        limitWeek: "87,500 AFP",
-        limitMonth: "250,000 AFP",
-        limit5hCount: 25000,
-        limitWeekCount: 87500,
-        limitMonthCount: 250000,
-        notes: "免费赠送 ArkClaw 轻量版；12.5× Small 用量；支持 Seedance 2.0 及 Kimi K3；豆包搜索 500 次/月；视觉日额度 125,000 AFP；建议 2+ 个项目",
-      },
-      {
-        name: "Max",
-        price: 1000,
-        period: "月",
-        limit5h: "50,000 AFP",
-        limitWeek: "175,000 AFP",
-        limitMonth: "500,000 AFP",
-        limit5hCount: 50000,
-        limitWeekCount: 175000,
-        limitMonthCount: 500000,
-        notes: "免费赠送 ArkClaw 轻量版；25× Small 用量；支持 Seedance 2.0 及 Kimi K3；豆包搜索 500 次/月；视觉日额度 250,000 AFP",
-      },
-    ],
-    billingUnit: "积分制",
-    tools: [
-      "Claude Code",
-      "TRAE",
-      "Roo Code",
-      "Codex CLI",
-      "OpenCode",
-      "Cline",
-      "Kilo Code",
-      "OpenClaw",
-      "Cursor",
-      "Hermes Agent",
-    ],
-    toolCount: 10,
-    tags: ["AFP积分", "豆包搜索"],
   },
   {
     id: "huawei",

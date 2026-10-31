@@ -50,10 +50,10 @@ export function FilterBar({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="搜索平台、模型..."
+            placeholder="搜索套餐、平台、模型..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            aria-label="搜索套餐平台或模型"
+            aria-label="搜索套餐名称、平台或模型"
             className="w-full h-9 pl-9 pr-8 rounded-md bg-secondary text-sm text-foreground placeholder:text-muted-foreground border-none outline-none focus:ring-2 focus:ring-primary/30 transition-all"
           />
           {search && (
