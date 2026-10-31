@@ -786,7 +786,7 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/kimi.png", alt: "Kimi" },
     notice:
-      "新套餐 Go/Plus/Pro/Max/Ultra；Go 不含 Kimi Code，Plus 起可用；新会员无周限额、保留 5h 滚动，共享月额度。Plus 起 K3.1 Pro 与 K3（Plus 限 K3 256K）；Pro 起 1M 与高速版（K3.1 Pro Highspeed、K2.7 Code Highspeed）。K3.1 Pro 初期可能排队或失败。旧档 Andante/Moderato/Allegretto/Allegro 可续费；可开加油包。",
+      "新套餐 Go/Plus/Pro/Max/Ultra；Go 不含 Kimi Code，Plus 起可用；Go 月/5h 额度按 Plus 同比例推算。新会员无周限额、保留 5h 滚动，共享月额度。Plus 起 K3.1 Pro 与 K3（Plus 限 K3 256K）；Pro 起 1M 与高速版（K3.1 Pro Highspeed、K2.7 Code Highspeed）。K3.1 Pro 初期可能排队或失败。旧档 Andante/Moderato/Allegretto/Allegro 可续费；可开加油包。",
     models: [
       "Kimi K3.1 Pro",
       "Kimi K3.1 Pro Highspeed",
@@ -800,10 +800,11 @@ export const plans: Plan[] = [
         name: "Go",
         price: 49,
         period: "月",
-        limit5h: "-",
-        limitMonth: "会员共享月额度",
+        limit5h: "~3.2M Token",
+        limitMonth: "~65.3M Token",
+        limitMonthTokens: 65_333_333,
         notes:
-          "¥49/月；不含 Kimi Code；含文档/PPT/深度研究、网页部署等会员能力；共享月额度",
+          "¥49/月；不含 Kimi Code；含文档/PPT/深度研究、网页部署等会员能力；共享月额度；月/5h Token 按 Plus×(49/99) 价格比例推算（非官方绝对值）",
       },
       {
         name: "Plus",
