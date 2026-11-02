@@ -283,7 +283,7 @@ export const plans: Plan[] = [
     category: "国内大厂",
     links: {
       official: "https://cn.aliyun.com/benefit/scene/tokenplan",
-      affiliate: "https://www.aliyun.com/benefit/client/cross?userCode=y44p2mtf",
+      affiliate: "https://www.aliyun.com/minisite/goods?clubTaskBiz=subTask..12953028..10292..&userCode=y44p2mtf",
     },
     logo: { src: "/logos/qwen.png", alt: "通义千问" },
     notice:
@@ -325,12 +325,12 @@ export const plans: Plan[] = [
       {
         name: "Essential 个人",
         price: 120,
-        firstMonthPrice: 9.9,
+        firstMonthPrice: 79,
         secondMonthPrice: 79,
         period: "月",
         limit5h: "-",
         limitMonth: "25,500 积分",
-        notes: "首月 ¥9.9，次月起限时 ¥79/月（原价 ¥120）；25,500 Credits/月；并发 Agent 2–3",
+        notes: "限时 ¥79/月（原价 ¥120）；25,500 Credits/月；并发 Agent 2–3",
       },
       {
         name: "Standard 个人",
