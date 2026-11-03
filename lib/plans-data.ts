@@ -282,12 +282,12 @@ export const plans: Plan[] = [
     product: "百炼 Token Plan",
     category: "国内大厂",
     links: {
-      official: "https://cn.aliyun.com/benefit/scene/tokenplan",
+      official: "https://www.aliyun.com/minisite/goods?clubTaskBiz=subTask..12953028..10292..&userCode=y44p2mtf",
       affiliate: "https://www.aliyun.com/minisite/goods?clubTaskBiz=subTask..12953028..10292..&userCode=y44p2mtf",
     },
     logo: { src: "/logos/qwen.png", alt: "通义千问" },
     notice:
-      "仅支持华北2（北京）。个人版与团队版可同时持有、各自计费。个人版按订阅月累计 Credits，用尽暂停，未用额度不结转，可购用量包补充。与 Coding Plan 独立、不可迁移；Coding Plan Lite 已于 2026-03-20 停新购、2026-04-13 停续费升级。",
+      "2026年9月22日起个人版取消周限额，Credits 改为按月限额并按订阅月重置；存量订阅当日剩余额度一次性重置为对应套餐满月额度，订阅到期日不变。2026年8月3日官网公告：个人版 Token Plan 用户权益升级。个人版与团队版可同时持有。22:00–08:00 部分 Qwen、DeepSeek 模型限时优惠，活动以控制台为准。",
     models: [
       "Qwen Auto",
       "Qwen3.8 Max",
