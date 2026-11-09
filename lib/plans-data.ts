@@ -413,7 +413,7 @@ export const plans: Plan[] = [
     },
     logo: { src: "/logos/volcengine.png", alt: "火山引擎" },
     notice:
-      "2026年6月8日至8月8日，Lite/Pro 新购、续费、升配享首两个月 2.5 折（¥9.9/¥49.9），第三个月起恢复原价；优惠资格共享且名额有限，先到先得。",
+      "Lite/Pro 首两个月 2.5 折普惠活动已于 2026 年 11 月 8 日结束，新购、续费、升配按刊例价 ¥40/¥200/月；已购订单权益不变。邀请裂变等叠加优惠以订购页为准；部分模型限时抵扣系数活动仍以控制台为准。",
     models: [
       "Auto",
       "Doubao Seed 2.0",
@@ -430,8 +430,6 @@ export const plans: Plan[] = [
       {
         name: "Lite",
         price: 40,
-        firstMonthPrice: 9.4,
-        secondMonthPrice: 9.9,
         period: "月",
         limit5h: "~1,200 次",
         limitWeek: "9,000 次",
@@ -444,8 +442,6 @@ export const plans: Plan[] = [
       {
         name: "Pro",
         price: 200,
-        firstMonthPrice: 47.4,
-        secondMonthPrice: 49.9,
         period: "月",
         limit5h: "~6,000 次",
         limitWeek: "45,000 次",
@@ -471,6 +467,8 @@ export const plans: Plan[] = [
       affiliate: "https://www.volcengine.com/activity/agentplan?utm_campaign=CG&utm_content=CG&utm_medium=CakeGrowth&utm_source=OWO&utm_term=CG&utm=cg&cgv=ogewxv7kp2",
     },
     logo: { src: "/logos/volcengine.png", alt: "火山引擎" },
+    notice:
+      "2026年6月8日至2027年3月31日，Small/Medium 新购、续费、升配享首两个月 2.5 折（¥9.9/¥49.9），第三个月起恢复刊例价（¥40/¥200）；每账号最多两个月特惠，资格在新购、续费、升配间共享，使用后不因升档或退订等重新获得，名额有限。2026年11月9日至12日，Small/Medium 连续包年享 5 折（¥240/¥1200/年），新购、续费、升配可参与；历史未订 Small/Medium 的新用户经好友邀请首单包年可再 9.5 折（¥228/¥1140/年）；Large、Max 不参与包年活动。",
     models: [
       "Doubao Seed 2.0 Mini",
       "Doubao Seed 2.0 Lite",
@@ -504,7 +502,7 @@ export const plans: Plan[] = [
         limit5hCount: 2000,
         limitWeekCount: 7000,
         limitMonthCount: 20000,
-        notes: "限时 ¥9.9/月（刊例价 ¥40）；体验版本，仅供测试；不支持视频生成；视觉模型日额度 10,000 AFP（仅图片）；建议 1 个项目",
+        notes: "首两月 ¥9.9（刊例 ¥40/月）；连续包年刊例 ¥480/年；体验版本，仅供测试；不支持视频生成；视觉日额度 10,000 AFP（仅图片）；建议 1 个项目",
       },
       {
         name: "Medium",
@@ -518,7 +516,7 @@ export const plans: Plan[] = [
         limit5hCount: 10000,
         limitWeekCount: 35000,
         limitMonthCount: 100000,
-        notes: "限时 ¥49.9/月（刊例价 ¥200）；免费赠送 ArkClaw 轻量版；5× Small 用量；支持 Kimi K3 及视频生成；豆包搜索 500 次/月；视觉日额度 50,000 AFP；建议 1–2 个项目",
+        notes: "首两月 ¥49.9（刊例 ¥200/月）；连续包年刊例 ¥2,400/年；赠送 ArkClaw 轻量版；5× Small 用量；支持 Kimi K3 及视频生成；豆包搜索 500 次/月；视觉日额度 50,000 AFP；建议 1–2 个项目",
       },
       {
         name: "Large",
