@@ -97,6 +97,15 @@ export function ClientShell({ plans }: { plans: Plan[] }) {
     setView(q.startsWith("by:provider ") ? "cards" : "table")
   }, [])
 
+  useEffect(() => {
+    if (!("modelContext" in navigator) && !("modelContext" in document)) return
+    let cleanup: (() => void) | undefined
+    void import("@/lib/webmcp").then(({ initWebMcp }) => {
+      cleanup = initWebMcp(plans, setSearch)
+    })
+    return () => cleanup?.()
+  }, [plans])
+
   const billingOptions = useMemo(() => {
     const preferred: readonly string[] = ["全部", "API请求", "按量计费", "Token计费", "积分制", "请求次数"]
     const set = new Set<string>(plans.map((p) => p.billingUnit))

@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next"
 import Script from "next/script"
 import "./globals.css"
-import { FAQPageJsonLd, ItemListJsonLd, WebSiteJsonLd } from "@/components/json-ld"
+import { DatasetJsonLd, FAQPageJsonLd, ItemListJsonLd, WebSiteJsonLd } from "@/components/json-ld"
 import { plans } from "@/lib/plans-data"
-import { getMetadataBase } from "@/lib/site-origin"
+import { SITE_ORIGIN, getMetadataBase } from "@/lib/site-origin"
 import { TopFloatingHeader } from "@/components/top-floating-header"
 import { SiteFooter } from "@/components/site-footer"
 
@@ -97,6 +97,37 @@ export default function RootLayout({
           title={siteName}
           href="/opensearch.xml"
         />
+        <link
+          rel="alternate"
+          type="text/plain"
+          href={`${SITE_ORIGIN}/llms.txt`}
+          title="llms.txt"
+        />
+        <link
+          rel="alternate"
+          type="application/json"
+          href={`${SITE_ORIGIN}/api/plans.json`}
+          title="国内Coding Plan对比 JSON"
+        />
+        <link
+          rel="api-catalog"
+          href={`${SITE_ORIGIN}/.well-known/api-catalog`}
+          type="application/linkset+json"
+        />
+        <link
+          rel="agent-card"
+          href={`${SITE_ORIGIN}/.well-known/agent-card.json`}
+          type="application/json"
+        />
+        <link
+          rel="service-desc"
+          href={`${SITE_ORIGIN}/.well-known/openapi.yaml`}
+          type="text/yaml"
+        />
+        <WebSiteJsonLd />
+        <ItemListJsonLd plans={plans} />
+        <DatasetJsonLd totalPlans={plans.length} />
+        <FAQPageJsonLd />
       </head>
       <body className="font-sans antialiased">
         <a
@@ -113,9 +144,6 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         )}
-        <WebSiteJsonLd />
-        <ItemListJsonLd plans={plans} />
-        <FAQPageJsonLd />
         <TopFloatingHeader />
         {children}
         <SiteFooter />

@@ -19,8 +19,17 @@ export function WebSiteJsonLd() {
   const data = [
     {
       "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "国内Coding Plan对比",
+      alternateName: ["AI Coding Plan 对比", "coding.mcppla.net"],
+      ...(siteUrl ? { url: siteUrl } : {}),
+      description: "国内主流AI编程套餐（AI Coding Plan / Token Plan / Agent Plan）价格、模型与配额全面横评",
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "WebSite",
       name: "国内Coding Plan对比",
+      alternateName: ["AI Coding Plan 对比", "coding.mcppla.net"],
       ...(siteUrl ? { url: siteUrl } : {}),
       description: "国内主流AI编程套餐全面横评，持续更新",
       inLanguage: "zh-CN",
@@ -41,9 +50,50 @@ export function WebSiteJsonLd() {
       author: {
         "@type": "Organization",
         name: "国内Coding Plan对比",
+        ...(siteUrl ? { url: siteUrl } : {}),
       },
     },
   ]
+
+  return <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(data)} />
+}
+
+export function DatasetJsonLd({ totalPlans }: { totalPlans: number }) {
+  const dateModified = new Date().toISOString().split("T")[0]
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    name: "国内 AI Coding Plan 套餐价格与配额对比数据集",
+    description: `收录 ${totalPlans} 家国内外主流 AI 编程订阅套餐的价格、首月优惠、5小时/周/月配额、支持模型与兼容工具数据，供搜索引擎与大模型引用。`,
+    url: `${siteUrl}/api/plans.json`,
+    inLanguage: "zh-CN",
+    dateModified,
+    isAccessibleForFree: true,
+    creator: {
+      "@type": "Organization",
+      name: "国内Coding Plan对比",
+      url: siteUrl,
+    },
+    distribution: [
+      {
+        "@type": "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: `${siteUrl}/api/plans.json`,
+      },
+      {
+        "@type": "DataDownload",
+        encodingFormat: "text/plain",
+        contentUrl: `${siteUrl}/llms-full.txt`,
+      },
+    ],
+    keywords: [
+      "AI Coding Plan",
+      "国内AI编程套餐",
+      "Token Plan",
+      "Agent Plan",
+      "Claude Code替代",
+    ],
+  }
 
   return <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(data)} />
 }
@@ -63,19 +113,27 @@ export function ItemListJsonLd({ plans }: { plans: Plan[] }) {
       return {
         "@type": "ListItem",
         position: idx + 1,
-        name: `${plan.product} — ${plan.company}`,
-        description: desc,
-        ...(plan.links.official ? { url: plan.links.official } : {}),
-        ...(minPrice != null
-          ? {
-              offers: {
-                "@type": "Offer",
-                priceCurrency: "CNY",
-                price: String(minPrice),
-                priceValidUntil: "2026-12-31",
-              },
-            }
-          : {}),
+        item: {
+          "@type": "Product",
+          name: `${plan.product} — ${plan.company}`,
+          description: desc,
+          brand: {
+            "@type": "Brand",
+            name: plan.company,
+          },
+          ...(plan.links.official ? { url: plan.links.official } : {}),
+          ...(minPrice != null
+            ? {
+                offers: {
+                  "@type": "Offer",
+                  priceCurrency: "CNY",
+                  price: String(minPrice),
+                  priceValidUntil: "2026-12-31",
+                  ...(plan.links.official ? { url: plan.links.official } : {}),
+                },
+              }
+            : {}),
+        },
       }
     }),
   }
