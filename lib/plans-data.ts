@@ -283,9 +283,9 @@ export const plans: Plan[] = [
     category: "国内大厂",
     links: {
       official:
-        "https://www.aliyun.com/benefit/ai/aistar?clubBiz=subTask..12905002..10274..&userCode=y44p2mtf",
+        "https://www.aliyun.com/benefit/scene/tokenplan?source=5176.29345612&userCode=y44p2mtf",
       affiliate:
-        "https://www.aliyun.com/benefit/ai/aistar?clubBiz=subTask..12905002..10274..&userCode=y44p2mtf",
+        "https://www.aliyun.com/benefit/scene/tokenplan?source=5176.29345612&userCode=y44p2mtf",
     },
     logo: { src: "/logos/qwen.png", alt: "通义千问" },
     notice:
