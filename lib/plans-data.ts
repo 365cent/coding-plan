@@ -1700,7 +1700,7 @@ export const plans: Plan[] = [
     category: "其他",
     links: {
       official: "https://open-design.ai/pricing/",
-      affiliate: "https://open-design.ai/cloud/r/bYiiUmQrAPdy",
+      affiliate: "https://open-design.ai/cloud/r/bp95fC8LGrKz",
     },
     logo: { src: "/logos/opendesign.png", alt: "OpenDesign" },
     yearlyPrice: 563,
